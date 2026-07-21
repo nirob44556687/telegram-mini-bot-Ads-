@@ -4,14 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#0B1020">
-    <title>OPEN EDEN - Earn Rewards</title>
+    <title>OPEN EDEN - Earn Money</title>
+    
+    <!-- Telegram WebApp SDK -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     
     <!-- Monetag Ad Network SDK -->
     <script src='//libtl.com/sdk.js' data-zone='9406863' data-sdk='show_9406863'></script>
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        /* আগের সব CSS একই থাকবে */
         :root {
             --primary: #FF8C00;
             --secondary: #FFA726;
@@ -88,24 +90,31 @@
         .header {
             display: flex; justify-content: space-between; align-items: center;
             padding: 16px 20px;
-            background: rgba(11, 16, 32, 0.9);
+            background: rgba(11, 16, 32, 0.95);
             backdrop-filter: blur(10px);
             border-bottom: 1px solid var(--border);
         }
         .user-info { display: flex; align-items: center; gap: 12px; }
         .avatar {
-            width: 44px; height: 44px; border-radius: 50%;
+            width: 48px; height: 48px; border-radius: 50%;
             background: linear-gradient(135deg, var(--primary), var(--accent));
             display: flex; align-items: center; justify-content: center;
-            font-weight: 700; font-size: 18px; color: #fff;
+            font-weight: 700; font-size: 20px; color: #fff;
+            overflow: hidden;
+        }
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
         .user-details h3 { font-size: 15px; font-weight: 600; }
         .user-details p { font-size: 12px; color: var(--text-secondary); }
         .notif-btn {
-            width: 40px; height: 40px; border-radius: 12px;
+            width: 44px; height: 44px; border-radius: 12px;
             background: var(--card); border: 1px solid var(--border);
             display: flex; align-items: center; justify-content: center;
-            color: var(--text-primary); font-size: 18px; position: relative;
+            color: var(--text-primary); font-size: 20px; position: relative;
+            cursor: pointer;
         }
         .notif-dot {
             position: absolute; top: 8px; right: 8px;
@@ -121,12 +130,13 @@
         .page { display: none; animation: fadeIn 0.3s ease; }
         .page.active { display: block; }
 
-        /* Balance Card */
+        /* Balance Card - Enhanced */
         .balance-card {
-            background: linear-gradient(135deg, rgba(255,140,0,0.15), rgba(108,77,255,0.15));
-            border: 1px solid rgba(255,140,0,0.2);
+            background: linear-gradient(135deg, rgba(255,140,0,0.2), rgba(108,77,255,0.15));
+            border: 1px solid rgba(255,140,0,0.3);
             border-radius: 24px; padding: 24px;
-            margin-bottom: 24px; position: relative; overflow: hidden;
+            margin-bottom: 20px; position: relative; overflow: hidden;
+            box-shadow: 0 8px 32px rgba(255,140,0,0.15);
         }
         .balance-card::before {
             content: ''; position: absolute; top: -50%; right: -50%;
@@ -135,38 +145,116 @@
         }
         .bal-label { font-size: 14px; color: var(--text-secondary); margin-bottom: 8px; }
         .bal-amount {
-            font-size: 36px; font-weight: 800;
+            font-size: 38px; font-weight: 800;
             background: linear-gradient(90deg, var(--primary), var(--secondary));
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            margin-bottom: 4px; display: flex; align-items: center; gap: 8px;
+            margin-bottom: 6px; display: flex; align-items: center; gap: 10px;
         }
-        .bal-value { font-size: 14px; color: var(--text-secondary); margin-bottom: 20px; }
-        .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+        .bal-value { 
+            font-size: 16px; 
+            color: var(--success); 
+            font-weight: 600;
+            margin-bottom: 20px; 
+        }
+        .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
         .stat-box {
-            background: rgba(11, 16, 32, 0.6);
-            border-radius: 16px; padding: 12px; text-align: center;
+            background: rgba(11, 16, 32, 0.7);
+            border-radius: 14px; padding: 12px; text-align: center;
+            border: 1px solid var(--border);
         }
         .stat-val { font-size: 18px; font-weight: 700; color: var(--primary); margin-bottom: 4px; }
         .stat-lbl { font-size: 11px; color: var(--text-secondary); }
 
-        /* Quick Actions */
-        .quick-actions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px; }
-        .action-btn {
-            background: var(--card); border: 1px solid var(--border);
-            border-radius: 20px; padding: 16px 10px;
-            display: flex; flex-direction: column; align-items: center; gap: 8px;
-            cursor: pointer; transition: all 0.2s;
+        /* Feature Cards - Enhanced */
+        .features-section {
+            margin-bottom: 20px;
         }
+        .section-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+        
+        .quick-actions { 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 12px; 
+            margin-bottom: 20px; 
+        }
+        .action-btn {
+            background: var(--card); 
+            border: 1px solid var(--border);
+            border-radius: 18px; 
+            padding: 16px 12px;
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            gap: 8px;
+            cursor: pointer; 
+            transition: all 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+        .action-btn::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(135deg, rgba(255,140,0,0.1), transparent);
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .action-btn:active::before { opacity: 1; }
         .action-btn:active { transform: scale(0.95); border-color: var(--primary); }
         .action-icon {
+            width: 52px; height: 52px; border-radius: 16px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 26px;
+            position: relative;
+            z-index: 1;
+        }
+        .icon-ads { background: linear-gradient(135deg, rgba(34,197,94,0.2), rgba(34,197,94,0.1)); }
+        .icon-daily { background: linear-gradient(135deg, rgba(108,77,255,0.2), rgba(108,77,255,0.1)); }
+        .icon-wheel { background: linear-gradient(135deg, rgba(255,140,0,0.2), rgba(255,140,0,0.1)); }
+        .action-btn span { 
+            font-size: 12px; 
+            font-weight: 600;
+            position: relative;
+            z-index: 1;
+        }
+        .action-btn .reward-tag {
+            font-size: 10px;
+            color: var(--success);
+            font-weight: 700;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Menu Grid - Enhanced */
+        .menu-grid { 
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 12px; 
+        }
+        .menu-item {
+            background: var(--card); 
+            border: 1px solid var(--border);
+            border-radius: 18px; 
+            padding: 18px;
+            display: flex; 
+            align-items: center; 
+            gap: 14px;
+            cursor: pointer; 
+            transition: all 0.2s;
+        }
+        .menu-item:active { transform: scale(0.97); border-color: var(--primary); }
+        .menu-icon {
             width: 48px; height: 48px; border-radius: 14px;
             display: flex; align-items: center; justify-content: center;
-            font-size: 24px;
+            font-size: 22px; 
+            background: linear-gradient(135deg, rgba(255,140,0,0.15), rgba(255,140,0,0.1));
         }
-        .icon-ads { background: rgba(34,197,94,0.15); }
-        .icon-daily { background: rgba(108,77,255,0.15); }
-        .icon-wheel { background: rgba(255,140,0,0.15); }
-        .action-btn span { font-size: 12px; font-weight: 500; }
+        .menu-item span { font-size: 14px; font-weight: 600; }
 
         /* Ad Container */
         .ad-container {
@@ -187,177 +275,321 @@
             margin-bottom: 8px;
         }
 
-        /* Menu Grid */
-        .menu-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-        .menu-item {
-            background: var(--card); border: 1px solid var(--border);
-            border-radius: 20px; padding: 20px;
-            display: flex; align-items: center; gap: 14px;
-            cursor: pointer; transition: all 0.2s;
-        }
-        .menu-item:active { transform: scale(0.97); border-color: var(--primary); }
-        .menu-icon {
-            width: 44px; height: 44px; border-radius: 12px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 20px; background: rgba(255,140,0,0.1);
-        }
-        .menu-item span { font-size: 14px; font-weight: 600; }
-
         /* Tasks Page */
         .page-title { font-size: 24px; font-weight: 700; margin-bottom: 20px; }
         .task-item {
-            background: var(--card); border: 1px solid var(--border);
-            border-radius: 16px; padding: 16px;
-            display: flex; align-items: center; justify-content: space-between;
+            background: var(--card); 
+            border: 1px solid var(--border);
+            border-radius: 16px; 
+            padding: 16px;
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between;
             margin-bottom: 12px;
         }
         .task-left { display: flex; align-items: center; gap: 12px; flex: 1; }
         .task-icon {
             width: 44px; height: 44px; border-radius: 12px;
             background: rgba(255,140,0,0.1);
-            display: flex; align-items: center; justify-content: center; font-size: 20px;
+            display: flex; align-items: center; justify-content: center; 
+            font-size: 20px;
         }
         .task-info h4 { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
         .task-info p { font-size: 12px; color: var(--text-secondary); }
-        .task-reward { font-size: 13px; font-weight: 700; color: var(--primary); margin-bottom: 6px; text-align: right; }
+        .task-reward { 
+            font-size: 13px; 
+            font-weight: 700; 
+            color: var(--primary); 
+            margin-bottom: 6px; 
+            text-align: right; 
+        }
         .task-btn {
-            padding: 6px 14px; background: var(--primary);
-            border: none; border-radius: 8px; color: #fff;
-            font-size: 12px; font-weight: 600; cursor: pointer;
+            padding: 8px 16px; 
+            background: var(--primary);
+            border: none; 
+            border-radius: 10px; 
+            color: #fff;
+            font-size: 12px; 
+            font-weight: 600; 
+            cursor: pointer;
         }
         .task-btn.done { background: var(--success); }
 
-        /* Wheel Page */
+        /* Wheel Page - Enhanced */
+        .wheel-page {
+            text-align: center;
+        }
+        .wheel-info {
+            margin-bottom: 20px;
+        }
+        .wheel-info h2 {
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .spins-info {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+        .spins-info span {
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 18px;
+        }
         .wheel-wrap {
-            width: 280px; height: 280px; margin: 30px auto;
+            width: 300px; 
+            height: 300px; 
+            margin: 0 auto 30px;
             position: relative;
         }
         .wheel {
             width: 100%; height: 100%; border-radius: 50%;
             background: conic-gradient(
-                #FF8C00 0deg 45deg, #00BCD4 45deg 90deg,
-                #4CAF50 90deg 135deg, #8BC34A 135deg 180deg,
-                #FF9800 180deg 225deg, #9C27B0 225deg 270deg,
-                #E91E63 270deg 315deg, #FF5722 315deg 360deg
+                #FF8C00 0deg 45deg, 
+                #00BCD4 45deg 90deg,
+                #4CAF50 90deg 135deg, 
+                #8BC34A 135deg 180deg,
+                #FF9800 180deg 225deg, 
+                #9C27B0 225deg 270deg,
+                #E91E63 270deg 315deg, 
+                #FF5722 315deg 360deg
             );
-            border: 6px solid var(--card);
-            box-shadow: 0 0 30px rgba(255,140,0,0.2);
+            border: 8px solid var(--card);
+            box-shadow: 0 0 40px rgba(255,140,0,0.3);
             transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99);
             position: relative;
         }
         .wheel-center {
-            position: absolute; top: 50%; left: 50%;
+            position: absolute; 
+            top: 50%; 
+            left: 50%;
             transform: translate(-50%, -50%);
-            width: 70px; height: 70px; border-radius: 50%;
+            width: 80px; 
+            height: 80px; 
+            border-radius: 50%;
             background: linear-gradient(135deg, var(--primary), var(--secondary));
-            display: flex; align-items: center; justify-content: center;
-            font-weight: 800; font-size: 16px; color: #fff;
-            border: 4px solid var(--card);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            z-index: 10; cursor: pointer;
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            font-weight: 800; 
+            font-size: 18px; 
+            color: #fff;
+            border: 5px solid var(--card);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+            z-index: 10; 
+            cursor: pointer;
         }
         .wheel-pointer {
-            position: absolute; top: -10px; left: 50%;
+            position: absolute; 
+            top: -15px; 
+            left: 50%;
             transform: translateX(-50%);
-            width: 0; height: 0;
-            border-left: 15px solid transparent;
-            border-right: 15px solid transparent;
-            border-top: 25px solid #fff;
-            z-index: 11; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+            width: 0; 
+            height: 0;
+            border-left: 18px solid transparent;
+            border-right: 18px solid transparent;
+            border-top: 30px solid #fff;
+            z-index: 11; 
+            filter: drop-shadow(0 2px 6px rgba(0,0,0,0.5));
+        }
+        .wheel-rewards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-top: 20px;
+        }
+        .wheel-reward-item {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 10px 6px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .wheel-reward-item .amount {
+            color: var(--primary);
+            font-size: 14px;
+            display: block;
+        }
+        .wheel-reward-item .label {
+            color: var(--text-secondary);
+            font-size: 10px;
         }
 
         /* Wallet Page */
         .wallet-card {
-            background: var(--card); border: 1px solid var(--border);
-            border-radius: 20px; padding: 24px; text-align: center;
+            background: var(--card); 
+            border: 1px solid var(--border);
+            border-radius: 20px; 
+            padding: 24px; 
+            text-align: center;
             margin-bottom: 24px;
         }
-        .methods { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
-        .method {
-            background: var(--card); border: 2px solid var(--border);
-            border-radius: 14px; padding: 14px 8px; text-align: center;
-            cursor: pointer; transition: all 0.2s;
+        .methods { 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 10px; 
+            margin-bottom: 20px; 
         }
-        .method.active { border-color: var(--primary); background: rgba(255,140,0,0.1); }
+        .method {
+            background: var(--card); 
+            border: 2px solid var(--border);
+            border-radius: 14px; 
+            padding: 14px 8px; 
+            text-align: center;
+            cursor: pointer; 
+            transition: all 0.2s;
+        }
+        .method.active { 
+            border-color: var(--primary); 
+            background: rgba(255,140,0,0.1); 
+        }
         .method-icon {
-            width: 36px; height: 36px; border-radius: 8px;
-            margin: 0 auto 8px; display: flex; align-items: center; justify-content: center;
-            font-weight: 700; font-size: 11px; color: #fff;
+            width: 40px; height: 40px; border-radius: 10px;
+            margin: 0 auto 8px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            font-weight: 700; 
+            font-size: 11px; 
+            color: #fff;
         }
         .method span { font-size: 12px; font-weight: 600; }
         .input-group { margin-bottom: 16px; }
-        .input-group label { display: block; font-size: 13px; color: var(--text-secondary); margin-bottom: 8px; }
+        .input-group label { 
+            display: block; 
+            font-size: 13px; 
+            color: var(--text-secondary); 
+            margin-bottom: 8px; 
+        }
         .input-group input {
-            width: 100%; padding: 14px;
-            background: rgba(11,16,32,0.5); border: 1px solid var(--border);
-            border-radius: 12px; color: #fff; font-size: 15px; outline: none;
+            width: 100%; 
+            padding: 14px;
+            background: rgba(11,16,32,0.5); 
+            border: 1px solid var(--border);
+            border-radius: 12px; 
+            color: #fff; 
+            font-size: 15px; 
+            outline: none;
         }
         .input-group input:focus { border-color: var(--primary); }
         .primary-btn {
-            width: 100%; padding: 16px;
+            width: 100%; 
+            padding: 16px;
             background: linear-gradient(135deg, var(--primary), var(--secondary));
-            border: none; border-radius: 14px; color: #fff;
-            font-size: 16px; font-weight: 700; cursor: pointer;
+            border: none; 
+            border-radius: 14px; 
+            color: #fff;
+            font-size: 16px; 
+            font-weight: 700; 
+            cursor: pointer;
             box-shadow: 0 8px 20px rgba(255,140,0,0.3);
         }
 
         /* Profile Page */
         .profile-header {
-            background: var(--card); border: 1px solid var(--border);
-            border-radius: 20px; padding: 24px;
-            display: flex; align-items: center; gap: 16px; margin-bottom: 20px;
+            background: var(--card); 
+            border: 1px solid var(--border);
+            border-radius: 20px; 
+            padding: 24px;
+            display: flex; 
+            align-items: center; 
+            gap: 16px; 
+            margin-bottom: 20px;
         }
         .profile-avatar {
             width: 70px; height: 70px; border-radius: 50%;
             background: linear-gradient(135deg, var(--primary), var(--accent));
             display: flex; align-items: center; justify-content: center;
             font-size: 28px; font-weight: 700; color: #fff;
+            overflow: hidden;
+        }
+        .profile-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
         .profile-info h3 { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
         .profile-info p { font-size: 13px; color: var(--text-secondary); margin-bottom: 8px; }
         .status {
-            display: inline-block; padding: 4px 12px;
-            background: rgba(34,197,94,0.15); color: var(--success);
-            border-radius: 20px; font-size: 11px; font-weight: 600;
+            display: inline-block; 
+            padding: 4px 12px;
+            background: rgba(34,197,94,0.15); 
+            color: var(--success);
+            border-radius: 20px; 
+            font-size: 11px; 
+            font-weight: 600;
         }
-        .profile-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .profile-stats { 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 10px; 
+        }
         .p-stat {
-            background: var(--card); border: 1px solid var(--border);
-            border-radius: 14px; padding: 14px; text-align: center;
+            background: var(--card); 
+            border: 1px solid var(--border);
+            border-radius: 14px; 
+            padding: 14px; 
+            text-align: center;
         }
         .p-stat .val { font-size: 16px; font-weight: 700; color: var(--primary); margin-bottom: 4px; }
         .p-stat .lbl { font-size: 11px; color: var(--text-secondary); }
 
         /* Bottom Nav */
         .bottom-nav {
-            position: fixed; bottom: 0; left: 0; right: 0;
-            background: rgba(23, 31, 53, 0.95);
+            position: fixed; 
+            bottom: 0; 
+            left: 0; 
+            right: 0;
+            background: rgba(23, 31, 53, 0.98);
             backdrop-filter: blur(10px);
             border-top: 1px solid var(--border);
-            display: flex; justify-content: space-around;
-            padding: 10px 0 16px; z-index: 100;
+            display: flex; 
+            justify-content: space-around;
+            padding: 10px 0 16px; 
+            z-index: 100;
         }
         .nav-item {
-            flex: 1; background: none; border: none;
+            flex: 1; 
+            background: none; 
+            border: none;
             color: var(--text-secondary);
-            display: flex; flex-direction: column; align-items: center; gap: 4px;
-            padding: 6px; cursor: pointer; transition: all 0.2s;
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            gap: 4px;
+            padding: 6px; 
+            cursor: pointer; 
+            transition: all 0.2s;
         }
         .nav-item.active { color: var(--primary); }
-        .nav-item .icon { font-size: 22px; }
-        .nav-item span { font-size: 10px; font-weight: 600; }
+        .nav-item .icon { font-size: 24px; }
+        .nav-item span { font-size: 11px; font-weight: 600; }
 
         /* Toast */
         .toast {
-            position: fixed; top: 80px; left: 50%;
+            position: fixed; 
+            top: 80px; 
+            left: 50%;
             transform: translateX(-50%) translateY(-20px);
-            background: var(--card); border: 1px solid var(--border);
-            padding: 12px 24px; border-radius: 12px;
-            font-size: 14px; font-weight: 500;
-            opacity: 0; visibility: hidden; transition: all 0.3s;
-            z-index: 10000; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            background: var(--card); 
+            border: 1px solid var(--border);
+            padding: 14px 28px; 
+            border-radius: 14px;
+            font-size: 14px; 
+            font-weight: 600;
+            opacity: 0; 
+            visibility: hidden; 
+            transition: all 0.3s;
+            z-index: 10000; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
-        .toast.show { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
+        .toast.show { 
+            opacity: 1; 
+            visibility: visible; 
+            transform: translateX(-50%) translateY(0); 
+        }
         .toast.success { border-color: var(--success); color: var(--success); }
         .toast.error { border-color: var(--danger); color: var(--danger); }
 
@@ -372,26 +604,29 @@
 </head>
 <body>
 
-    <!-- Splash Screen (1.5 seconds only) -->
+    <!-- Splash Screen -->
     <div class="splash" id="splash">
         <div class="splash-logo">OE</div>
         <h1>OPEN EDEN</h1>
-        <p>Earn. Spin. Withdraw.</p>
+        <p>Watch Ads, Earn Money & Withdraw</p>
         <div class="loader"><div class="loader-bar"></div></div>
     </div>
 
-    <!-- Main App (Directly Show) -->
+    <!-- Main App -->
     <div class="app hidden" id="mainApp">
         <!-- Header -->
         <header class="header">
             <div class="user-info">
-                <div class="avatar" id="userAvatar">U</div>
+                <div class="avatar" id="userAvatar">
+                    <span id="avatarInitial">U</span>
+                    <img id="userPhoto" src="" alt="" style="display: none;">
+                </div>
                 <div class="user-details">
-                    <h3 id="userName">Guest User</h3>
-                    <p id="userId">ID: Guest</p>
+                    <h3 id="userName">Loading...</h3>
+                    <p id="userId">ID: ---</p>
                 </div>
             </div>
-            <div class="notif-btn">
+            <div class="notif-btn" onclick="showToast('No new notifications', 'success')">
                 🔔
                 <div class="notif-dot"></div>
             </div>
@@ -404,68 +639,68 @@
             <div class="page active" id="page-dashboard">
                 <div class="balance-card">
                     <div class="bal-label">Your Balance</div>
-                    <div class="bal-amount">🪙 <span id="balCoins">12,450</span></div>
-                    <div class="bal-value">= ৳<span id="balValue">124.50</span></div>
+                    <div class="bal-amount">
+                        <span style="font-size: 32px;">🪙</span>
+                        <span id="balCoins">0</span>
+                    </div>
+                    <div class="bal-value">= ৳<span id="balValue">0.00</span></div>
                     <div class="stats">
                         <div class="stat-box">
-                            <div class="stat-val" id="statToday">1,250</div>
+                            <div class="stat-val" id="statToday">0</div>
                             <div class="stat-lbl">Today Earn</div>
                         </div>
                         <div class="stat-box">
-                            <div class="stat-val" id="statTotal">25,450</div>
+                            <div class="stat-val" id="statTotal">0</div>
                             <div class="stat-lbl">Total Earn</div>
                         </div>
                         <div class="stat-box">
-                            <div class="stat-val" id="statRef">156</div>
+                            <div class="stat-val" id="statRef">0</div>
                             <div class="stat-lbl">Referrals</div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Monetag Ad Banner -->
-                <div class="ad-label">Advertisement</div>
-                <div class="ad-container">
-                    <div id="monetag-ad">
-                        <!-- Monetag ad will load here -->
-                        <script>
-                            if (typeof show_9406863 !== 'undefined') {
-                                show_9406863();
-                            }
-                        </script>
+                <!-- Features Section -->
+                <div class="features-section">
+                    <div class="section-title">🎯 Quick Earn</div>
+                    <div class="quick-actions">
+                        <div class="action-btn" onclick="watchAd()">
+                            <div class="action-icon icon-ads">▶️</div>
+                            <span>Watch Ads</span>
+                            <span class="reward-tag">৳0.10</span>
+                        </div>
+                        <div class="action-btn" onclick="dailyCheckin()">
+                            <div class="action-icon icon-daily">📅</div>
+                            <span>Daily Check-in</span>
+                            <span class="reward-tag">1.00</span>
+                        </div>
+                        <div class="action-btn" onclick="navigate('wheel')">
+                            <div class="action-icon icon-wheel">🎡</div>
+                            <span>Spin Wheel</span>
+                            <span class="reward-tag">Win Big!</span>
+                        </div>
                     </div>
                 </div>
 
-                <div class="quick-actions">
-                    <div class="action-btn" onclick="watchAd()">
-                        <div class="action-icon icon-ads">▶️</div>
-                        <span>Watch Ads</span>
-                    </div>
-                    <div class="action-btn" onclick="dailyCheckin()">
-                        <div class="action-icon icon-daily">📅</div>
-                        <span>Daily Check-in</span>
-                    </div>
-                    <div class="action-btn" onclick="navigate('wheel')">
-                        <div class="action-icon icon-wheel">🎡</div>
-                        <span>Spin Wheel</span>
-                    </div>
-                </div>
-
-                <div class="menu-grid">
-                    <div class="menu-item" onclick="navigate('tasks')">
-                        <div class="menu-icon">📋</div>
-                        <span>Daily Tasks</span>
-                    </div>
-                    <div class="menu-item" onclick="navigate('wallet')">
-                        <div class="menu-icon"></div>
-                        <span>Wallet</span>
-                    </div>
-                    <div class="menu-item" onclick="showToast('Referral link copied!', 'success')">
-                        <div class="menu-icon">👥</div>
-                        <span>Referral</span>
-                    </div>
-                    <div class="menu-item" onclick="showToast('Leaderboard loading...', 'success')">
-                        <div class="menu-icon">🏆</div>
-                        <span>Leaderboard</span>
+                <div class="features-section">
+                    <div class="section-title"> More Options</div>
+                    <div class="menu-grid">
+                        <div class="menu-item" onclick="navigate('tasks')">
+                            <div class="menu-icon">📝</div>
+                            <span>Daily Tasks</span>
+                        </div>
+                        <div class="menu-item" onclick="navigate('wallet')">
+                            <div class="menu-icon">💰</div>
+                            <span>Wallet</span>
+                        </div>
+                        <div class="menu-item" onclick="showReferral()">
+                            <div class="menu-icon">👥</div>
+                            <span>Referral</span>
+                        </div>
+                        <div class="menu-item" onclick="showToast('Leaderboard coming soon!', 'success')">
+                            <div class="menu-icon">🏆</div>
+                            <span>Leaderboard</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -478,12 +713,12 @@
                     <div class="task-left">
                         <div class="task-icon">▶️</div>
                         <div class="task-info">
-                            <h4>Watch 5 Ads</h4>
-                            <p>Progress: <span id="adProgress">0</span>/5</p>
+                            <h4>Watch 500 Ads</h4>
+                            <p>Progress: <span id="adProgress">0</span>/500</p>
                         </div>
                     </div>
                     <div>
-                        <div class="task-reward">🪙 500</div>
+                        <div class="task-reward">50.00</div>
                         <button class="task-btn" id="watchAdBtn" onclick="watchAdTask()">Watch</button>
                     </div>
                 </div>
@@ -497,7 +732,7 @@
                         </div>
                     </div>
                     <div>
-                        <div class="task-reward"> 300</div>
+                        <div class="task-reward">৳0.50</div>
                         <button class="task-btn" onclick="joinChannel(this)">Join</button>
                     </div>
                 </div>
@@ -506,26 +741,26 @@
                     <div class="task-left">
                         <div class="task-icon">👥</div>
                         <div class="task-info">
-                            <h4>Invite 5 Friends</h4>
-                            <p>Progress: 0/5</p>
+                            <h4>Invite 10 Friends</h4>
+                            <p>Progress: 0/10</p>
                         </div>
                     </div>
                     <div>
-                        <div class="task-reward">🪙 2500</div>
+                        <div class="task-reward">৳10.00</div>
                         <button class="task-btn">Invite</button>
                     </div>
                 </div>
 
                 <div class="task-item">
                     <div class="task-left">
-                        <div class="task-icon">📅</div>
+                        <div class="task-icon"></div>
                         <div class="task-info">
                             <h4>Daily Check-in</h4>
                             <p>Check in every day</p>
                         </div>
                     </div>
                     <div>
-                        <div class="task-reward">🪙 200</div>
+                        <div class="task-reward">৳1.00</div>
                         <button class="task-btn" onclick="dailyCheckinTask(this)">Check-in</button>
                     </div>
                 </div>
@@ -533,18 +768,59 @@
 
             <!-- Wheel Page -->
             <div class="page" id="page-wheel">
-                <h2 class="page-title" style="text-align:center;">Spin Wheel</h2>
-                <div style="text-align:center; color: var(--text-secondary); font-size: 14px; margin-bottom: 10px;">
-                    Spins left: <span style="color: var(--primary); font-weight: 700;" id="spinsLeft">1</span>
-                </div>
-                
-                <div class="wheel-wrap">
-                    <div class="wheel-pointer"></div>
-                    <div class="wheel" id="wheel"></div>
-                    <div class="wheel-center" onclick="spinWheel()">SPIN</div>
-                </div>
+                <div class="wheel-page">
+                    <div class="wheel-info">
+                        <h2>🎡 Spin & Win</h2>
+                        <div class="spins-info">
+                            Spins left: <span id="spinsLeft">1</span>
+                        </div>
+                    </div>
+                    
+                    <div class="wheel-wrap">
+                        <div class="wheel-pointer"></div>
+                        <div class="wheel" id="wheel"></div>
+                        <div class="wheel-center" onclick="spinWheel()">SPIN</div>
+                    </div>
 
-                <button class="primary-btn" onclick="spinWheel()">Spin Now</button>
+                    <div class="wheel-rewards">
+                        <div class="wheel-reward-item">
+                            <span class="amount">৳0.50</span>
+                            <span class="label">50 Coins</span>
+                        </div>
+                        <div class="wheel-reward-item">
+                            <span class="amount">৳1.00</span>
+                            <span class="label">100 Coins</span>
+                        </div>
+                        <div class="wheel-reward-item">
+                            <span class="amount">2.00</span>
+                            <span class="label">200 Coins</span>
+                        </div>
+                        <div class="wheel-reward-item">
+                            <span class="amount">৳5.00</span>
+                            <span class="label">500 Coins</span>
+                        </div>
+                        <div class="wheel-reward-item">
+                            <span class="amount">৳10.00</span>
+                            <span class="label">1000 Coins</span>
+                        </div>
+                        <div class="wheel-reward-item">
+                            <span class="amount">20.00</span>
+                            <span class="label">2000 Coins</span>
+                        </div>
+                        <div class="wheel-reward-item">
+                            <span class="amount">৳50.00</span>
+                            <span class="label">5000 Coins</span>
+                        </div>
+                        <div class="wheel-reward-item">
+                            <span class="amount">৳100.00</span>
+                            <span class="label">10000 Coins</span>
+                        </div>
+                    </div>
+
+                    <button class="primary-btn" onclick="spinWheel()" style="margin-top: 24px;">
+                        Spin Now
+                    </button>
+                </div>
             </div>
 
             <!-- Wallet Page -->
@@ -553,11 +829,14 @@
                 
                 <div class="wallet-card">
                     <div class="bal-label">Your Balance</div>
-                    <div class="bal-amount" style="justify-content:center;">🪙 <span id="walletBalance">12,450</span></div>
-                    <div class="bal-value">= ৳<span id="walletValue">124.50</span></div>
+                    <div class="bal-amount" style="justify-content:center;">
+                        <span style="font-size: 32px;">🪙</span>
+                        <span id="walletBalance">0</span>
+                    </div>
+                    <div class="bal-value">= ৳<span id="walletValue">0.00</span></div>
                 </div>
 
-                <h3 style="font-size: 18px; margin-bottom: 16px;">Select Method</h3>
+                <h3 style="font-size: 16px; margin-bottom: 16px; font-weight: 600;">Select Withdraw Method</h3>
                 <div class="methods">
                     <div class="method active" onclick="selectMethod(this)">
                         <div class="method-icon" style="background:#E2136E;">bKash</div>
@@ -574,8 +853,8 @@
                 </div>
 
                 <div class="input-group">
-                    <label>Amount (Min 10000 Coins)</label>
-                    <input type="number" placeholder="10000" id="withdrawAmount">
+                    <label>Amount (Min 1000 Coins = ৳10)</label>
+                    <input type="number" placeholder="1000" id="withdrawAmount">
                 </div>
                 <div class="input-group">
                     <label>Account Number</label>
@@ -589,40 +868,43 @@
                 <h2 class="page-title">Profile</h2>
                 
                 <div class="profile-header">
-                    <div class="profile-avatar" id="profileAvatar">U</div>
+                    <div class="profile-avatar" id="profileAvatar">
+                        <span id="profileInitial">U</span>
+                        <img id="profilePhoto" src="" alt="" style="display: none;">
+                    </div>
                     <div class="profile-info">
-                        <h3 id="profileName">Guest User</h3>
-                        <p>ID: Guest</p>
+                        <h3 id="profileName">Loading...</h3>
+                        <p id="profileId">ID: ---</p>
                         <span class="status">● Active</span>
                     </div>
                 </div>
 
                 <div class="profile-stats">
                     <div class="p-stat">
-                        <div class="val" id="profileTotalCoins">12,450</div>
+                        <div class="val" id="profileTotalCoins">0</div>
                         <div class="lbl">Total Coins</div>
                     </div>
                     <div class="p-stat">
-                        <div class="val" id="profileWithdrawn">৳124</div>
+                        <div class="val" id="profileWithdrawn">0</div>
                         <div class="lbl">Withdrawn</div>
                     </div>
                     <div class="p-stat">
-                        <div class="val" id="profileRefs">156</div>
+                        <div class="val" id="profileRefs">0</div>
                         <div class="lbl">Referrals</div>
                     </div>
                 </div>
 
                 <div style="margin-top: 24px;">
-                    <div class="task-item" style="cursor:pointer;" onclick="navigate('tasks')">
+                    <div class="task-item" style="cursor:pointer;" onclick="showToast('Settings coming soon!', 'success')">
                         <div class="task-left">
                             <div class="task-icon">⚙️</div>
                             <div class="task-info"><h4>Settings</h4></div>
                         </div>
                         <span style="color: var(--text-secondary);">›</span>
                     </div>
-                    <div class="task-item" style="cursor:pointer;" onclick="showToast('History loaded', 'success')">
+                    <div class="task-item" style="cursor:pointer;" onclick="showToast('History coming soon!', 'success')">
                         <div class="task-left">
-                            <div class="task-icon"></div>
+                            <div class="task-icon">📜</div>
                             <div class="task-info"><h4>Transaction History</h4></div>
                         </div>
                         <span style="color: var(--text-secondary);">›</span>
@@ -639,7 +921,7 @@
                 <span>Home</span>
             </button>
             <button class="nav-item" onclick="navigate('tasks')">
-                <div class="icon">📋</div>
+                <div class="icon">📝</div>
                 <span>Tasks</span>
             </button>
             <button class="nav-item" onclick="navigate('wallet')">
@@ -662,15 +944,61 @@
 
     <script>
         // --- App State ---
-        let balance = 12450;
-        let totalEarn = 25450;
-        let todayEarn = 1250;
+        let balance = 0;
+        let totalEarn = 0;
+        let todayEarn = 0;
         let adWatchCount = 0;
         let dailySpins = 1;
         let lastCheckin = localStorage.getItem('lastCheckin');
+        let tgUser = null;
 
-        // --- Auto Login (Skip Login Screen) ---
+        // --- Initialize Telegram WebApp ---
+        function initTelegram() {
+            if (window.Telegram && window.Telegram.WebApp) {
+                const tg = window.Telegram.WebApp;
+                tg.ready();
+                tg.expand();
+                
+                const user = tg.initDataUnsafe?.user;
+                if (user) {
+                    tgUser = user;
+                    document.getElementById('userName').textContent = user.first_name + (user.last_name ? ' ' + user.last_name : '');
+                    document.getElementById('userId').textContent = 'ID: ' + user.id;
+                    document.getElementById('profileName').textContent = document.getElementById('userName').textContent;
+                    document.getElementById('profileId').textContent = 'ID: ' + user.id;
+                    
+                    // Set avatar
+                    const initial = user.first_name.charAt(0).toUpperCase();
+                    document.getElementById('avatarInitial').textContent = initial;
+                    document.getElementById('profileInitial').textContent = initial;
+                    
+                    if (user.photo_url) {
+                        document.getElementById('userPhoto').src = user.photo_url;
+                        document.getElementById('userPhoto').style.display = 'block';
+                        document.getElementById('avatarInitial').style.display = 'none';
+                        
+                        document.getElementById('profilePhoto').src = user.photo_url;
+                        document.getElementById('profilePhoto').style.display = 'block';
+                        document.getElementById('profileInitial').style.display = 'none';
+                    }
+                } else {
+                    document.getElementById('userName').textContent = 'Guest User';
+                    document.getElementById('userId').textContent = 'ID: Guest';
+                    document.getElementById('profileName').textContent = 'Guest User';
+                    document.getElementById('profileId').textContent = 'ID: Guest';
+                }
+            } else {
+                document.getElementById('userName').textContent = 'Guest User';
+                document.getElementById('userId').textContent = 'ID: Guest';
+                document.getElementById('profileName').textContent = 'Guest User';
+                document.getElementById('profileId').textContent = 'ID: Guest';
+            }
+        }
+
+        // --- Auto Login ---
         window.onload = function() {
+            initTelegram();
+            
             // Show splash for 1.5 seconds then go directly to app
             setTimeout(() => {
                 document.getElementById('splash').style.opacity = '0';
@@ -722,27 +1050,26 @@
             if (typeof show_9406863 !== 'undefined') {
                 show_9406863();
                 setTimeout(() => {
-                    balance += 100;
-                    todayEarn += 100;
-                    totalEarn += 100;
+                    balance += 10; // 10 coins = 0.10 taka
+                    todayEarn += 10;
+                    totalEarn += 10;
                     updateBalance();
-                    showToast('+100 Coins from Ad!', 'success');
+                    showToast('+৳0.10 from Ad!', 'success');
                 }, 3000);
             } else {
-                // Fallback if ad not loaded
                 setTimeout(() => {
-                    balance += 100;
-                    todayEarn += 100;
-                    totalEarn += 100;
+                    balance += 10;
+                    todayEarn += 10;
+                    totalEarn += 10;
                     updateBalance();
-                    showToast('+100 Coins!', 'success');
+                    showToast('+৳0.10!', 'success');
                 }, 1000);
             }
         }
 
-        // --- Watch Ad Task ---
+        // --- Watch Ad Task (500 ads = 50 taka) ---
         function watchAdTask() {
-            if (adWatchCount >= 5) {
+            if (adWatchCount >= 500) {
                 showToast('Task completed!', 'success');
                 return;
             }
@@ -753,26 +1080,27 @@
             
             setTimeout(() => {
                 adWatchCount++;
-                balance += 100;
-                todayEarn += 100;
-                totalEarn += 100;
+                balance += 10; // Each ad = 10 coins = 0.10 taka
+                todayEarn += 10;
+                totalEarn += 10;
                 updateBalance();
                 
-                if (adWatchCount >= 5) {
-                    balance += 500; // Bonus for completing 5 ads
-                    todayEarn += 500;
-                    totalEarn += 500;
-                    showToast('Task Complete! +500 Bonus!', 'success');
+                if (adWatchCount >= 500) {
+                    balance += 5000; // Bonus: 5000 coins = 50 taka
+                    todayEarn += 5000;
+                    totalEarn += 5000;
+                    showToast('Task Complete! ৳50 Bonus!', 'success');
                     document.getElementById('watchAdBtn').textContent = 'Done';
                     document.getElementById('watchAdBtn').classList.add('done');
                 } else {
-                    showToast(`Ad ${adWatchCount}/5 watched! +100`, 'success');
+                    const remaining = 500 - adWatchCount;
+                    showToast(`Ad ${adWatchCount}/500! ${remaining} remaining`, 'success');
                 }
                 updateBalance();
             }, 2000);
         }
 
-        // --- Daily Check-in ---
+        // --- Daily Check-in (1 taka = 100 coins) ---
         function dailyCheckin() {
             const today = new Date().toDateString();
             if (lastCheckin === today) {
@@ -780,36 +1108,38 @@
                 return;
             }
             
-            balance += 200;
-            todayEarn += 200;
-            totalEarn += 200;
+            balance += 100; // 100 coins = 1 taka
+            todayEarn += 100;
+            totalEarn += 100;
             lastCheckin = today;
             localStorage.setItem('lastCheckin', today);
             updateBalance();
-            showToast('Daily Check-in! +200 Coins', 'success');
+            showToast('Daily Check-in! +৳1.00', 'success');
         }
 
         function dailyCheckinTask(btn) {
-            dailyCheckin();
-            if (lastCheckin === new Date().toDateString()) {
-                btn.textContent = 'Done';
-                btn.classList.add('done');
+            const today = new Date().toDateString();
+            if (lastCheckin === today) {
+                showToast('Already checked in!', 'error');
+                return;
             }
+            dailyCheckin();
+            btn.textContent = 'Done';
+            btn.classList.add('done');
         }
 
         // --- Join Channel ---
         function joinChannel(btn) {
-            // Open Telegram channel
             window.open('https://t.me/YourChannel', '_blank');
             
             setTimeout(() => {
-                balance += 300;
-                todayEarn += 300;
-                totalEarn += 300;
+                balance += 50; // 50 coins = 0.50 taka
+                todayEarn += 50;
+                totalEarn += 50;
                 updateBalance();
                 btn.textContent = 'Done';
                 btn.classList.add('done');
-                showToast('+300 Coins!', 'success');
+                showToast('+৳0.50!', 'success');
             }, 5000);
         }
 
@@ -830,13 +1160,16 @@
             document.getElementById('spinsLeft').textContent = dailySpins;
             
             setTimeout(() => {
-                const rewards = [500, 1000, 1500, 2000, 2500, 3000, 4000, 5000];
+                // Rewards in coins (100 coins = 1 taka)
+                const rewards = [50, 100, 200, 500, 1000, 2000, 5000, 10000];
                 const won = rewards[Math.floor(Math.random() * rewards.length)];
+                const takaWon = won / 100;
+                
                 balance += won;
                 todayEarn += won;
                 totalEarn += won;
                 updateBalance();
-                showToast(`🎉 You won ${won} Coins!`, 'success');
+                showToast(`🎉 You won ৳${takaWon.toFixed(2)}!`, 'success');
             }, 4000);
         }
 
@@ -849,8 +1182,8 @@
         // --- Request Withdraw ---
         function requestWithdraw() {
             const amount = parseInt(document.getElementById('withdrawAmount').value);
-            if (!amount || amount < 10000) {
-                showToast('Minimum withdraw is 10000 coins', 'error');
+            if (!amount || amount < 1000) {
+                showToast('Minimum withdraw is 1000 coins (৳10)', 'error');
                 return;
             }
             if (amount > balance) {
@@ -862,6 +1195,22 @@
             updateBalance();
             document.getElementById('withdrawAmount').value = '';
             showToast('Withdraw request submitted!', 'success');
+        }
+
+        // --- Referral ---
+        function showReferral() {
+            const userId = tgUser?.id || 'Guest';
+            const refLink = `https://t.me/YourBot?start=${userId}`;
+            
+            // Copy to clipboard
+            const tempInput = document.createElement('input');
+            tempInput.value = refLink;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+            
+            showToast('Referral link copied!', 'success');
         }
 
         // --- Toast Notification ---
