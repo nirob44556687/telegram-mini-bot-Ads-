@@ -1,190 +1,400 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="bn">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<title>Viral Zone</title>
-<meta name="monetag" content="bc2ad82ddcca5d36b468e4e23c6d8d0a">
-<!-- Fonts & Icons -->
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Hind+Siliguri:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-<!-- TELEGRAM WEB APP SDK -->
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
-
-<!-- ADSGRAM SCRIPT -->
-<script src="https://sad.adsgram.ai/js/sad.min.js"></script>
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title id="site-title">VideoHub</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-/* --- DESIGN SYSTEM --- */
-:root { --primary: #8b5cf6; --primary-gradient: linear-gradient(135deg, #8b5cf6, #ec4899); --bg-main: #0f0f23; --bg-card: #1a1a2e; --bg-nav: rgba(30, 30, 48, 0.95); --text-main: #ffffff; --text-muted: #9ca3af; --border: 1px solid rgba(255,255,255,0.08); }
-* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-body { margin: 0; background: var(--bg-main); color: var(--text-main); font-family: 'Poppins', 'Hind Siliguri', sans-serif; padding-bottom: 90px; }
-.app { max-width: 500px; margin: 0 auto; padding: 12px; }
+  :root {
+    --bg: #0a0a0f;
+    --surface: #13131a;
+    --surface2: #1c1c28;
+    --border: #2a2a3a;
+    --accent: #ff3c5f;
+    --accent2: #ff7043;
+    --text: #f0f0f8;
+    --muted: #7a7a9a;
+    --nav-h: 60px;
+    --radius: 12px;
+    --font-head: 'Bebas Neue', sans-serif;
+    --font-body: 'DM Sans', sans-serif;
+  }
 
-.header { background: linear-gradient(to bottom, #1e1e30, #151525); padding: 20px; border-radius: 16px; text-align: center; border: var(--border); margin-bottom: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
-.title { font-size: 26px; font-weight: 800; color: #a855f7; margin: 0; letter-spacing: 1px; }
-.subtitle { font-size: 12px; color: var(--text-muted); margin-top: 5px; }
+  /* THEME VARIABLES - overridden by admin */
+  body.theme-ocean { --accent:#00b4d8; --accent2:#48cae4; --bg:#050d1a; --surface:#0a1628; --surface2:#0f2040; }
+  body.theme-purple { --accent:#a855f7; --accent2:#c084fc; --bg:#0d0814; --surface:#160c22; --surface2:#1e1030; }
+  body.theme-green { --accent:#22c55e; --accent2:#4ade80; --bg:#050f09; --surface:#0a1a10; --surface2:#0f2416; }
+  body.theme-gold { --accent:#f59e0b; --accent2:#fbbf24; --bg:#0f0d05; --surface:#1a1608; --surface2:#24200e; }
+  body.theme-pink { --accent:#ec4899; --accent2:#f472b6; --bg:#0f060d; --surface:#1a0c18; --surface2:#241020; }
+  body.theme-cyan { --accent:#06b6d4; --accent2:#22d3ee; --bg:#050c10; --surface:#091620; --surface2:#0d202e; }
+  body.theme-orange { --accent:#f97316; --accent2:#fb923c; --bg:#100806; --surface:#1c100a; --surface2:#26160e; }
+  body.theme-white { --accent:#3b82f6; --accent2:#60a5fa; --bg:#f0f0f8; --surface:#ffffff; --surface2:#e8e8f5; --border:#d0d0e0; --text:#111128; --muted:#6666aa; }
+  body.theme-neon { --accent:#00ff88; --accent2:#00ffcc; --bg:#020a06; --surface:#041208; --surface2:#061a0c; }
+  body.theme-blood { --accent:#dc2626; --accent2:#ef4444; --bg:#0a0505; --surface:#160808; --surface2:#200c0c; }
 
-.search-wrapper { position: relative; margin-bottom: 15px; }
-.search-input { width: 100%; padding: 14px 20px; padding-right: 50px; border-radius: 50px; background: #232336; border: var(--border); color: white; font-size: 14px; outline: none; transition: 0.3s; }
-.search-input:focus { border-color: #8b5cf6; background: #2a2a40; }
-.search-icon { position: absolute; right: 5px; top: 5px; background: var(--primary); width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 14px; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
 
-.filter-scroll { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 5px; margin-bottom: 15px; scrollbar-width: none; }
-.filter-scroll::-webkit-scrollbar { display: none; }
-.filter-btn { position: relative; padding: 8px 18px; background: var(--bg-card); border: var(--border); color: #ccc; border-radius: 50px; font-size: 13px; white-space: nowrap; cursor: pointer; margin-top: 8px; margin-right: 5px; }
-.filter-btn.active { background: var(--primary-gradient); color: white; border: none; padding: 9px 19px; }
-.badge { position: absolute; top: -6px; right: -2px; background: #ef4444; color: white; font-size: 9px; font-weight: bold; height: 18px; min-width: 18px; padding: 0 4px; border-radius: 10px; display: flex; align-items: center; justify-content: center; border: 2px solid var(--bg-main); z-index: 10; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    min-height: 100vh;
+    transition: background 0.4s, color 0.4s;
+  }
 
-.cards { display: flex; flex-direction: column; gap: 15px; }
-.card { background: var(--bg-card); border-radius: 16px; overflow: hidden; border: var(--border); box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-.banner-wrapper { width: 100%; overflow: hidden; border-radius: 12px; margin: 5px 0; text-align: center; background: #000; }
-.banner-wrapper img { max-width: 100%; height: auto; display: block; margin: 0 auto; }
-.media { position: relative; padding-bottom: 56.25%; background: black; }
-.media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-.heart-btn { position: absolute; top: 10px; right: 10px; width: 36px; height: 36px; border-radius: 50%; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); border: none; color: white; display: flex; align-items: center; justify-content: center; font-size: 16px; cursor: pointer; }
-.meta { padding: 15px; }
+  /* NAV */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    height: var(--nav-h);
+    background: rgba(10,10,15,0.92);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 12px;
+    padding: 0 20px;
+  }
+  .nav-logo {
+    font-family: var(--font-head);
+    font-size: 1.8rem;
+    letter-spacing: 2px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    flex: 1;
+    cursor: pointer;
+  }
+  .nav-search {
+    flex: 2; max-width: 400px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 50px;
+    padding: 8px 16px;
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .nav-search:focus { border-color: var(--accent); }
+  .nav-search::placeholder { color: var(--muted); }
 
-/* Meta Header for Title and View Count */
-.meta-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 10px; }
-.meta h3 { margin: 0; font-size: 16px; line-height: 1.4; font-weight: 600; flex: 1; }
-.view-count-badge { font-size: 11px; color: #9ca3af; background: rgba(255,255,255,0.05); padding: 4px 8px; border-radius: 6px; display: flex; align-items: center; gap: 5px; white-space: nowrap; border: 1px solid rgba(255,255,255,0.05); }
+  /* BANNER AD */
+  #banner-ad-zone {
+    width: 100%; overflow: hidden;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    min-height: 0;
+    transition: all 0.3s;
+    display: flex; justify-content: center; align-items: center;
+    padding: 0;
+  }
 
-.actions { display: flex; gap: 10px; }
-.unlock-btn { flex: 1; padding: 12px; border-radius: 10px; border: none; background: var(--primary-gradient); color: white; font-weight: 700; font-size: 13px; text-transform: uppercase; box-shadow: 0 4px 12px rgba(236, 72, 153, 0.3); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
-.unlock-btn.done { background: #10b981; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); }
-.link-btn { width: 45px; background: #2d2d44; border: var(--border); border-radius: 10px; color: #a855f7; display: flex; align-items: center; justify-content: center; font-size: 16px; cursor: pointer; }
+  /* MAIN */
+  main {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 24px 20px 60px;
+  }
 
-.info-box { background: var(--bg-card); border-radius: 16px; padding: 20px; border: var(--border); margin-bottom: 15px; }
-.step { display: flex; gap: 15px; margin-bottom: 15px; }
-.step-num { background: #2d2d44; color: #a855f7; width: 25px; height: 25px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; flex-shrink: 0; }
+  .section-header {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 20px;
+  }
+  .section-header h2 {
+    font-family: var(--font-head);
+    font-size: 1.6rem;
+    letter-spacing: 1px;
+    color: var(--text);
+  }
+  .section-line {
+    flex: 1; height: 1px;
+    background: linear-gradient(to right, var(--accent), transparent);
+  }
 
-/* BOTTOM NAV */
-.bottom-nav { 
-    position: fixed; bottom: 10px; left: 10px; right: 10px; 
-    background: var(--bg-nav); backdrop-filter: blur(10px); 
-    border-radius: 20px; border: var(--border); 
-    display: flex; justify-content: space-around; 
-    padding: 8px 12px; max-width: 500px; margin: 0 auto; 
-    box-shadow: 0 10px 40px rgba(0,0,0,0.5); z-index: 100; 
-}
-.nav-item { 
-    background: none; border: none; color: #6b7280; 
-    cursor: pointer; position: relative; 
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    gap: 3px; width: auto; height: auto;
-}
-.nav-item i { font-size: 18px; transition: 0.3s; }
-.nav-text { font-size: 10px; font-weight: 500; font-family: 'Hind Siliguri', sans-serif; }
-.nav-item.active { color: #ec4899; }
-.nav-item.active i { transform: translateY(-2px); }
-.nav-item.active::after { 
-    content: ''; position: absolute; bottom: -4px; left: 50%; transform: translateX(-50%); 
-    width: 4px; height: 4px; background: #ec4899; border-radius: 50%; 
-}
+  /* GRID */
+  .video-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+  }
 
-/* LOADING OVERLAY */
-.loading-overlay {
-    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0,0,0,0.9); z-index: 999;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
+  /* CARD */
+  .video-card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    overflow: hidden;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+    position: relative;
+  }
+  .video-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--accent);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.4), 0 0 0 1px var(--accent)22;
+  }
+
+  .thumb-wrap {
+    position: relative;
+    aspect-ratio: 16/9;
+    overflow: hidden;
+    background: var(--surface2);
+  }
+  .thumb-wrap img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s;
+  }
+  .video-card:hover .thumb-wrap img { transform: scale(1.05); }
+
+  /* TIME BADGE */
+  .time-badge {
+    position: absolute;
+    bottom: 8px; right: 8px;
+    background: rgba(0,0,0,0.85);
+    color: #fff;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 4px;
+    letter-spacing: 0.5px;
+    pointer-events: none;
+  }
+
+  /* PLAY BUTTON */
+  .play-btn {
+    position: absolute;
+    inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0;
+    transition: opacity 0.25s;
+    background: rgba(0,0,0,0.3);
+  }
+  .video-card:hover .play-btn { opacity: 1; }
+  .play-icon {
+    width: 56px; height: 56px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 20px var(--accent)66;
+    transition: transform 0.2s;
+  }
+  .play-icon:hover { transform: scale(1.1); }
+  .play-icon svg { width: 22px; height: 22px; fill: white; margin-left: 3px; }
+
+  /* CARD INFO */
+  .card-info {
+    padding: 12px 14px 14px;
+  }
+  .card-title {
+    font-size: 0.92rem;
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--text);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-bottom: 6px;
+  }
+  .card-meta {
+    font-size: 0.78rem;
+    color: var(--muted);
+    display: flex; gap: 8px; align-items: center;
+  }
+  .card-dot { font-size: 0.5rem; }
+
+  /* EMPTY STATE */
+  .empty-state {
+    grid-column: 1/-1;
+    text-align: center;
+    padding: 80px 20px;
+    color: var(--muted);
+  }
+  .empty-state svg { width: 64px; height: 64px; margin-bottom: 16px; opacity: 0.4; }
+  .empty-state p { font-size: 1.1rem; }
+
+  /* SKELETON */
+  .skeleton { animation: shimmer 1.5s infinite; }
+  .skeleton-card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .skel-thumb { aspect-ratio: 16/9; background: var(--surface2); }
+  .skel-body { padding: 12px 14px 14px; }
+  .skel-line { height: 12px; background: var(--surface2); border-radius: 4px; margin-bottom: 8px; }
+  .skel-line.w80 { width: 80%; }
+  .skel-line.w50 { width: 50%; }
+  @keyframes shimmer {
+    0%,100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+
+  /* ===== OVERLAY ===== */
+  #video-overlay {
     display: none;
-}
-.loader { border: 4px solid #f3f3f3; border-top: 4px solid #a855f7; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin-bottom: 15px; }
-@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    position: fixed; inset: 0; z-index: 9999;
+    overflow: hidden;
+  }
+  #video-overlay.active { display: block; }
 
-.toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); background: #10b981; color: white; padding: 8px 20px; border-radius: 50px; font-size: 12px; font-weight: 600; display: none; z-index: 200; }
-.single-view { position: fixed; inset: 0; background: var(--bg-main); z-index: 150; overflow-y: auto; padding: 15px; display: none; }
-.single-view.active { display: block; }
-.hidden { display: none; }
-.fadeIn { animation: fadeIn 0.3s ease; }
-@keyframes fadeIn { from{opacity:0;transform:translateY(10px);} to{opacity:1;transform:translateY(0);} }
+  /* GIF background - blurred */
+  #overlay-bg {
+    position: absolute; inset: 0;
+    background-size: cover;
+    background-position: center;
+    filter: blur(18px) brightness(0.35) saturate(1.5);
+    transform: scale(1.1);
+    transition: background-image 0.3s;
+  }
+
+  /* Dark vignette */
+  #overlay-bg::after {
+    content:'';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.7) 100%);
+  }
+
+  /* Overlay content */
+  #overlay-content {
+    position: relative; z-index: 2;
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column;
+    gap: 16px;
+    cursor: pointer;
+  }
+
+  /* GIF "player" box */
+  #gif-player-box {
+    position: relative;
+    width: min(600px, 90vw);
+    aspect-ratio: 16/9;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 2px solid rgba(255,255,255,0.15);
+    box-shadow: 0 20px 80px rgba(0,0,0,0.8);
+    cursor: pointer;
+  }
+  #gif-player-box img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* Blur overlay on top of gif */
+  #gif-blur-mask {
+    position: absolute; inset: 0;
+    backdrop-filter: blur(6px);
+    background: rgba(0,0,0,0.35);
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column;
+    gap: 12px;
+    transition: backdrop-filter 0.3s;
+  }
+
+  /* "Video playing" pulse */
+  .pulse-ring {
+    position: absolute;
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    border: 3px solid var(--accent);
+    animation: pulseRing 1.8s ease-out infinite;
+  }
+  .pulse-ring:nth-child(2) { animation-delay: 0.6s; }
+  .pulse-ring:nth-child(3) { animation-delay: 1.2s; }
+  @keyframes pulseRing {
+    0% { transform: scale(0.5); opacity: 1; }
+    100% { transform: scale(2.5); opacity: 0; }
+  }
+
+  .overlay-play-center {
+    position: relative; z-index: 1;
+    width: 68px; height: 68px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 0 40px var(--accent)88;
+  }
+  .overlay-play-center svg { width: 28px; height: 28px; fill: white; margin-left: 4px; }
+
+  /* Time display */
+  #overlay-time {
+    position: absolute;
+    bottom: 12px; right: 14px;
+    background: rgba(0,0,0,0.85);
+    color: #fff;
+    font-size: 0.9rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 6px;
+    letter-spacing: 1px;
+    font-family: monospace;
+  }
+
+  /* "Click to watch" label */
+  #overlay-cta {
+    color: rgba(255,255,255,0.8);
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    animation: fadeUpDown 2s ease-in-out infinite;
+  }
+  @keyframes fadeUpDown {
+    0%,100% { opacity: 0.6; transform: translateY(0); }
+    50% { opacity: 1; transform: translateY(-4px); }
+  }
+
+  /* Close button */
+  #overlay-close {
+    position: absolute;
+    top: 16px; right: 16px;
+    width: 40px; height: 40px;
+    background: rgba(0,0,0,0.6);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    color: white;
+    font-size: 1.2rem;
+    z-index: 10;
+    transition: background 0.2s;
+  }
+  #overlay-close:hover { background: var(--accent); }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 24px;
+    color: var(--muted);
+    font-size: 0.8rem;
+    border-top: 1px solid var(--border);
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 640px) {
+    .video-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    nav { padding: 0 12px; gap: 8px; }
+    .nav-search { max-width: 160px; padding: 6px 12px; font-size: 0.82rem; }
+    .nav-logo { font-size: 1.4rem; }
+    main { padding: 16px 12px 40px; }
+  }
+  @media (max-width: 380px) {
+    .video-grid { grid-template-columns: 1fr; }
+  }
 </style>
 </head>
-<body>
+<body class="theme-red">
 
-<div class="app">
-    <!-- OVERLAY -->
-    <div id="loadingOverlay" class="loading-overlay">
-        <div class="loader"></div>
-        <div id="loadingText" style="color:white; font-size:16px; font-weight:bold;">Processing...</div>
-        <div id="loadingSub" style="color:#aaa; font-size:12px; margin-top:5px;">Please do not close</div>
-    </div>
-
-    <!-- SINGLE VIEW -->
-    <div id="singleView" class="single-view">
-        <button onclick="closeSingle()" style="background:#2d2d44; color:white; border:none; padding:10px 20px; border-radius:50px; margin-bottom:20px; display:flex; align-items:center; gap:8px;">
-            <i class="fas fa-arrow-left"></i> ফিরে যান
-        </button>
-        <div id="singleCardContainer"></div>
-    </div>
-
-    <!-- MAIN CONTENT -->
-    <div id="mainContent">
-        <div class="header">
-            <h1 class="title"> VIRAL ZONE VIDEO<i class="fas fa-fire" style="color:#ec4899"></i></h1>
-            <div class="subtitle">Exclusive Premium Video </div>
-        </div>
-
-        <div id="homeSec" class="fadeIn">
-            <div class="search-wrapper">
-                <input id="searchInput" type="text" class="search-input" placeholder="ভিডিও খুঁজুন...">
-                <div class="search-icon"><i class="fas fa-search"></i></div>
-            </div>
-            <div id="filterContainer" class="filter-scroll"></div>
-            <div id="cards" class="cards">
-                <div style="text-align:center; padding:30px; color:#666"><i class="fas fa-circle-notch fa-spin"></i> Loading...</div>
-            </div>
-        </div>
-
-        <div id="likedSec" class="hidden fadeIn">
-            <h3 style="color:#ec4899; margin-left:5px;">❤️ পছন্দের ভিডিও</h3>
-            <div id="likedCards" class="cards"></div>
-        </div>
-
-        <div id="tutSec" class="hidden fadeIn">
-            <h3 style="color:#a855f7; margin-left:5px;">🎥 টিউটোরিয়াল</h3>
-            <div class="info-box">
-                <div id="tutEmbed" style="width:100%; aspect-ratio:16/9; background:#000; border-radius:10px; margin-bottom:20px;"></div>
-                <div class="step"><div class="step-num">১</div><div style="font-size:13px; color:#ddd;">UNLOCK বাটনে ক্লিক করুন।</div></div>
-                <div class="step"><div class="step-num">২</div><div style="font-size:13px; color:#ddd;">৩টি অ্যাড আসবে, ওই অ্যাড গুলো সম্পূর্ণভাবে দেখুন।</div></div>
-                <div class="step"><div class="step-num">৩</div><div style="font-size:13px; color:#ddd;">শেষে ৫ সেকেন্ড অপেক্ষা করলে আনলক হবে।</div></div>
-            </div>
-        </div>
-
-        <div id="linkSec" class="hidden fadeIn">
-            <h3 style="color:#a855f7; margin-left:5px;">🔗 প্রয়োজনীয় লিংক</h3>
-            <div id="linkList" class="cards"></div>
-        </div>
-    </div>
-
-    <!-- UPDATED BOTTOM NAV -->
-    <div class="bottom-nav">
-        <button class="nav-item active" onclick="nav('homeSec', this)">
-            <i class="fas fa-home"></i>
-            <span class="nav-text">হোম</span>
-        </button>
-        <button class="nav-item" onclick="nav('likedSec', this)">
-            <i class="fas fa-heart"></i>
-            <span class="nav-text">পছন্দ</span>
-        </button>
-        <button class="nav-item" onclick="nav('tutSec', this)">
-            <i class="fas fa-book-open"></i>
-            <span class="nav-text">টিউটোরিয়াল</span>
-        </button>
-        <button class="nav-item" onclick="nav('linkSec', this)">
-            <i class="fas fa-link"></i>
-            <span class="nav-text">লিংক</span>
-        </button>
-    </div>
-    <div id="toast" class="toast">Link Copied!</div>
-</div>
-
+<!-- Firebase SDK -->
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-import { getDatabase, ref, onValue, runTransaction } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
+// ===== FIREBASE CONFIG - আপনার config এখানে দিন =====
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: "AIzaSyA2uRtGvTV0nMwdrXDfkdtplJfL_wCXLak",
@@ -199,294 +409,225 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
-const tg = window.Telegram.WebApp; tg.expand();
-const currentUserId = tg.initDataUnsafe?.user?.id || Math.floor(Math.random() * 90000000) + 10000000;
 
-let allVideos=[], filters=[], menuLinks=[];
-let adsgramIds=[], bannerAds=[]; 
-let settings={ ads_limit: 20, bot_app_link: "", monetag_id: "" };
-let currentFilter = 'all';
-let monetagLoaded = false;
-
-function init() {
-    // সেটিংস লোড
-    onValue(ref(db, 'settings'), s => { 
-        if(s.val()) {
-            settings = s.val();
-            if(settings.tutorial_id) document.getElementById('tutEmbed').innerHTML=`<iframe src="${settings.tutorial_id}" style="width:100%;height:100%;border:0" allowfullscreen></iframe>`;
-            
-            // মনেট্যাগ অ্যাড লোড
-            if(settings.monetag_id && !monetagLoaded) {
-                const script = document.createElement('script');
-                script.src = '//libtl.com/sdk.js';
-                script.dataset.zone = settings.monetag_id;
-                script.dataset.sdk = 'show_' + settings.monetag_id;
-                document.head.appendChild(script);
-                monetagLoaded = true;
-            }
-        }
-    });
-
-    // অ্যাডস কনফিগারেশন লোড
-    onValue(ref(db, 'ads_config'), s => { 
-        adsgramIds = []; bannerAds = [];
-        if(s.val()) {
-            if(s.val().interstitial_ids) Object.values(s.val().interstitial_ids).forEach(id => adsgramIds.push(id));
-            if(s.val().banners) Object.values(s.val().banners).forEach(b => bannerAds.push(b));
-        }
-        renderCards(); // অ্যাড লোড হলে আবার রেন্ডার হবে
-    });
-
-    // লিংক এবং ফিল্টার লোড
-    onValue(ref(db, 'links'), s => { menuLinks=[]; if(s.val()) Object.values(s.val()).forEach(v=>menuLinks.push(v)); renderLinks(); });
-    onValue(ref(db, 'filters'), s => { filters=[]; if(s.val()) Object.values(s.val()).forEach(v=>filters.push(v)); });
-
-    // ভিডিও লোড এবং ডিপ লিংক হ্যান্ডলিং (FIXED)
-    onValue(ref(db, 'videos'), s => {
-        allVideos = [];
-        if(s.val()) Object.entries(s.val()).forEach(([k,v])=>allVideos.push({id:k,...v}));
-        allVideos.reverse();
-        
-        renderFilters();
-        renderCards(); // আগে সব ভিডিও দেখাবে
-        renderLiked();
-
-        // এরপর চেক করবে লিংক আছে কিনা
-        checkDeepLink();
-    });
+// Helper: video URL → GIF via tenor/giphy fallback or use thumb as GIF
+function getGifFromVideo(videoUrl, thumb) {
+  // Admin can provide a direct GIF url, otherwise we create one from the thumb
+  // If videoUrl ends in .gif we use it directly
+  if (videoUrl && videoUrl.match(/\.gif($|\?)/i)) return videoUrl;
+  // Fallback: use thumb as animated bg
+  return thumb || '';
 }
 
-// ডিপ লিংক চেক করার ফাংশন (শেয়ার করা লিংক কাজ করার জন্য)
-function checkDeepLink() {
-    const startParam = tg.initDataUnsafe?.start_param || new URLSearchParams(window.location.search).get('file');
-    
-    if(startParam) {
-        let videoId = startParam.split('_')[0];
-        // ভিডিওটি ডাটাবেসে আছে কিনা চেক করা
-        const targetVideo = allVideos.find(v => v.id === videoId);
-        
-        if(targetVideo) {
-            console.log("Opening shared video:", videoId);
-            openSingle(videoId);
-        } else {
-            console.log("Shared video not found in database.");
-            showToast("ভিডিওটি খুঁজে পাওয়া যায়নি!");
-        }
-    }
+// Format seconds → mm:ss
+function fmtTime(sec) {
+  if (!sec && sec !== 0) return '';
+  const m = Math.floor(sec / 60);
+  const s = sec % 60;
+  return `${m}:${s.toString().padStart(2,'0')}`;
 }
 
-function getCount(cat) { return cat === 'all' ? allVideos.length : allVideos.filter(v => v.category === cat).length; }
+// ---- SITE CONFIG ----
+onValue(ref(db, 'config'), (snap) => {
+  const cfg = snap.val() || {};
 
-function renderFilters() {
-    const div = document.getElementById('filterContainer');
-    let html = `<button class="filter-btn ${currentFilter==='all'?'active':''}" onclick="setFilter('all', this)">All <span class="badge">${getCount('all')}</span></button>`;
-    filters.forEach(f => {
-        html += `<button class="filter-btn ${currentFilter===f.id?'active':''}" onclick="setFilter('${f.id}', this)">${f.name} <span class="badge">${getCount(f.id)}</span></button>`;
-    });
-    div.innerHTML = html;
-}
+  // Site title
+  const title = cfg.siteName || 'VideoHub';
+  document.title = title;
+  document.getElementById('site-title').textContent = title;
+  document.getElementById('nav-logo-text').textContent = title;
 
-function renderCards() {
-    const div = document.getElementById('cards');
-    const q = document.getElementById('searchInput').value.toLowerCase();
-    const list = allVideos.filter(v => (v.name.toLowerCase().includes(q)) && (currentFilter==='all' || v.category===currentFilter));
-    
-    div.innerHTML = list.length ? '' : '<p style="text-align:center;color:#666;margin-top:20px;">কোনো ভিডিও পাওয়া যায়নি</p>';
-    
-    list.forEach((v, index) => {
-        div.appendChild(createCard(v));
-        if ((index + 1) % 2 === 0 && bannerAds.length > 0) {
-            const bannerDiv = document.createElement('div');
-            bannerDiv.className = 'banner-wrapper';
-            bannerDiv.innerHTML = bannerAds[Math.floor(Math.random() * bannerAds.length)];
-            div.appendChild(bannerDiv);
-        }
-    });
-}
+  // Theme
+  document.body.className = 'theme-' + (cfg.theme || 'red');
 
-function createCard(v) {
-    const liked = getLiked().includes(v.id);
-    const count = getProgress(v.id);
-    const req = v.ad_watches_required || 1;
-    const isUnlocked = count >= req;
-    const views = v.view_count || 0;
+  // Direct Link
+  window._directLink = cfg.directLink || '#';
 
-    const el = document.createElement('div');
-    el.className = 'card';
-    el.innerHTML = `
-        <div class="media">
-            <img src="${v.image_url}" onerror="this.src='https://via.placeholder.com/400'">
-            <button class="heart-btn" onclick="toggleLike('${v.id}')"><i class="${liked?'fas':'far'} fa-heart" style="color:${liked?'#ec4899':'white'}"></i></button>
+  // Banner Ad
+  const bannerZone = document.getElementById('banner-ad-zone');
+  if (cfg.bannerAd) {
+    bannerZone.innerHTML = cfg.bannerAd;
+    bannerZone.style.padding = '8px 0';
+    bannerZone.style.minHeight = '60px';
+  } else {
+    bannerZone.innerHTML = '';
+    bannerZone.style.minHeight = '0';
+    bannerZone.style.padding = '0';
+  }
+});
+
+// ---- VIDEOS ----
+onValue(ref(db, 'videos'), (snap) => {
+  const grid = document.getElementById('video-grid');
+  grid.innerHTML = '';
+  const val = snap.val();
+
+  if (!val) {
+    grid.innerHTML = `<div class="empty-state">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M15 10l4.553-2.277A1 1 0 0121 8.72v6.56a1 1 0 01-1.447.897L15 14M3 8a2 2 0 012-2h10a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z"/>
+      </svg>
+      <p>এখনো কোনো ভিডিও নেই</p>
+    </div>`;
+    return;
+  }
+
+  const videos = Object.entries(val).reverse(); // newest first
+  window._searchData = videos;
+
+  renderVideos(videos);
+});
+
+function renderVideos(videos) {
+  const grid = document.getElementById('video-grid');
+  grid.innerHTML = '';
+
+  if (!videos.length) {
+    grid.innerHTML = `<div class="empty-state"><p>কোনো ফলাফল পাওয়া যায়নি</p></div>`;
+    return;
+  }
+
+  videos.forEach(([id, v]) => {
+    const gifSrc = getGifFromVideo(v.videoLink, v.thumbnail);
+    const timeStr = v.duration ? fmtTime(parseInt(v.duration)) : '';
+
+    const card = document.createElement('div');
+    card.className = 'video-card';
+    card.innerHTML = `
+      <div class="thumb-wrap">
+        <img src="${v.thumbnail || 'https://via.placeholder.com/480x270/13131a/7a7a9a?text=Video'}"
+             alt="${v.title || ''}" loading="lazy"
+             onerror="this.src='https://via.placeholder.com/480x270/13131a/7a7a9a?text=No+Thumb'">
+        ${timeStr ? `<div class="time-badge">${timeStr}</div>` : ''}
+        <div class="play-btn">
+          <div class="play-icon">
+            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          </div>
         </div>
-        <div class="meta">
-            <div class="meta-header">
-                <h3>${v.name}</h3>
-                <div class="view-count-badge">
-                    <i class="fas fa-eye"></i> ${views}
-                </div>
-            </div>
-            <div class="actions">
-                <button class="unlock-btn ${isUnlocked?'done':''}" onclick="handleUnlock('${v.id}', '${v.download_link}', ${req})">
-                    ${isUnlocked ? '<i class="fas fa-download"></i> DOWNLOAD' : `<i class="fas fa-play"></i> UNLOCK (${count}/${req})`}
-                </button>
-                <button class="link-btn" onclick="copyLink('${v.id}')"><i class="fas fa-link"></i></button>
-            </div>
-        </div>`;
-    return el;
+      </div>
+      <div class="card-info">
+        <div class="card-title">${v.title || 'Untitled'}</div>
+        <div class="card-meta">
+          <span>VideoHub</span>
+          ${timeStr ? `<span class="card-dot">●</span><span>${timeStr}</span>` : ''}
+        </div>
+      </div>
+    `;
+
+    card.addEventListener('click', () => {
+      openOverlay({ ...v, gifSrc, timeStr });
+    });
+
+    grid.appendChild(card);
+  });
 }
 
-window.copyLink = (id) => {
-    const botLink = settings.bot_app_link || "";
-    // বট লিংক না থাকলে ওয়েব লিংক কপি হবে
-    if(!botLink) { 
-        const url = window.location.origin + window.location.pathname + '?file=' + id;
-        navigator.clipboard.writeText(url); 
-        showToast("Web Link Copied!"); 
-        return; 
-    }
-    // টেলিগ্রাম লিংক জেনারেট
-    const tgLink = `${botLink}?startapp=${id}_${currentUserId}`;
-    navigator.clipboard.writeText(tgLink);
-    showToast("Share Link Copied!");
+// ---- OVERLAY ----
+function openOverlay(v) {
+  const overlay = document.getElementById('video-overlay');
+  const bg = document.getElementById('overlay-bg');
+  const gifImg = document.getElementById('gif-img');
+  const timeEl = document.getElementById('overlay-time');
+
+  bg.style.backgroundImage = `url('${v.gifSrc || v.thumbnail}')`;
+  gifImg.src = v.gifSrc || v.thumbnail || '';
+  timeEl.textContent = v.timeStr || '';
+  timeEl.style.display = v.timeStr ? 'block' : 'none';
+
+  overlay.classList.add('active');
+  document.body.style.overflow = 'hidden';
 }
 
-window.handleUnlock = (id, link, req) => {
-    const count = getProgress(id);
-    if(count >= req) { window.open(link, '_blank'); return; }
-    if(getDaily() >= (settings.ads_limit||20)) { showToast("Daily limit reached!"); return; }
-    if(adsgramIds.length === 0) { alert("Admin: Add Adsgram IDs"); return; }
+document.getElementById('overlay-content').addEventListener('click', (e) => {
+  if (e.target.closest('#overlay-close')) return;
+  // Open direct link
+  const link = window._directLink || '#';
+  if (link && link !== '#') {
+    window.open(link, '_blank', 'noopener');
+  }
+});
 
-    showOverlay("Processing...");
-    playMixedSequence(0, id, link, req);
-}
+document.getElementById('overlay-close').addEventListener('click', () => {
+  document.getElementById('video-overlay').classList.remove('active');
+  document.body.style.overflow = '';
+  document.getElementById('gif-img').src = '';
+});
 
-function playMixedSequence(step, videoId, link, req) {
-    const txt = document.getElementById('loadingText');
-    if(step >= 3) {
-        startFinalCountdown(videoId, req);
-        return;
-    }
-    const delay = 500; 
-    setTimeout(() => {
-        if(step === 1) {
-            if(settings.monetag_id) {
-                txt.innerText = "Loading Partner Ad...";
-                const sdkFunc = window['show_' + settings.monetag_id];
-                if(typeof sdkFunc === 'function') {
-                    sdkFunc().then(() => playMixedSequence(step + 1, videoId, link, req))
-                           .catch(e => playMixedSequence(step + 1, videoId, link, req));
-                } else { playMixedSequence(step + 1, videoId, link, req); }
-            } else { playMixedSequence(step + 1, videoId, link, req); }
-        } 
-        else {
-            txt.innerText = "Loading Video Ad...";
-            if(window.Adsgram) {
-                const blockId = adsgramIds[step % adsgramIds.length];
-                const AdController = window.Adsgram.init({ blockId: blockId });
-                AdController.show().then((result) => playMixedSequence(step + 1, videoId, link, req))
-                            .catch((result) => playMixedSequence(step + 1, videoId, link, req));
-            } else { playMixedSequence(step + 1, videoId, link, req); }
-        }
-    }, delay);
-}
+// Escape key close
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    document.getElementById('video-overlay').classList.remove('active');
+    document.body.style.overflow = '';
+  }
+});
 
-// ভিউ কাউন্ট বাড়ানোর ফাংশন
-function incrementViewCount(videoId) {
-    // চেক করবে ইউজার আগে এই ভিডিওর ভিউ কাউন্ট করেছে কিনা (Life Time 1 View)
-    const storageKey = 'viewed_event_' + videoId;
-    if(localStorage.getItem(storageKey)) return;
+// ---- SEARCH ----
+document.getElementById('search-input').addEventListener('input', function() {
+  const q = this.value.toLowerCase().trim();
+  if (!window._searchData) return;
+  if (!q) { renderVideos(window._searchData); return; }
+  const filtered = window._searchData.filter(([,v]) =>
+    (v.title || '').toLowerCase().includes(q)
+  );
+  renderVideos(filtered);
+});
 
-    const vidRef = ref(db, 'videos/' + videoId + '/view_count');
-    runTransaction(vidRef, (currentViews) => {
-        return (currentViews || 0) + 1;
-    }).then(() => {
-        localStorage.setItem(storageKey, 'true'); // মার্ক করে রাখা হলো
-    }).catch(err => console.error("View update failed", err));
-}
-
-function startFinalCountdown(videoId, req) {
-    let count = 5;
-    const txt = document.getElementById('loadingText');
-    const sub = document.getElementById('loadingSub');
-    txt.innerText = `Verification Successful!`;
-    sub.innerText = `Unlocking in ${count} seconds...`;
-    const timer = setInterval(() => {
-        count--;
-        if(count > 0) { sub.innerText = `Unlocking in ${count} seconds...`; } 
-        else {
-            clearInterval(timer);
-            
-            // আনলক সংখ্যা বাড়ানো
-            const currentProgress = getProgress(videoId) + 1;
-            localStorage.setItem('p_'+videoId, currentProgress);
-            
-            incDaily(); 
-
-            // যদি টার্গেট পূর্ণ হয়, তবেই ভিউ কাউন্ট হবে
-            if(currentProgress >= req) {
-                incrementViewCount(videoId);
-            }
-
-            renderCards();
-            if(document.getElementById('singleView').style.display==='block') openSingle(videoId);
-            hideOverlay(); showToast("Unlock Successful!");
-        }
-    }, 1000);
-}
-
-function showOverlay(msg) { document.getElementById('loadingOverlay').style.display = 'flex'; document.getElementById('loadingText').innerText = msg; }
-function hideOverlay() { document.getElementById('loadingOverlay').style.display = 'none'; }
-function showToast(msg) { const t=document.getElementById('toast'); t.innerText=msg; t.style.display='block'; setTimeout(()=>t.style.display='none', 3000); }
-
-function renderLinks() { 
-    const d=document.getElementById('linkList'); 
-    d.innerHTML=''; 
-    menuLinks.forEach(l => { 
-        d.innerHTML += `
-        <div class="card" style="padding:15px;display:flex;align-items:center;gap:15px;">
-            <i class="fas fa-link" style="color:#a855f7;font-size:20px"></i>
-            <div style="flex:1"><b>${l.title}</b></div>
-            <a href="${l.url}" target="_blank" style="background:#2d2d44;color:white;padding:5px 15px;border-radius:50px;text-decoration:none;font-size:12px">Open</a>
-        </div>`; 
-    }); 
-}
-
-function renderLiked() { const d=document.getElementById('likedCards'); const l=getLiked(); const v=allVideos.filter(x=>l.includes(x.id)); d.innerHTML = v.length?'':'<p style="text-align:center;color:gray;padding:20px">পছন্দের ভিডিও নেই</p>'; v.forEach(x=>d.appendChild(createCard(x))); }
-window.nav = (id, btn) => { ['homeSec','likedSec','tutSec','linkSec'].forEach(s=>document.getElementById(s).classList.add('hidden')); document.getElementById(id).classList.remove('hidden'); document.querySelectorAll('.nav-item').forEach(x=>x.classList.remove('active')); btn.classList.add('active'); if(id==='homeSec') document.getElementById('mainContent').style.display='block'; }
-window.setFilter = (id, btn) => { currentFilter=id; renderFilters(); renderCards(); }
-document.getElementById('searchInput').oninput = renderCards;
-function getLiked(){ return JSON.parse(localStorage.getItem('likes')||'[]'); }
-window.toggleLike=(id)=>{ let l=getLiked(); if(l.includes(id)) l=l.filter(x=>x!==id); else l.push(id); localStorage.setItem('likes',JSON.stringify(l)); renderCards(); renderLiked(); }
-function getProgress(id){ return parseInt(localStorage.getItem('p_'+id)||0); }
-function incProgress(id){ localStorage.setItem('p_'+id, getProgress(id)+1); }
-function getDaily(){ const d=JSON.parse(localStorage.getItem('daily')||'{}'); return d.date===new Date().toDateString()?d.count:0; }
-function incDaily(){ localStorage.setItem('daily', JSON.stringify({date:new Date().toDateString(), count:getDaily()+1})); }
-
-// সিঙ্গেল ভিডিও ওপেন করার লজিক
-window.openSingle = (id) => { 
-    const v = allVideos.find(x => x.id === id); 
-    if(!v) return; 
-    
-    document.getElementById('mainContent').style.display='none'; 
-    document.getElementById('singleView').classList.add('active'); 
-    document.getElementById('singleCardContainer').innerHTML=''; 
-    document.getElementById('singleCardContainer').appendChild(createCard(v)); 
-    
-    // URL আপডেট করা যাতে রিলোড দিলে থাকে
-    const newUrl = window.location.pathname + '?file=' + id;
-    window.history.pushState({ path: newUrl }, '', newUrl);
-}
-
-window.closeSingle = () => { 
-    document.getElementById('singleView').classList.remove('active'); 
-    document.getElementById('mainContent').style.display='block'; 
-    
-    // URL ক্লিন করা
-    window.history.pushState({}, '', window.location.pathname); 
-    renderCards(); 
-}
-
-init();
 </script>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo" id="nav-logo-text">VideoHub</div>
+  <input class="nav-search" type="search" id="search-input" placeholder="ভিডিও খুঁজুন...">
+</nav>
+
+<!-- BANNER AD -->
+<div id="banner-ad-zone"></div>
+
+<!-- MAIN -->
+<main>
+  <div class="section-header">
+    <h2>সব ভিডিও</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="video-grid" id="video-grid">
+    <!-- Skeleton loaders -->
+    <div class="skeleton-card skeleton"><div class="skel-thumb"></div><div class="skel-body"><div class="skel-line w80"></div><div class="skel-line w50"></div></div></div>
+    <div class="skeleton-card skeleton"><div class="skel-thumb"></div><div class="skel-body"><div class="skel-line w80"></div><div class="skel-line w50"></div></div></div>
+    <div class="skeleton-card skeleton"><div class="skel-thumb"></div><div class="skel-body"><div class="skel-line w80"></div><div class="skel-line w50"></div></div></div>
+    <div class="skeleton-card skeleton"><div class="skel-thumb"></div><div class="skel-body"><div class="skel-line w80"></div><div class="skel-line w50"></div></div></div>
+  </div>
+</main>
+
+<!-- VIDEO OVERLAY -->
+<div id="video-overlay">
+  <div id="overlay-bg"></div>
+  <div id="overlay-close">✕</div>
+  <div id="overlay-content">
+    <div id="gif-player-box">
+      <img id="gif-img" src="" alt="video">
+      <div id="gif-blur-mask">
+        <div class="pulse-ring"></div>
+        <div class="pulse-ring"></div>
+        <div class="pulse-ring"></div>
+        <div class="overlay-play-center">
+          <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        </div>
+      </div>
+      <div id="overlay-time"></div>
+    </div>
+    <div id="overlay-cta">👆 ট্যাপ করুন ফুল ভিডিও দেখতে</div>
+  </div>
+</div>
+
+<footer>
+  <span id="footer-name">VideoHub</span> &copy; 2024 · All rights reserved
+</footer>
+
+<script type="module">
+// Sync footer name with site title
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+</script>
+
 </body>
 </html>
