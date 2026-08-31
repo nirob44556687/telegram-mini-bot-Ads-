@@ -9,84 +9,107 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;700&display=swap');
-        body { font-family: 'Hind Siliguri', sans-serif; background: #0b0f19; color: white; overflow-x: hidden; }
-        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.08); }
+        body { font-family: 'Hind Siliguri', sans-serif; background: #070a13; color: white; height: 100vh; overflow: hidden; -webkit-tap-highlight-color: transparent; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.08); }
         .no-scrollbar::-webkit-scrollbar { display: none; }
-        .btn-gradient { background: linear-gradient(90deg, #06b6d4, #3b82f6); box-shadow: 0 4px 20px rgba(6, 182, 212, 0.4); }
+        .scroll-area { height: calc(100vh - 80px); overflow-y: auto; padding-bottom: 120px; }
+        
+        /* Image Slider */
+        .img-slider { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 10px; border-radius: 30px; }
+        .img-slider img { min-width: 100%; scroll-snap-align: start; height: 280px; object-fit: cover; border-radius: 30px; }
+        
         .big-stat { font-size: 2.2rem; font-weight: 900; color: #22d3ee; line-height: 1; }
-        .opt-card.active { border-color: #06b6d4; background: rgba(6, 182, 212, 0.15); }
+        .btn-order { background: linear-gradient(90deg, #06b6d4, #3b82f6); box-shadow: 0 4px 20px rgba(6, 182, 212, 0.4); }
+        .opt-card { border: 1px solid rgba(255,255,255,0.1); cursor: pointer; transition: 0.2s; }
+        .opt-card.active { border: 2px solid #06b6d4; background: rgba(6, 182, 212, 0.15); }
+        .p-card { cursor: pointer; position: relative; z-index: 10; }
     </style>
 </head>
-<body class="pb-24">
+<body>
 
-    <!-- Header -->
-    <header class="p-4 flex justify-between items-center sticky top-0 bg-[#0b0f19]/90 backdrop-blur-md z-50 border-b border-white/5">
+    <!-- Header with Telegram Profile -->
+    <header class="p-4 flex justify-between items-center sticky top-0 bg-[#070a13]/95 backdrop-blur-md z-50 border-b border-white/5">
         <div class="flex items-center gap-3">
-            <img id="user-photo" src="https://via.placeholder.com/100" class="w-11 h-11 rounded-full border-2 border-cyan-500">
+            <img id="u-photo" src="https://via.placeholder.com/100" class="w-12 h-12 rounded-full border-2 border-cyan-500 shadow-lg shadow-cyan-500/20">
             <div>
-                <h1 id="user-name" class="text-sm font-bold truncate w-32">লোড হচ্ছে...</h1>
+                <h1 id="u-name" class="text-sm font-bold">লোড হচ্ছে...</h1>
                 <p class="text-[9px] text-green-500 font-bold uppercase tracking-wider">● Online Now / অনলাইনে</p>
             </div>
         </div>
-        <a href="https://t.me/+84-L3JEY7BNlNDll" target="_blank" class="bg-blue-600/20 text-blue-400 border border-blue-500/30 px-4 py-2 rounded-xl text-[10px] font-bold">JOIN CHANNEL</a>
+        <a href="https://t.me/+84-L3JEY7BNlNDll" class="bg-blue-600 px-4 py-2 rounded-xl text-[10px] font-bold shadow-lg">JOIN CHANNEL</a>
     </header>
 
-    <main class="p-4 space-y-6">
-        <!-- Product Grid -->
-        <div id="product-list" class="grid grid-cols-1 gap-6"></div>
-    </main>
+    <div class="scroll-area no-scrollbar">
+        <!-- Dynamic Product Grid -->
+        <div class="px-4 mt-6 space-y-4">
+            <div class="flex justify-between items-center px-1">
+                <h3 class="text-[10px] font-bold text-slate-500 uppercase tracking-[4px]">Premium Services / সার্ভিসসমূহ</h3>
+                <span class="text-[9px] text-cyan-500 flex items-center gap-1"><span class="w-1.5 h-1.5 bg-cyan-500 rounded-full animate-ping"></span> Live</span>
+            </div>
+            <div id="product-grid" class="grid grid-cols-1 gap-6">
+                <!-- Products load here -->
+            </div>
+        </div>
+    </div>
 
-    <!-- Product Modal -->
-    <div id="p-modal" class="fixed inset-0 bg-[#0b0f19] z-[100] hidden flex flex-col">
-        <!-- Back Bar -->
-        <div class="p-4 flex items-center gap-4 border-b border-white/5">
+    <!-- Product Details Modal (Full Screen View) -->
+    <div id="p-modal" class="fixed inset-0 bg-[#070a13] z-[100] hidden flex flex-col">
+        <!-- Back Button Bar -->
+        <div class="p-4 flex items-center gap-4 border-b border-white/5 sticky top-0 bg-[#070a13] z-[110]">
             <button onclick="closeModal()" class="w-10 h-10 glass rounded-full flex items-center justify-center text-xl text-cyan-400">
                 <i class="fa-solid fa-arrow-left"></i>
             </button>
-            <span class="font-bold text-sm">প্যাকেজ ডিটেইলস</span>
+            <span class="font-bold text-sm">Back / পিছনে যান</span>
         </div>
 
-        <div class="flex-1 overflow-y-auto p-6 space-y-8 no-scrollbar">
-            <!-- Multi-Image Slider -->
-            <div id="m-slider" class="flex overflow-x-auto gap-4 snap-x no-scrollbar"></div>
+        <div class="flex-1 overflow-y-auto p-6 space-y-8 no-scrollbar pb-40">
+            <!-- Image Slider -->
+            <div class="img-slider no-scrollbar shadow-2xl" id="modal-slider"></div>
+            <p class="text-center text-[9px] text-slate-500 tracking-widest uppercase">Swipe for more images / ছবি দেখতে সোয়াইপ করুন</p>
 
             <!-- Big Stats -->
             <div class="grid grid-cols-2 gap-4">
-                <div class="glass p-6 rounded-[35px] text-center">
-                    <p class="text-[9px] text-slate-400 uppercase mb-2">Total Views / ভিউ</p>
+                <div class="glass p-6 rounded-[35px] text-center border-b-4 border-cyan-500">
+                    <p class="text-[10px] text-slate-400 uppercase font-bold mb-2">Views / ভিউ</p>
                     <h3 id="m-views" class="big-stat">30,004</h3>
                 </div>
-                <div class="glass p-6 rounded-[35px] text-center">
-                    <p class="text-[9px] text-slate-400 uppercase mb-2">Total Sales / সেলস</p>
+                <div class="glass p-6 rounded-[35px] text-center border-b-4 border-green-500">
+                    <p class="text-[10px] text-slate-400 uppercase font-bold mb-2">Sales / সেলস</p>
                     <h3 id="m-sales" class="big-stat">1,145</h3>
                 </div>
             </div>
 
-            <h2 id="m-title" class="text-2xl font-black text-center leading-tight"></h2>
+            <h2 id="m-title" class="text-2xl font-black text-center text-white leading-tight"></h2>
 
-            <!-- Rules -->
-            <div class="glass p-5 rounded-[30px] border border-dashed border-cyan-500/30 text-[11px] text-slate-300 space-y-3">
-                <p class="text-cyan-400 font-black border-b border-cyan-400/20 pb-2">আমাদের নিয়ম ও শর্তাবলি:</p>
-                <p>● আমরা আগে থেকে কোনো কিছু দেখাই না।</p>
-                <p>● আপনার ইচ্ছা হলে কাজ করবেন, জোর করার কিছু নেই। 😊</p>
-                <p>● কাজ শুরু করার আগে পেমেন্ট সম্পন্ন করতে হবে।</p>
-                <p>● পেমেন্ট নিশ্চিত হওয়ার পরই কাজ শুরু করা হবে।</p>
+            <!-- Rules Box -->
+            <div class="glass p-6 rounded-[30px] border border-dashed border-cyan-500/30 space-y-3 text-[11px] text-slate-300">
+                <p class="text-cyan-400 font-black border-b border-cyan-400/20 pb-2 flex items-center gap-2 uppercase tracking-widest">
+                    <i class="fa-solid fa-shield-halved"></i> Rules / আমাদের নিয়মাবলি
+                </p>
+                <p>● আমরা আগে থেকে কোনো কিছু দেখাই না। আপনার ইচ্ছা হলে কাজ করবেন। 😊</p>
+                <p>● কাজ শুরু করার আগে পেমেন্ট সম্পন্ন করতে হবে। পেমেন্ট নিশ্চিত হওয়ার পরই কাজ শুরু হবে।</p>
             </div>
 
-            <!-- Price Packages -->
-            <div class="space-y-4 pb-10">
-                <p class="text-xs font-bold text-cyan-400 text-center uppercase tracking-[3px]">সময় ও প্যাকেজ নির্বাচন করুন</p>
-                <div id="m-list" class="grid grid-cols-1 gap-3"></div>
+            <!-- Auto Generated Packages -->
+            <div class="space-y-4">
+                <p class="text-xs font-bold text-cyan-400 text-center uppercase tracking-[3px]">Select Package / প্যাকেজ নির্বাচন করুন</p>
+                <div id="pkg-list" class="grid grid-cols-1 gap-3"></div>
             </div>
         </div>
 
-        <!-- Buy Button -->
-        <div class="p-4 glass border-t border-white/10 sticky bottom-0">
-            <button id="buy-btn" class="w-full btn-gradient py-4 rounded-2xl font-black text-lg active:scale-95">
-                অর্ডার করতে এডমিনকে মেসেজ দিন
+        <!-- Confirm Button -->
+        <div class="p-4 glass border-t border-white/10 absolute bottom-0 left-0 right-0 z-[120]">
+            <button id="buy-btn" class="w-full btn-order py-5 rounded-[25px] font-black text-lg active:scale-95 transition-all uppercase">
+                Confirm Order / অর্ডার কনফার্ম
             </button>
         </div>
     </div>
+
+    <!-- Bottom Nav -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-[#070a13] border-t border-white/5 flex justify-around p-4 z-50">
+        <button onclick="location.reload()" class="text-cyan-400 flex flex-col items-center gap-1"><i class="fa-solid fa-house text-xl"></i><span class="text-[10px] font-bold">Home</span></button>
+        <a href="https://t.me/nirobking78" class="text-slate-500 flex flex-col items-center gap-1"><i class="fa-solid fa-comments text-xl"></i><span class="text-[10px] font-bold">Support</span></a>
+    </nav>
 
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
@@ -106,29 +129,41 @@
         const tg = window.Telegram.WebApp;
         tg.expand();
 
-        const user = tg.initDataUnsafe?.user || { id: "12345", first_name: "Guest" };
-        document.getElementById('user-name').innerText = user.first_name;
-        if(user.photo_url) document.getElementById('user-photo').src = user.photo_url;
+        // Display Telegram User Info
+        const user = tg.initDataUnsafe?.user || { id: "0000", first_name: "Guest", photo_url: "" };
+        document.getElementById('u-name').innerText = user.first_name;
+        if(user.photo_url) document.getElementById('u-photo').src = user.photo_url;
 
         let activeP = null, selectedO = null;
 
+        // আপনার দেওয়া প্যাকেজ লিস্ট যা অটো জেনারেট হবে
+        const defaultPackages = [
+            {min: "৬ মিনিট", price: 600}, {min: "১০ মিনিট", price: 8000}, {min: "১৫ মিনিট", price: 1000},
+            {min: "২০ মিনিট", price: 1200}, {min: "৩০ মিনিট", price: 1500}, {min: "৪০ মিনিট", price: 1700},
+            {min: "৫০ মিনিট", price: 2000}, {min: "৬০ মিনিট", price: 2300}, {min: "৯০ মিনিট", price: 3000},
+            {min: "১২০ মিনিট", price: 3800},
+            {min: "৩ দিন / ৭২ ঘণ্টা", price: 12000}, {min: "৪ দিন / ৯৬ ঘণ্টা", price: 18000},
+            {min: "৫ দিন / ১২০ ঘণ্টা", price: 25000}, {min: "৭ দিন / ১৬৮ ঘণ্টা", price: 35000}
+        ];
+
+        // Load Products
         db.ref('products').on('value', snap => {
-            const grid = document.getElementById('product-list'); grid.innerHTML = '';
+            const grid = document.getElementById('product-grid'); grid.innerHTML = '';
             snap.forEach(child => {
                 const p = child.val();
-                grid.innerHTML += `
-                    <div onclick="openP('${child.key}')" class="glass rounded-[40px] overflow-hidden mb-4">
-                        <img src="${p.images[0]}" class="w-full h-64 object-cover">
-                        <div class="p-6 flex justify-between items-center">
-                            <div>
-                                <h3 class="font-bold text-lg">${p.name}</h3>
-                                <p class="text-[10px] text-slate-500 mt-1"><i class="fa-solid fa-eye"></i> ${p.views || '30,004'} ভিউ • ${p.sales || '500'} সেলস</p>
-                            </div>
-                            <div class="w-12 h-12 bg-white/5 rounded-full flex items-center justify-center text-cyan-400">
-                                <i class="fa-solid fa-chevron-right"></i>
-                            </div>
+                const div = document.createElement('div');
+                div.className = "p-card glass rounded-[45px] overflow-hidden mb-2";
+                div.innerHTML = `
+                    <img src="${p.images[0]}" class="w-full h-64 object-cover pointer-events-none">
+                    <div class="p-6 flex justify-between items-center pointer-events-none">
+                        <div>
+                            <h3 class="font-bold text-lg text-white">${p.name}</h3>
+                            <p class="text-[10px] text-slate-500 mt-1"><i class="fa-solid fa-eye"></i> ${p.views || '30,004'} ভিউ • ${p.sales || '1,145'} সেলস</p>
                         </div>
+                        <div class="w-12 h-12 glass rounded-full flex items-center justify-center text-cyan-400 border border-white/5"><i class="fa-solid fa-arrow-right"></i></div>
                     </div>`;
+                div.onclick = () => openP(child.key);
+                grid.appendChild(div);
             });
         });
 
@@ -139,55 +174,51 @@
                 document.getElementById('m-views').innerText = activeP.views || '30,004';
                 document.getElementById('m-sales').innerText = activeP.sales || '1,145';
                 
-                const slider = document.getElementById('m-slider'); slider.innerHTML = '';
+                // Slider Images
+                const slider = document.getElementById('modal-slider'); slider.innerHTML = '';
                 activeP.images.forEach(img => {
-                    slider.innerHTML += `<img src="${img}" class="w-full h-72 object-cover rounded-[35px] snap-center shrink-0">`;
+                    slider.innerHTML += `<img src="${img}" class="snap-center">`;
                 });
 
-                const list = document.getElementById('m-list'); list.innerHTML = '';
-                activeP.options.forEach((o, index) => {
-                    list.innerHTML += `
-                        <div onclick="selO(${index}, this)" class="glass p-5 rounded-[25px] flex justify-between items-center opt-card transition-all border border-white/5">
-                            <span class="font-bold text-sm">⏱️ ${o.min}</span>
-                            <span class="text-cyan-400 font-black text-xl">৳${o.price}</span>
-                        </div>`;
+                // Package List (Auto Generated)
+                const list = document.getElementById('pkg-list'); list.innerHTML = '';
+                defaultPackages.forEach((o, index) => {
+                    const div = document.createElement('div');
+                    div.className = "glass p-5 rounded-[25px] flex justify-between items-center opt-card";
+                    div.innerHTML = `<span class="font-bold text-sm">⏱️ ${o.min}</span><span class="text-cyan-400 font-black text-xl">৳${o.price}</span>`;
+                    div.onclick = () => {
+                        document.querySelectorAll('.opt-card').forEach(c => c.classList.remove('active'));
+                        div.classList.add('active');
+                        selectedO = o;
+                    };
+                    list.appendChild(div);
                 });
+
                 document.getElementById('p-modal').classList.remove('hidden');
+                // Increment views locally
+                const newV = (parseInt(String(activeP.views).replace(/,/g,'')) || 30000) + 1;
+                db.ref('products/'+id).update({ views: newV.toLocaleString() });
             });
         }
 
-        function selO(idx, el) {
-            document.querySelectorAll('.opt-card').forEach(c => c.classList.remove('active'));
-            el.classList.add('active');
-            selectedO = activeP.options[idx];
-        }
-
         document.getElementById('buy-btn').onclick = () => {
-            if(!selectedO) return tg.showAlert("অনুগ্রহ করে প্যাকেজ নির্বাচন করুন!");
-
-            const date = new Date().toLocaleString('bn-BD');
-            const adminUsername = "nirobking78"; 
+            if(!selectedO) return tg.showAlert("অনুগ্রহ করে একটি প্যাকেজ নির্বাচন করুন!");
             
-            // ডিটেইলস মেসেজ তৈরি
             const message = `হ্যালো এডমিন, আমি একটি প্যাকেজ অর্ডার করতে চাই।
             
 📦 সার্ভিস: ${activeP.name}
-⏱️ প্যাকেজ: ${selectedO.min}
-💰 মূল্য: ৳${selectedO.price}
-📅 তারিখ: ${date}
+⏱️ সময়: ${selectedO.min}
+💰 প্রাইস: ৳${selectedO.price}
+📅 তারিখ: ${new Date().toLocaleString('bn-BD')}
 👤 কাস্টমার: ${user.first_name} (ID: ${user.id})
-🖼️ ছবির লিঙ্ক: ${activeP.images[0]}
+🖼️ মেইন ছবি: ${activeP.images[0]}`;
 
-আমি কাজ শুরু করতে আগ্রহী।`;
-
-            // টেলিগ্রাম মেসেজ পাঠানোর লিঙ্ক তৈরি
-            const telegramUrl = `https://t.me/${adminUsername}?text=${encodeURIComponent(message)}`;
-            
-            // কাস্টমারকে সরাসরি আপনার ইনবক্সে নিয়ে যাবে
+            const telegramUrl = `https://t.me/nirobking78?text=${encodeURIComponent(message)}`;
             tg.openTelegramLink(telegramUrl);
         };
 
         function closeModal() { document.getElementById('p-modal').classList.add('hidden'); selectedO = null; }
+        window.closeModal = closeModal;
     </script>
 </body>
 </html>
