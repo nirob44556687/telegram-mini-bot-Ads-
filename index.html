@@ -1,633 +1,213 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title id="site-title">VideoHub</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --bg: #0a0a0f;
-    --surface: #13131a;
-    --surface2: #1c1c28;
-    --border: #2a2a3a;
-    --accent: #ff3c5f;
-    --accent2: #ff7043;
-    --text: #f0f0f8;
-    --muted: #7a7a9a;
-    --nav-h: 60px;
-    --radius: 12px;
-    --font-head: 'Bebas Neue', sans-serif;
-    --font-body: 'DM Sans', sans-serif;
-  }
-
-  /* THEME VARIABLES - overridden by admin */
-  body.theme-ocean { --accent:#00b4d8; --accent2:#48cae4; --bg:#050d1a; --surface:#0a1628; --surface2:#0f2040; }
-  body.theme-purple { --accent:#a855f7; --accent2:#c084fc; --bg:#0d0814; --surface:#160c22; --surface2:#1e1030; }
-  body.theme-green { --accent:#22c55e; --accent2:#4ade80; --bg:#050f09; --surface:#0a1a10; --surface2:#0f2416; }
-  body.theme-gold { --accent:#f59e0b; --accent2:#fbbf24; --bg:#0f0d05; --surface:#1a1608; --surface2:#24200e; }
-  body.theme-pink { --accent:#ec4899; --accent2:#f472b6; --bg:#0f060d; --surface:#1a0c18; --surface2:#241020; }
-  body.theme-cyan { --accent:#06b6d4; --accent2:#22d3ee; --bg:#050c10; --surface:#091620; --surface2:#0d202e; }
-  body.theme-orange { --accent:#f97316; --accent2:#fb923c; --bg:#100806; --surface:#1c100a; --surface2:#26160e; }
-  body.theme-white { --accent:#3b82f6; --accent2:#60a5fa; --bg:#f0f0f8; --surface:#ffffff; --surface2:#e8e8f5; --border:#d0d0e0; --text:#111128; --muted:#6666aa; }
-  body.theme-neon { --accent:#00ff88; --accent2:#00ffcc; --bg:#020a06; --surface:#041208; --surface2:#061a0c; }
-  body.theme-blood { --accent:#dc2626; --accent2:#ef4444; --bg:#0a0505; --surface:#160808; --surface2:#200c0c; }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
-
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--font-body);
-    min-height: 100vh;
-    transition: background 0.4s, color 0.4s;
-  }
-
-  /* NAV */
-  nav {
-    position: sticky; top: 0; z-index: 100;
-    height: var(--nav-h);
-    background: rgba(10,10,15,0.92);
-    backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--border);
-    display: flex; align-items: center; gap: 12px;
-    padding: 0 20px;
-  }
-  .nav-logo {
-    font-family: var(--font-head);
-    font-size: 1.8rem;
-    letter-spacing: 2px;
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    flex: 1;
-    cursor: pointer;
-  }
-  .nav-search {
-    flex: 2; max-width: 400px;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 50px;
-    padding: 8px 16px;
-    color: var(--text);
-    font-family: var(--font-body);
-    font-size: 0.9rem;
-    outline: none;
-    transition: border-color 0.2s;
-  }
-  .nav-search:focus { border-color: var(--accent); }
-  .nav-search::placeholder { color: var(--muted); }
-
-  /* BANNER AD */
-  #banner-ad-zone {
-    width: 100%; overflow: hidden;
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    min-height: 0;
-    transition: all 0.3s;
-    display: flex; justify-content: center; align-items: center;
-    padding: 0;
-  }
-
-  /* MAIN */
-  main {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 24px 20px 60px;
-  }
-
-  .section-header {
-    display: flex; align-items: center; gap: 12px;
-    margin-bottom: 20px;
-  }
-  .section-header h2 {
-    font-family: var(--font-head);
-    font-size: 1.6rem;
-    letter-spacing: 1px;
-    color: var(--text);
-  }
-  .section-line {
-    flex: 1; height: 1px;
-    background: linear-gradient(to right, var(--accent), transparent);
-  }
-
-  /* GRID */
-  .video-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 20px;
-  }
-
-  /* CARD */
-  .video-card {
-    background: var(--surface);
-    border-radius: var(--radius);
-    overflow: hidden;
-    border: 1px solid var(--border);
-    cursor: pointer;
-    transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
-    position: relative;
-  }
-  .video-card:hover {
-    transform: translateY(-4px);
-    border-color: var(--accent);
-    box-shadow: 0 8px 30px rgba(0,0,0,0.4), 0 0 0 1px var(--accent)22;
-  }
-
-  .thumb-wrap {
-    position: relative;
-    aspect-ratio: 16/9;
-    overflow: hidden;
-    background: var(--surface2);
-  }
-  .thumb-wrap img {
-    width: 100%; height: 100%;
-    object-fit: cover;
-    transition: transform 0.4s;
-  }
-  .video-card:hover .thumb-wrap img { transform: scale(1.05); }
-
-  /* TIME BADGE */
-  .time-badge {
-    position: absolute;
-    bottom: 8px; right: 8px;
-    background: rgba(0,0,0,0.85);
-    color: #fff;
-    font-size: 0.72rem;
-    font-weight: 600;
-    padding: 2px 6px;
-    border-radius: 4px;
-    letter-spacing: 0.5px;
-    pointer-events: none;
-  }
-
-  /* PLAY BUTTON */
-  .play-btn {
-    position: absolute;
-    inset: 0;
-    display: flex; align-items: center; justify-content: center;
-    opacity: 0;
-    transition: opacity 0.25s;
-    background: rgba(0,0,0,0.3);
-  }
-  .video-card:hover .play-btn { opacity: 1; }
-  .play-icon {
-    width: 56px; height: 56px;
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 4px 20px var(--accent)66;
-    transition: transform 0.2s;
-  }
-  .play-icon:hover { transform: scale(1.1); }
-  .play-icon svg { width: 22px; height: 22px; fill: white; margin-left: 3px; }
-
-  /* CARD INFO */
-  .card-info {
-    padding: 12px 14px 14px;
-  }
-  .card-title {
-    font-size: 0.92rem;
-    font-weight: 600;
-    line-height: 1.4;
-    color: var(--text);
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    margin-bottom: 6px;
-  }
-  .card-meta {
-    font-size: 0.78rem;
-    color: var(--muted);
-    display: flex; gap: 8px; align-items: center;
-  }
-  .card-dot { font-size: 0.5rem; }
-
-  /* EMPTY STATE */
-  .empty-state {
-    grid-column: 1/-1;
-    text-align: center;
-    padding: 80px 20px;
-    color: var(--muted);
-  }
-  .empty-state svg { width: 64px; height: 64px; margin-bottom: 16px; opacity: 0.4; }
-  .empty-state p { font-size: 1.1rem; }
-
-  /* SKELETON */
-  .skeleton { animation: shimmer 1.5s infinite; }
-  .skeleton-card {
-    background: var(--surface);
-    border-radius: var(--radius);
-    overflow: hidden;
-    border: 1px solid var(--border);
-  }
-  .skel-thumb { aspect-ratio: 16/9; background: var(--surface2); }
-  .skel-body { padding: 12px 14px 14px; }
-  .skel-line { height: 12px; background: var(--surface2); border-radius: 4px; margin-bottom: 8px; }
-  .skel-line.w80 { width: 80%; }
-  .skel-line.w50 { width: 50%; }
-  @keyframes shimmer {
-    0%,100% { opacity: 1; }
-    50% { opacity: 0.5; }
-  }
-
-  /* ===== OVERLAY ===== */
-  #video-overlay {
-    display: none;
-    position: fixed; inset: 0; z-index: 9999;
-    overflow: hidden;
-  }
-  #video-overlay.active { display: block; }
-
-  /* GIF background - blurred */
-  #overlay-bg {
-    position: absolute; inset: 0;
-    background-size: cover;
-    background-position: center;
-    filter: blur(18px) brightness(0.35) saturate(1.5);
-    transform: scale(1.1);
-    transition: background-image 0.3s;
-  }
-
-  /* Dark vignette */
-  #overlay-bg::after {
-    content:'';
-    position: absolute; inset: 0;
-    background: radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.7) 100%);
-  }
-
-  /* Overlay content */
-  #overlay-content {
-    position: relative; z-index: 2;
-    width: 100%; height: 100%;
-    display: flex; align-items: center; justify-content: center;
-    flex-direction: column;
-    gap: 16px;
-    cursor: pointer;
-  }
-
-  /* GIF "player" box */
-  #gif-player-box {
-    position: relative;
-    width: min(600px, 90vw);
-    aspect-ratio: 16/9;
-    border-radius: 16px;
-    overflow: hidden;
-    border: 2px solid rgba(255,255,255,0.15);
-    box-shadow: 0 20px 80px rgba(0,0,0,0.8);
-    cursor: pointer;
-  }
-  #gif-player-box img {
-    width: 100%; height: 100%;
-    object-fit: cover;
-    display: block;
-  }
-
-  /* Blur overlay on top of gif */
-  #gif-blur-mask {
-    position: absolute; inset: 0;
-    backdrop-filter: blur(6px);
-    background: rgba(0,0,0,0.35);
-    display: flex; align-items: center; justify-content: center;
-    flex-direction: column;
-    gap: 12px;
-    transition: backdrop-filter 0.3s;
-  }
-
-  /* "Video playing" pulse */
-  .pulse-ring {
-    position: absolute;
-    width: 80px; height: 80px;
-    border-radius: 50%;
-    border: 3px solid var(--accent);
-    animation: pulseRing 1.8s ease-out infinite;
-  }
-  .pulse-ring:nth-child(2) { animation-delay: 0.6s; }
-  .pulse-ring:nth-child(3) { animation-delay: 1.2s; }
-  @keyframes pulseRing {
-    0% { transform: scale(0.5); opacity: 1; }
-    100% { transform: scale(2.5); opacity: 0; }
-  }
-
-  .overlay-play-center {
-    position: relative; z-index: 1;
-    width: 68px; height: 68px;
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 0 40px var(--accent)88;
-  }
-  .overlay-play-center svg { width: 28px; height: 28px; fill: white; margin-left: 4px; }
-
-  /* Time display */
-  #overlay-time {
-    position: absolute;
-    bottom: 12px; right: 14px;
-    background: rgba(0,0,0,0.85);
-    color: #fff;
-    font-size: 0.9rem;
-    font-weight: 700;
-    padding: 4px 10px;
-    border-radius: 6px;
-    letter-spacing: 1px;
-    font-family: monospace;
-  }
-
-  /* "Click to watch" label */
-  #overlay-cta {
-    color: rgba(255,255,255,0.8);
-    font-size: 0.85rem;
-    font-weight: 500;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    animation: fadeUpDown 2s ease-in-out infinite;
-  }
-  @keyframes fadeUpDown {
-    0%,100% { opacity: 0.6; transform: translateY(0); }
-    50% { opacity: 1; transform: translateY(-4px); }
-  }
-
-  /* Close button */
-  #overlay-close {
-    position: absolute;
-    top: 16px; right: 16px;
-    width: 40px; height: 40px;
-    background: rgba(0,0,0,0.6);
-    border: 1px solid rgba(255,255,255,0.2);
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer;
-    color: white;
-    font-size: 1.2rem;
-    z-index: 10;
-    transition: background 0.2s;
-  }
-  #overlay-close:hover { background: var(--accent); }
-
-  /* FOOTER */
-  footer {
-    text-align: center;
-    padding: 24px;
-    color: var(--muted);
-    font-size: 0.8rem;
-    border-top: 1px solid var(--border);
-  }
-
-  /* RESPONSIVE */
-  @media (max-width: 640px) {
-    .video-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
-    nav { padding: 0 12px; gap: 8px; }
-    .nav-search { max-width: 160px; padding: 6px 12px; font-size: 0.82rem; }
-    .nav-logo { font-size: 1.4rem; }
-    main { padding: 16px 12px 40px; }
-  }
-  @media (max-width: 380px) {
-    .video-grid { grid-template-columns: 1fr; }
-  }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Apex Premium Shop</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap');
+        body { font-family: 'Hind Siliguri', sans-serif; background: #070a13; color: white; height: 100vh; overflow: hidden; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .scroll-area { height: calc(100vh - 80px); overflow-y: auto; padding-bottom: 120px; }
+        
+        /* Image Slider */
+        .img-slider { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 10px; border-radius: 24px; }
+        .img-slider img { min-width: 100%; scroll-snap-align: start; height: 250px; object-fit: cover; }
+        
+        .badge-views { background: rgba(6, 182, 212, 0.2); color: #22d3ee; border: 1px solid rgba(6, 182, 212, 0.3); }
+        .btn-order { background: linear-gradient(90deg, #06b6d4, #3b82f6); box-shadow: 0 4px 15px rgba(6, 182, 212, 0.4); }
+        .opt-selected { border-color: #06b6d4 !important; background: rgba(6, 182, 212, 0.1) !important; }
+    </style>
 </head>
-<body class="theme-red">
+<body>
 
-<!-- Firebase SDK -->
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+    <div class="scroll-area no-scrollbar">
+        <!-- Header -->
+        <header class="p-4 flex justify-between items-center sticky top-0 bg-[#070a13]/90 backdrop-blur-md z-40">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-cyan-500 flex items-center justify-center font-bold italic shadow-lg shadow-cyan-500/20">A</div>
+                <h1 class="text-sm font-bold tracking-widest">Apex Rewards</h1>
+            </div>
+            <a href="https://t.me/+84-L3JEY7BNlNDll" class="bg-blue-600 px-4 py-2 rounded-full text-[10px] font-bold shadow-lg">JOIN CHANNEL</a>
+        </header>
 
-// ===== FIREBASE CONFIG - আপনার config এখানে দিন =====
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyA2uRtGvTV0nMwdrXDfkdtplJfL_wCXLak",
-  authDomain: "apex-rewards-4704a.firebaseapp.com",
-  databaseURL: "https://apex-rewards-4704a-default-rtdb.firebaseio.com",
-  projectId: "apex-rewards-4704a",
-  storageBucket: "apex-rewards-4704a.firebasestorage.app",
-  messagingSenderId: "706940448098",
-  appId: "1:706940448098:web:31f7a5bc7958099130103b",
-  measurementId: "G-L7C631EWJS"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-
-// Helper: video URL → GIF via tenor/giphy fallback or use thumb as GIF
-function getGifFromVideo(videoUrl, thumb) {
-  // Admin can provide a direct GIF url, otherwise we create one from the thumb
-  // If videoUrl ends in .gif we use it directly
-  if (videoUrl && videoUrl.match(/\.gif($|\?)/i)) return videoUrl;
-  // Fallback: use thumb as animated bg
-  return thumb || '';
-}
-
-// Format seconds → mm:ss
-function fmtTime(sec) {
-  if (!sec && sec !== 0) return '';
-  const m = Math.floor(sec / 60);
-  const s = sec % 60;
-  return `${m}:${s.toString().padStart(2,'0')}`;
-}
-
-// ---- SITE CONFIG ----
-onValue(ref(db, 'config'), (snap) => {
-  const cfg = snap.val() || {};
-
-  // Site title
-  const title = cfg.siteName || 'VideoHub';
-  document.title = title;
-  document.getElementById('site-title').textContent = title;
-  document.getElementById('nav-logo-text').textContent = title;
-
-  // Theme
-  document.body.className = 'theme-' + (cfg.theme || 'red');
-
-  // Direct Link
-  window._directLink = cfg.directLink || '#';
-
-  // Banner Ad
-  const bannerZone = document.getElementById('banner-ad-zone');
-  if (cfg.bannerAd) {
-    bannerZone.innerHTML = cfg.bannerAd;
-    bannerZone.style.padding = '8px 0';
-    bannerZone.style.minHeight = '60px';
-  } else {
-    bannerZone.innerHTML = '';
-    bannerZone.style.minHeight = '0';
-    bannerZone.style.padding = '0';
-  }
-});
-
-// ---- VIDEOS ----
-onValue(ref(db, 'videos'), (snap) => {
-  const grid = document.getElementById('video-grid');
-  grid.innerHTML = '';
-  const val = snap.val();
-
-  if (!val) {
-    grid.innerHTML = `<div class="empty-state">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-        <path d="M15 10l4.553-2.277A1 1 0 0121 8.72v6.56a1 1 0 01-1.447.897L15 14M3 8a2 2 0 012-2h10a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z"/>
-      </svg>
-      <p>এখনো কোনো ভিডিও নেই</p>
-    </div>`;
-    return;
-  }
-
-  const videos = Object.entries(val).reverse(); // newest first
-  window._searchData = videos;
-
-  renderVideos(videos);
-});
-
-function renderVideos(videos) {
-  const grid = document.getElementById('video-grid');
-  grid.innerHTML = '';
-
-  if (!videos.length) {
-    grid.innerHTML = `<div class="empty-state"><p>কোনো ফলাফল পাওয়া যায়নি</p></div>`;
-    return;
-  }
-
-  videos.forEach(([id, v]) => {
-    const gifSrc = getGifFromVideo(v.videoLink, v.thumbnail);
-    const timeStr = v.duration ? fmtTime(parseInt(v.duration)) : '';
-
-    const card = document.createElement('div');
-    card.className = 'video-card';
-    card.innerHTML = `
-      <div class="thumb-wrap">
-        <img src="${v.thumbnail || 'https://via.placeholder.com/480x270/13131a/7a7a9a?text=Video'}"
-             alt="${v.title || ''}" loading="lazy"
-             onerror="this.src='https://via.placeholder.com/480x270/13131a/7a7a9a?text=No+Thumb'">
-        ${timeStr ? `<div class="time-badge">${timeStr}</div>` : ''}
-        <div class="play-btn">
-          <div class="play-icon">
-            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-          </div>
+        <!-- Dynamic Product Grid -->
+        <div class="px-4 mt-6 space-y-4">
+            <div class="flex justify-between items-center px-1">
+                <h3 class="text-[10px] font-bold text-slate-500 uppercase tracking-[4px]">Premium Services</h3>
+                <span class="text-[9px] text-cyan-500 flex items-center gap-1"><span class="w-1.5 h-1.5 bg-cyan-500 rounded-full animate-ping"></span> Live Status</span>
+            </div>
+            <div id="product-grid" class="grid grid-cols-1 gap-4">
+                <!-- Products load here -->
+            </div>
         </div>
-      </div>
-      <div class="card-info">
-        <div class="card-title">${v.title || 'Untitled'}</div>
-        <div class="card-meta">
-          <span>VideoHub</span>
-          ${timeStr ? `<span class="card-dot">●</span><span>${timeStr}</span>` : ''}
-        </div>
-      </div>
-    `;
-
-    card.addEventListener('click', () => {
-      openOverlay({ ...v, gifSrc, timeStr });
-    });
-
-    grid.appendChild(card);
-  });
-}
-
-// ---- OVERLAY ----
-function openOverlay(v) {
-  const overlay = document.getElementById('video-overlay');
-  const bg = document.getElementById('overlay-bg');
-  const gifImg = document.getElementById('gif-img');
-  const timeEl = document.getElementById('overlay-time');
-
-  bg.style.backgroundImage = `url('${v.gifSrc || v.thumbnail}')`;
-  gifImg.src = v.gifSrc || v.thumbnail || '';
-  timeEl.textContent = v.timeStr || '';
-  timeEl.style.display = v.timeStr ? 'block' : 'none';
-
-  overlay.classList.add('active');
-  document.body.style.overflow = 'hidden';
-}
-
-document.getElementById('overlay-content').addEventListener('click', (e) => {
-  if (e.target.closest('#overlay-close')) return;
-  // Open direct link
-  const link = window._directLink || '#';
-  if (link && link !== '#') {
-    window.open(link, '_blank', 'noopener');
-  }
-});
-
-document.getElementById('overlay-close').addEventListener('click', () => {
-  document.getElementById('video-overlay').classList.remove('active');
-  document.body.style.overflow = '';
-  document.getElementById('gif-img').src = '';
-});
-
-// Escape key close
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') {
-    document.getElementById('video-overlay').classList.remove('active');
-    document.body.style.overflow = '';
-  }
-});
-
-// ---- SEARCH ----
-document.getElementById('search-input').addEventListener('input', function() {
-  const q = this.value.toLowerCase().trim();
-  if (!window._searchData) return;
-  if (!q) { renderVideos(window._searchData); return; }
-  const filtered = window._searchData.filter(([,v]) =>
-    (v.title || '').toLowerCase().includes(q)
-  );
-  renderVideos(filtered);
-});
-
-</script>
-
-<!-- NAV -->
-<nav>
-  <div class="nav-logo" id="nav-logo-text">VideoHub</div>
-  <input class="nav-search" type="search" id="search-input" placeholder="ভিডিও খুঁজুন...">
-</nav>
-
-<!-- BANNER AD -->
-<div id="banner-ad-zone"></div>
-
-<!-- MAIN -->
-<main>
-  <div class="section-header">
-    <h2>সব ভিডিও</h2>
-    <div class="section-line"></div>
-  </div>
-  <div class="video-grid" id="video-grid">
-    <!-- Skeleton loaders -->
-    <div class="skeleton-card skeleton"><div class="skel-thumb"></div><div class="skel-body"><div class="skel-line w80"></div><div class="skel-line w50"></div></div></div>
-    <div class="skeleton-card skeleton"><div class="skel-thumb"></div><div class="skel-body"><div class="skel-line w80"></div><div class="skel-line w50"></div></div></div>
-    <div class="skeleton-card skeleton"><div class="skel-thumb"></div><div class="skel-body"><div class="skel-line w80"></div><div class="skel-line w50"></div></div></div>
-    <div class="skeleton-card skeleton"><div class="skel-thumb"></div><div class="skel-body"><div class="skel-line w80"></div><div class="skel-line w50"></div></div></div>
-  </div>
-</main>
-
-<!-- VIDEO OVERLAY -->
-<div id="video-overlay">
-  <div id="overlay-bg"></div>
-  <div id="overlay-close">✕</div>
-  <div id="overlay-content">
-    <div id="gif-player-box">
-      <img id="gif-img" src="" alt="video">
-      <div id="gif-blur-mask">
-        <div class="pulse-ring"></div>
-        <div class="pulse-ring"></div>
-        <div class="pulse-ring"></div>
-        <div class="overlay-play-center">
-          <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-        </div>
-      </div>
-      <div id="overlay-time"></div>
     </div>
-    <div id="overlay-cta">👆 ট্যাপ করুন ফুল ভিডিও দেখতে</div>
-  </div>
-</div>
 
-<footer>
-  <span id="footer-name">VideoHub</span> &copy; 2024 · All rights reserved
-</footer>
+    <!-- Product Details Modal -->
+    <div id="p-modal" class="fixed inset-0 bg-black/98 z-[100] hidden flex flex-col justify-end">
+        <div class="bg-[#0f172a] rounded-t-[40px] p-6 space-y-6 border-t border-white/10 max-h-[92vh] overflow-y-auto no-scrollbar">
+            <div class="w-12 h-1 bg-white/20 mx-auto rounded-full"></div>
+            
+            <!-- Image Slider Container -->
+            <div class="img-slider no-scrollbar shadow-2xl" id="modal-slider">
+                <!-- Multi-images load here -->
+            </div>
+            <p class="text-center text-[8px] text-slate-500 tracking-widest">ছবি দেখতে ডানদিকে সোয়াইপ করুন <i class="fa-solid fa-arrow-right"></i></p>
 
-<script type="module">
-// Sync footer name with site title
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
-</script>
+            <!-- Title & Stats -->
+            <div class="text-center space-y-2">
+                <h2 id="modal-title" class="text-2xl font-black"></h2>
+                <div class="flex justify-center gap-3">
+                    <span class="badge-views text-[9px] px-3 py-1 rounded-full"><i class="fa-solid fa-eye mr-1"></i> <span id="m-views">0</span> Views</span>
+                    <span class="badge-views text-[9px] px-3 py-1 rounded-full text-green-400 border-green-500/30"><i class="fa-solid fa-check-circle mr-1"></i> <span id="m-sales">0</span>+ Sold</span>
+                </div>
+            </div>
 
+            <!-- Rules Box -->
+            <div class="bg-cyan-500/5 border border-dashed border-cyan-500/20 p-5 rounded-3xl space-y-2 text-[11px] text-slate-300 leading-relaxed">
+                <p class="text-cyan-400 font-bold flex items-center gap-2"><i class="fa-solid fa-shield-halved"></i> আমাদের নিয়মাবলি</p>
+                <p>● আমরা আগে থেকে কোনো কিছু দেখাই না। আপনার ইচ্ছা হলে কাজ করবেন। 😊</p>
+                <p>● কাজ শুরু করার আগে পেমেন্ট সম্পন্ন করতে হবে। পেমেন্ট নিশ্চিত হওয়ার পরই কাজ শুরু হবে।</p>
+            </div>
+
+            <!-- Price & Package List -->
+            <div class="space-y-4">
+                <p class="text-[10px] font-bold text-cyan-500 uppercase tracking-widest text-center">প্যাকেজ নির্বাচন করুন</p>
+                <div id="pkg-list" class="space-y-3">
+                    <!-- Dynamic Packages -->
+                </div>
+            </div>
+
+            <button id="submit-btn" class="w-full btn-order py-4 rounded-[24px] font-bold text-lg active:scale-95 transition-all">কনফার্ম অর্ডার</button>
+            <button onclick="closeModal()" class="w-full text-slate-500 text-sm py-2">পিছনে যান</button>
+        </div>
+    </div>
+
+    <!-- Nav -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-[#070a13] border-t border-white/5 flex justify-around p-4 z-50">
+        <button onclick="location.reload()" class="text-cyan-400 flex flex-col items-center gap-1"><i class="fa-solid fa-home text-xl"></i><span class="text-[10px] font-bold">Home</span></button>
+        <a href="https://t.me/nirobking78" class="text-slate-500 flex flex-col items-center gap-1"><i class="fa-solid fa-comments text-xl"></i><span class="text-[10px] font-bold">Support</span></a>
+    </nav>
+
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyA2uRtGvTV0nMwdrXDfkdtplJfL_wCXLak",
+            authDomain: "apex-rewards-4704a.firebaseapp.com",
+            databaseURL: "https://apex-rewards-4704a-default-rtdb.firebaseio.com",
+            projectId: "apex-rewards-4704a",
+            storageBucket: "apex-rewards-4704a.firebasestorage.app",
+            messagingSenderId: "706940448098",
+            appId: "1:706940448098:web:31f7a5bc7958099130103b",
+            measurementId: "G-L7C631EWJS"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+
+        const user = tg.initDataUnsafe?.user || { id: "12345", first_name: "Customer" };
+        let activeProduct = null, selectedOption = null;
+
+        // Load Products
+        db.ref('products').on('value', snap => {
+            const grid = document.getElementById('product-grid');
+            grid.innerHTML = '';
+            snap.forEach(child => {
+                const p = child.val();
+                const views = p.baseViews || Math.floor(Math.random() * 5000 + 2000); // ২-৭ হাজার ভিউ
+                const sales = p.baseSales || Math.floor(Math.random() * 1000 + 500); // ৫০০-১৫০০ সেলস
+                
+                grid.innerHTML += `
+                    <div onclick="openProduct('${child.key}')" class="glass rounded-[32px] p-4 space-y-4">
+                        <img src="${p.images ? p.images[0] : 'https://via.placeholder.com/400x200'}" class="w-full h-40 object-cover rounded-3xl">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <h3 class="font-bold text-sm">${p.name}</h3>
+                                <p class="text-[10px] text-slate-500"><i class="fa-solid fa-eye"></i> ${views} ভিউ • ${sales}+ সেলস</p>
+                            </div>
+                            <button class="bg-cyan-500/10 text-cyan-400 p-3 rounded-full"><i class="fa-solid fa-arrow-right"></i></button>
+                        </div>
+                    </div>`;
+            });
+        });
+
+        function openProduct(id) {
+            db.ref('products/'+id).once('value', snap => {
+                activeProduct = {id, ...snap.val()};
+                document.getElementById('modal-title').innerText = activeProduct.name;
+                document.getElementById('m-views').innerText = activeProduct.baseViews || '12.5k';
+                document.getElementById('m-sales').innerText = activeProduct.baseSales || '1.1k';
+                
+                // Slider Images
+                const slider = document.getElementById('modal-slider');
+                slider.innerHTML = '';
+                const images = activeProduct.images || [];
+                images.forEach(img => {
+                    slider.innerHTML += `<img src="${img}" class="rounded-3xl">`;
+                });
+
+                // Package List
+                const pkgCont = document.getElementById('pkg-list');
+                pkgCont.innerHTML = '';
+                for(let k in activeProduct.options) {
+                    const o = activeProduct.options[k];
+                    pkgCont.innerHTML += `
+                        <div onclick="selectPkg('${k}', ${o.price}, '${o.min}', this)" class="bg-white/5 border border-white/5 p-4 rounded-3xl flex justify-between items-center pkg-card transition-all">
+                            <span class="font-bold text-sm text-white">${o.min}</span>
+                            <span class="text-cyan-400 font-black text-lg">৳${o.price}</span>
+                        </div>`;
+                }
+
+                document.getElementById('p-modal').classList.remove('hidden');
+                db.ref('products/'+id+'/baseViews').set((parseInt(activeProduct.baseViews) || 12500) + 1);
+            });
+        }
+
+        function selectPkg(id, price, min, el) {
+            document.querySelectorAll('.pkg-card').forEach(c => c.classList.remove('opt-selected'));
+            el.classList.add('opt-selected');
+            selectedOption = { price, min };
+        }
+
+        document.getElementById('submit-btn').onclick = () => {
+            if(!selectedOption) return tg.showAlert("অনুগ্রহ করে প্যাকেজ নির্বাচন করুন!");
+            
+            const botToken = "7964012018:AAGqVlEtHlpc4rkvs4A99in8Kr7pW2JLWpk";
+            const chatId = "7796117435";
+            const msg = `
+🛒 **নতুন অর্ডার এসেছে!**
+━━━━━━━━━━━━━━━━
+👤 কাস্টমার: ${user.first_name}
+🆔 আইডি: \`${user.id}\`
+
+📦 সার্ভিস: ${activeProduct.name}
+⏱️ প্যাকেজ: ${selectedOption.min}
+💰 এমাউন্ট: ৳${selectedOption.price}
+━━━━━━━━━━━━━━━━
+পেমেন্ট চেক করে কাজ শুরু করুন।`;
+
+            fetch(`https://api.telegram.org/bot${botToken}/sendPhoto`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    chat_id: chatId,
+                    photo: activeProduct.images[0],
+                    caption: msg,
+                    parse_mode: 'Markdown'
+                })
+            }).then(() => {
+                tg.showAlert("অর্ডার পাঠানো হয়েছে! এডমিন শীঘ্রই আপনার সাথে যোগাযোগ করবে।");
+                closeModal();
+            });
+        };
+
+        function closeModal() { document.getElementById('p-modal').classList.add('hidden'); selectedOption = null; }
+    </script>
 </body>
 </html>
