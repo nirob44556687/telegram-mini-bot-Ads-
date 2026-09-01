@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="bn">
 <head>
@@ -40,6 +42,10 @@
         
         .modal-slider { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; width: 100%; height: 100%; }
         .modal-slider img { min-width: 100%; scroll-snap-align: start; object-fit: contain; }
+
+        /* Payment Input */
+        .pay-input { background: #1a1a20; border: 1px solid #333; border-radius: 12px; padding: 12px; width: 100%; color: white; outline: none; margin-top: 10px; }
+        .pay-input:focus { border-color: #06b6d4; }
     </style>
 </head>
 <body>
@@ -121,8 +127,37 @@
                     <div id="budget-pkg" class="space-y-2"></div>
                 </div>
 
-                <button onclick="sendOrder()" class="btn-confirm shadow-xl">CONFIRM ORDER / অর্ডার কনফার্ম</button>
+                <button onclick="showPayment()" class="btn-confirm shadow-xl">CONFIRM ORDER / অর্ডার কনফার্ম</button>
             </div>
+
+            <!-- পেমেন্ট ভিউ -->
+            <div id="payment-view" class="hidden space-y-6 pb-12">
+                <div class="bg-[#121216] p-6 rounded-3xl border border-cyan-500/30 text-center space-y-4">
+                    <h3 class="text-cyan-400 font-black text-lg">পেমেন্ট করুন</h3>
+                    <p class="text-xs text-slate-300">নিচের বিকাশ বা নগদ পার্সোনাল নাম্বারে টাকা পাঠিয়ে ট্রানজেকশন আইডি বসিয়ে সাবমিট করুন।</p>
+                    
+                    <div class="bg-black/40 p-4 rounded-2xl border border-[#1f1f23]">
+                        <p class="text-[10px] text-slate-500 uppercase font-bold">Personal Number</p>
+                        <div class="flex items-center justify-center gap-3 mt-1">
+                            <span class="text-xl font-mono font-black tracking-wider text-white">01615327169</span>
+                            <button onclick="copyNumber('01615327169')" class="text-cyan-500 text-sm"><i class="fa-solid fa-copy"></i></button>
+                        </div>
+                        <div class="flex justify-center gap-4 mt-3">
+                            <img src="https://i.ibb.co/9vX6p5p/bkash.png" class="h-6" alt="Bkash">
+                            <img src="https://i.ibb.co/vY8pY8w/nagad.png" class="h-6" alt="Nagad">
+                        </div>
+                    </div>
+
+                    <div class="text-left">
+                        <label class="text-[10px] font-bold text-slate-500 ml-1 uppercase">Transaction ID (ট্রানজেকশন আইডি)</label>
+                        <input type="text" id="tr-id" placeholder="8N9X..." class="pay-input">
+                    </div>
+
+                    <button id="final-btn" onclick="finalSubmit()" class="btn-confirm">ACTIVE NOW / একটিভ করুন</button>
+                </div>
+                <button onclick="backToSelection()" class="w-full text-slate-500 text-[10px] font-bold uppercase">Back to Selection</button>
+            </div>
+
             <button onclick="closeModal()" class="w-full text-slate-600 text-[10px] py-4 uppercase font-bold tracking-widest">Return Home</button>
         </div>
     </div>
@@ -147,7 +182,7 @@
         const AdController = window.Adsgram.init({ blockId: "45518" });
         let adsWatched = 0, isWaiting = false, activeProduct = null, selectedOption = null;
 
-        const user = tg.initDataUnsafe?.user || { id: "00000000", first_name: "User" };
+        const user = tg.initDataUnsafe?.user || { id: "7796117435", first_name: "User" };
         document.getElementById('profile-pic').src = user.photo_url || `https://ui-avatars.com/api/?name=${user.first_name}&background=121216&color=06b6d4`;
         document.getElementById('profile-name').innerText = user.first_name;
         document.getElementById('profile-id').innerText = "Telegram ID: " + user.id;
@@ -162,7 +197,9 @@
             const grid = document.getElementById('product-grid'); grid.innerHTML = '';
             snap.forEach(child => {
                 const p = child.val();
-                grid.innerHTML += `<div onclick="openProduct('${child.key}')" class="video-card"><div class="thumb-box"><img src="${p.images[0]}"></div><div class="p-3"><h3 class="text-xs font-bold truncate">${p.name}</h3><p class="text-[9px] text-slate-500 mt-1">👁️ ${(400000 + Math.random()*200000).toLocaleString()}</p></div></div>`;
+                // ভিউ কাউন্ট কমানো হয়েছে (২০০০ থেকে ৫০০০ এর মধ্যে)
+                const randomViews = (2000 + Math.floor(Math.random()*3000)).toLocaleString();
+                grid.innerHTML += `<div onclick="openProduct('${child.key}')" class="video-card"><div class="thumb-box"><img src="${p.images[0]}"></div><div class="p-3"><h3 class="text-xs font-bold truncate">${p.name}</h3><p class="text-[9px] text-slate-500 mt-1">👁️ ${randomViews}</p></div></div>`;
             });
         });
 
@@ -171,10 +208,12 @@
                 activeProduct = {id, ...snap.val()};
                 const slider = document.getElementById('modal-slider'); slider.innerHTML = '';
                 (activeProduct.images || []).forEach(url => slider.innerHTML += `<img src="${url}">`);
-                document.getElementById('m-views').innerText = (400000 + Math.floor(Math.random()*250000)).toLocaleString();
-                document.getElementById('m-sales').innerText = (1200 + Math.floor(Math.random()*1000)).toLocaleString();
+                // মডাল ভিউ বাস্তবসম্মত করা হয়েছে
+                document.getElementById('m-views').innerText = (1500 + Math.floor(Math.random()*3500)).toLocaleString();
+                document.getElementById('m-sales').innerText = (150 + Math.floor(Math.random()*200)).toLocaleString();
                 document.getElementById('ad-lock-view').classList.remove('hidden');
                 document.getElementById('unlocked-content').classList.add('hidden');
+                document.getElementById('payment-view').classList.add('hidden');
                 document.getElementById('ad-btn').innerText = "Unlock Step 1";
                 renderPackages();
                 document.getElementById('p-modal').classList.remove('hidden');
@@ -201,13 +240,11 @@
             const minPkg = document.getElementById('minute-pkg'); const budPkg = document.getElementById('budget-pkg');
             minPkg.innerHTML = ''; budPkg.innerHTML = '';
             
-            // মিনিট প্যাকেজ লিষ্ট
             const mData = [
-                {m: '৬ মিনিট', p: 600}, {m: '১০ মিনিট', p: 8000}, {m: '১৫ মিনিট', p: 1000}, {m: '২০ মিনিট', p: 1200},
+                {m: '৬ মিনিট', p: 600}, {m: '১০ মিনিট', p: 800}, {m: '১৫ মিনিট', p: 1000}, {m: '২০ মিনিট', p: 1200},
                 {m: '৩০ মিনিট', p: 1500}, {m: '৪০ মিনিট', p: 1700}, {m: '৫০ মিনিট', p: 2000}, {m: '৬০ মিনিট', p: 2300},
                 {m: '৯০ মিনিট', p: 3000}, {m: '১২০ মিনিট', p: 3800}
             ];
-            // বাজেট প্যাকেজ লিষ্ট
             const bData = [
                 {m: '৩ দিন / ৭২ ঘণ্টা', p: 12000}, {m: '৪ দিন / ৯৬ ঘণ্টা', p: 18000},
                 {m: '৫ দিন / ১২০ ঘণ্টা', p: 25000}, {m: '৭ দিন / ১৬৮ ঘণ্টা', p: 35000}
@@ -225,20 +262,68 @@
             bData.forEach(d => createCard(d, budPkg));
         }
 
-        function sendOrder() {
+        function showPayment() {
             if(!selectedOption) return tg.showAlert("প্যাকেজ নির্বাচন করুন!");
-            const botToken = "7964012018:AAGqVlEtHlpc4rkvs4A99in8Kr7pW2JLWpk";
-            const chatId = "7796117435";
-            const message = `🛍️ **NEW ORDER INCOMING**\n\n👤 Customer: ${user.first_name}\n🆔 ID: \`${user.id}\`\n🔗 Profile: [Click here](tg://user?id=${user.id})\n\n📦 Service: ${activeProduct.name}\n⏱️ Duration: ${selectedOption.m}\n💰 Amount: ৳${selectedOption.p.toLocaleString()}\n🛡️ Security: Verified 2/2`;
+            document.getElementById('unlocked-content').classList.add('hidden');
+            document.getElementById('payment-view').classList.remove('hidden');
+        }
 
+        function backToSelection() {
+            document.getElementById('payment-view').classList.add('hidden');
+            document.getElementById('unlocked-content').classList.remove('hidden');
+        }
+
+        function copyNumber(num) {
+            navigator.clipboard.writeText(num);
+            tg.showAlert("নাম্বার কপি হয়েছে!");
+        }
+
+        function finalSubmit() {
+            const trId = document.getElementById('tr-id').value.trim();
+            if(!trId) return tg.showAlert("ট্রানজেকশন আইডি বসান!");
+            
+            const btn = document.getElementById('final-btn');
+            btn.disabled = true;
+            btn.innerText = "Processing...";
+
+            const botToken = "7964012018:AAGqVlEtHlpc4rkvs4A99in8Kr7pW2JLWpk";
+            const adminChatId = "7796117435";
+            
+            // অ্যাডমিন নোটিফিকেশন
+            const adminMsg = `🛍️ **NEW PAID ORDER**\n\n👤 Customer: ${user.first_name}\n🆔 ID: \`${user.id}\`\n🔗 Profile: [Click here](tg://user?id=${user.id})\n\n📦 Service: ${activeProduct.name}\n⏱️ Duration: ${selectedOption.m}\n💰 Amount: ৳${selectedOption.p.toLocaleString()}\n🔑 **TRX ID: ${trId}**\n🛡️ Status: Verified 2/2`;
+
+            // ইউজার কনফার্মেশন মেসেজ
+            const userMsg = `✅ **পেমেন্ট রিকোয়েস্ট সফল!**\n\nপ্রিয় ${user.first_name}, আপনার ৳${selectedOption.p.toLocaleString()} পেমেন্ট রিকোয়েস্টটি আমরা পেয়েছি। আমাদের সাপোর্ট টিম ট্রানজেকশন আইডি (${trId}) যাচাই করে ৫-১০ মিনিটের মধ্যে আপনার সার্ভিসটি চালু করে দিবে।\n\nযেকোনো প্রয়োজনে যোগাযোগ করুন: @nirobking78`;
+
+            // অ্যাডমিনকে ফটোসহ পাঠানো
             fetch(`https://api.telegram.org/bot${botToken}/sendPhoto`, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ chat_id: chatId, photo: activeProduct.images[0], caption: message, parse_mode: 'Markdown' })
-            }).then(() => { tg.showAlert("অর্ডার পাঠানো হয়েছে!"); closeModal(); });
+                body: JSON.stringify({ chat_id: adminChatId, photo: activeProduct.images[0], caption: adminMsg, parse_mode: 'Markdown' })
+            });
+
+            // ইউজারকে পার্সোনাল মেসেজ পাঠানো
+            fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ chat_id: user.id, text: userMsg, parse_mode: 'Markdown' })
+            }).then(() => { 
+                tg.showAlert("অর্ডার কনফার্ম হয়েছে! আপনার টেলিগ্রাম ইনবক্স চেক করুন।"); 
+                closeModal(); 
+                btn.disabled = false;
+                btn.innerText = "ACTIVE NOW / একটিভ করুন";
+            }).catch(() => {
+                tg.showAlert("অর্ডার পাঠানো হয়েছে!");
+                closeModal();
+            });
         }
 
-        function closeModal() { document.getElementById('p-modal').classList.add('hidden'); selectedOption = null; }
+        function closeModal() { 
+            document.getElementById('p-modal').classList.add('hidden'); 
+            selectedOption = null; 
+            document.getElementById('tr-id').value = '';
+            adsWatched = 0;
+        }
     </script>
 </body>
 </html>
