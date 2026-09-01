@@ -1,93 +1,113 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Apex Rewards - Official</title>
+    <title>Apex Elite - Official Store</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://adsgram.ai/sdk/v1/adsgram.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;700&display=swap');
-        body { font-family: 'Hind Siliguri', sans-serif; background: #070a13; color: white; -webkit-tap-highlight-color: transparent; overflow-x: hidden; }
-        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.08); }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Hind+Siliguri:wght@400;700&display=swap');
+        body { font-family: 'Inter', 'Hind Siliguri', sans-serif; background: #08080a; color: white; height: 100vh; overflow: hidden; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
-        .btn-gradient { background: linear-gradient(90deg, #06b6d4, #3b82f6); box-shadow: 0 4px 20px rgba(6, 182, 212, 0.4); }
-        .big-stat { font-size: 2.2rem; font-weight: 900; color: #22d3ee; line-height: 1; }
-        .opt-card { border: 1px solid rgba(255,255,255,0.1); cursor: pointer; transition: 0.3s; border-radius: 20px; }
-        .opt-card.active { border: 2px solid #06b6d4; background: rgba(6, 182, 212, 0.15); }
-        .p-card { cursor: pointer; transition: transform 0.2s; position: relative; z-index: 10; }
-        .img-slider { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 10px; border-radius: 30px; }
-        .img-slider img { min-width: 100%; scroll-snap-align: start; height: 280px; object-fit: cover; }
+        .scroll-area { height: calc(100vh - 80px); overflow-y: auto; padding-bottom: 120px; }
+        
+        /* ২-কলামের ইউটিউব স্টাইল গ্রিড */
+        .video-card { background: #121216; border-radius: 14px; overflow: hidden; border: 1px solid #1f1f23; }
+        .thumbnail-box { position: relative; width: 100%; aspect-ratio: 16 / 9; background: #000; display: flex; align-items: center; justify-content: center; }
+        .thumbnail-box img { width: 100%; height: 100%; object-fit: contain; } /* ছবি ফুল দেখাবে, কাটবে না */
+        
+        .user-avatar { width: 42px; height: 42px; border-radius: 12px; object-fit: cover; border: 2px solid #ef4444; }
+        
+        .stat-badge { background: rgba(255, 255, 255, 0.05); padding: 2px 8px; border-radius: 6px; font-size: 9px; color: #94a3b8; display: flex; align-items: center; gap: 4px; }
+        
+        .btn-order { background: #ef4444; font-weight: 800; border-radius: 12px; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.2); }
+        .btn-locked { background: #1f1f23 !important; color: #4b5563 !important; cursor: not-allowed; }
+
+        .verify-dot { width: 12px; height: 6px; border-radius: 10px; background: #1f1f23; transition: 0.4s; }
+        .verify-active { background: #ef4444; width: 25px; box-shadow: 0 0 10px #ef4444; }
+        
+        .modal-slider img { width: 100%; height: 100%; object-fit: contain; scroll-snap-align: start; }
     </style>
 </head>
-<body class="pb-24">
+<body>
 
-    <!-- Header with Profile -->
-    <header class="p-4 flex justify-between items-center sticky top-0 bg-[#070a13]/95 backdrop-blur-md z-[60] border-b border-white/5">
+    <!-- Header: User Profile Details -->
+    <header class="p-4 flex justify-between items-center sticky top-0 bg-[#08080a]/95 backdrop-blur-md z-50 border-b border-[#1f1f23]">
         <div class="flex items-center gap-3">
-            <img id="u-photo" src="https://via.placeholder.com/100" class="w-12 h-12 rounded-full border-2 border-cyan-500 shadow-lg">
+            <img id="user-pic" src="https://ui-avatars.com/api/?background=121216&color=ef4444" class="user-avatar shadow-lg shadow-red-500/10">
             <div>
-                <h1 id="u-name" class="text-sm font-bold truncate w-32">লোড হচ্ছে...</h1>
-                <p class="text-[9px] text-green-500 font-bold uppercase tracking-wider">● Online Now / অনলাইনে</p>
+                <h1 id="user-full-name" class="text-xs font-bold text-white leading-tight">Loading...</h1>
+                <p id="user-username" class="text-[10px] text-red-500 font-medium tracking-tight">@username</p>
             </div>
         </div>
-        <a href="https://t.me/+84-L3JEY7BNlNDll" target="_blank" class="bg-blue-600 px-4 py-2 rounded-xl text-[10px] font-bold uppercase shadow-lg">Join Channel</a>
+        <div class="w-10 h-10 rounded-xl bg-[#121216] border border-[#1f1f23] flex items-center justify-center">
+            <i class="fa-solid fa-bell text-slate-500 text-sm"></i>
+        </div>
     </header>
 
-    <main class="p-4 space-y-6">
-        <div id="product-list" class="grid grid-cols-1 gap-6">
-            <!-- Products load here -->
-        </div>
-    </main>
-
-    <!-- Modal View -->
-    <div id="p-modal" class="fixed inset-0 bg-[#070a13] z-[100] hidden flex flex-col">
-        <div class="p-4 flex items-center gap-4 border-b border-white/5 bg-[#070a13] sticky top-0 z-[110]">
-            <button onclick="closeModal()" class="w-10 h-10 glass rounded-full flex items-center justify-center text-xl text-cyan-400">
-                <i class="fa-solid fa-arrow-left"></i>
-            </button>
-            <span class="font-bold text-sm">প্যাকেজ বিবরণ / Overview</span>
-        </div>
-
-        <div class="flex-1 overflow-y-auto p-6 space-y-8 no-scrollbar pb-40">
-            <div class="img-slider no-scrollbar shadow-2xl" id="m-slider"></div>
-            
-            <div class="grid grid-cols-2 gap-4">
-                <div class="glass p-6 rounded-[35px] text-center border-b-4 border-cyan-500">
-                    <p class="text-[9px] text-slate-400 uppercase font-bold mb-1">Views / ভিউ</p>
-                    <h3 id="m-views" class="big-stat">0</h3>
-                </div>
-                <div class="glass p-6 rounded-[35px] text-center border-b-4 border-green-500">
-                    <p class="text-[9px] text-slate-400 uppercase font-bold mb-1">Sales / সেলস</p>
-                    <h3 id="m-sales" class="big-stat">0</h3>
-                </div>
-            </div>
-
-            <h2 id="m-title" class="text-2xl font-black text-center text-white leading-tight"></h2>
-
-            <!-- Rules Box -->
-            <div class="glass p-6 rounded-[30px] border border-dashed border-cyan-500/30 space-y-3 text-[11px] text-slate-300">
-                <p class="text-cyan-400 font-black border-b border-cyan-400/20 pb-1 flex items-center gap-2 uppercase tracking-widest">
-                    <i class="fa-solid fa-shield-check"></i> আমাদের নিয়মাবলি / Rules
-                </p>
-                <p>● আমরা আগে থেকে কোনো কিছু দেখাই না।</p>
-                <p>● আপনার ইচ্ছা হলে কাজ করবেন, জোর করার কিছু নেই। 😊</p>
-                <p>● কাজ শুরু করার আগে পেমেন্ট সম্পন্ন করতে হবে।</p>
-            </div>
-
-            <div class="space-y-4">
-                <p class="text-xs font-bold text-cyan-400 text-center uppercase tracking-[3px]">Select Package / সময় নির্বাচন করুন</p>
-                <div id="m-list" class="grid grid-cols-1 gap-3"></div>
+    <div class="scroll-area no-scrollbar">
+        <!-- Title Section -->
+        <div class="px-4 py-5 flex justify-between items-center">
+            <h2 class="text-[11px] font-black uppercase tracking-[3px] text-slate-500">All Premium Services</h2>
+            <div class="flex items-center gap-1.5 bg-red-500/10 px-2 py-0.5 rounded-md border border-red-500/20">
+                <span class="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse"></span>
+                <span class="text-[9px] font-bold text-red-500">LIVE</span>
             </div>
         </div>
 
-        <div class="p-4 glass border-t border-white/10 absolute bottom-0 left-0 right-0 z-[120]">
-            <button id="buy-btn" class="w-full btn-gradient py-5 rounded-2xl font-black text-lg active:scale-95 transition-all uppercase">
-                Confirm Order / অর্ডার কনফার্ম
-            </button>
+        <!-- ২-কলামের গ্রিড (এখানে আপনার সব পোস্ট দেখাবে) -->
+        <div class="px-4">
+            <div id="product-grid" class="grid grid-cols-2 gap-3">
+                <!-- Posts will load here -->
+            </div>
         </div>
     </div>
+
+    <!-- Product Modal -->
+    <div id="p-modal" class="fixed inset-0 bg-black/98 z-[100] hidden flex flex-col justify-end">
+        <div class="bg-[#0f0f12] rounded-t-[35px] p-6 space-y-5 border-t border-[#1f1f23] max-h-[95vh] overflow-y-auto no-scrollbar">
+            <div class="w-12 h-1.5 bg-white/10 mx-auto rounded-full"></div>
+            
+            <div class="thumbnail-box rounded-2xl overflow-hidden border border-[#1f1f23]">
+                <div class="flex overflow-x-auto no-scrollbar scroll-snap-x w-full h-full modal-slider" id="modal-slider"></div>
+            </div>
+
+            <div class="space-y-1 text-center">
+                <h2 id="modal-title" class="text-xl font-black tracking-tight"></h2>
+                <div class="flex justify-center gap-3 mt-1">
+                    <span class="stat-badge" id="m-views"></span>
+                    <span class="stat-badge text-green-500 border border-green-500/10" id="m-sales"></span>
+                </div>
+            </div>
+
+            <!-- ২-ধাপের ভেরিফিকেশন -->
+            <div class="bg-[#121216] p-5 rounded-3xl border border-[#1f1f23] space-y-4">
+                <div class="flex justify-between items-center px-1">
+                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Gateway Access</p>
+                    <div class="flex gap-2">
+                        <div id="dot-1" class="verify-dot"></div>
+                        <div id="dot-2" class="verify-dot"></div>
+                    </div>
+                </div>
+                <button id="ad-btn" onclick="handleAds()" class="w-full bg-red-600 text-white py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-3 active:scale-95 transition-all">
+                    <i class="fa-solid fa-circle-play"></i> <span id="ad-btn-text">Unlock Step 1</span>
+                </button>
+            </div>
+
+            <div id="pkg-list" class="space-y-2"></div>
+
+            <button id="submit-btn" class="w-full btn-order btn-locked py-5 text-[11px] uppercase tracking-[3px]">Locked (Verification Required)</button>
+            <button onclick="closeModal()" class="w-full text-slate-500 font-bold text-[10px] uppercase tracking-widest">Return to Store</button>
+        </div>
+    </div>
+
+    <nav class="fixed bottom-0 left-0 right-0 bg-[#08080a] border-t border-[#1f1f23] flex justify-around p-5 z-50">
+        <button onclick="location.reload()" class="text-red-500"><i class="fa-solid fa-house-chimney text-xl"></i></button>
+        <a href="https://t.me/nirobking78" class="text-slate-600"><i class="fa-solid fa-headset text-xl"></i></a>
+    </nav>
 
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
@@ -100,99 +120,137 @@
             storageBucket: "apex-rewards-4704a.firebasestorage.app",
             messagingSenderId: "706940448098",
             appId: "1:706940448098:web:31f7a5bc7958099130103b",
-            measurementId: "G-L7C631EWJS"
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
         const tg = window.Telegram.WebApp;
-        tg.ready(); tg.expand();
+        tg.expand();
 
-        const user = tg.initDataUnsafe?.user || { id: "12345", first_name: "Guest", username: "nirob" };
-        document.getElementById('u-name').innerText = user.first_name;
-        if(user.photo_url) document.getElementById('u-photo').src = user.photo_url;
+        const AdController = window.Adsgram.init({ blockId: "45518" });
+        let adsWatched = 0;
+        let activeProduct = null, selectedOption = null;
 
-        // User Last Seen Tracking
-        db.ref('users/' + user.id).set({ name: user.first_name, username: user.username || 'n/a', lastSeen: Date.now() });
+        // Telegram User Profile Data
+        const user = tg.initDataUnsafe?.user || { id: "0", first_name: "Premium User", username: "unknown" };
+        document.getElementById('user-full-name').innerText = user.first_name + (user.last_name ? " " + user.last_name : "");
+        document.getElementById('user-username').innerText = user.username ? "@" + user.username : "@user_elite";
+        if(user.photo_url) document.getElementById('user-pic').src = user.photo_url;
 
-        let activeP = null, selectedO = null;
+        function getRealisticStats(id) {
+            const seed = id.split('').reduce((a, b) => a + b.charCodeAt(0), 0);
+            return {
+                views: (120000 + (seed * 840) % 350000).toLocaleString(),
+                sales: (2500 + (seed * 42) % 6000).toLocaleString()
+            };
+        }
 
-        const defaultPkgs = [
-            {min: "৬ মিনিট", price: 600}, {min: "১০ মিনিট", price: 8000}, {min: "১৫ মিনিট", price: 1000},
-            {min: "২০ মিনিট", price: 1200}, {min: "৩০ মিনিট", price: 1500}, {min: "৪০ মিনিট", price: 1700},
-            {min: "৫০ মিনিট", price: 2000}, {min: "৬০ মিনিট", price: 2300}, {min: "৯০ মিনিট", price: 3000},
-            {min: "১২০ মিনিট", price: 3800},
-            {min: "৩ দিন / ৭২ ঘণ্টা", price: 12000}, {min: "৪ দিন / ৯৬ ঘণ্টা", price: 18000},
-            {min: "৫ দিন / ১২০ ঘণ্টা", price: 25000}, {min: "৭ দিন / ১৬৮ ঘণ্টা", price: 35000}
-        ];
-
+        // Firebase-থেকে সব পোস্ট লোড করা
         db.ref('products').on('value', snap => {
-            const grid = document.getElementById('product-list'); grid.innerHTML = '';
+            const grid = document.getElementById('product-grid');
+            grid.innerHTML = '';
+            if(!snap.exists()) {
+                grid.innerHTML = '<p class="col-span-2 text-center text-slate-500 text-xs py-10">No posts available.</p>';
+                return;
+            }
             snap.forEach(child => {
                 const p = child.val();
-                const div = document.createElement('div');
-                div.className = "p-card glass rounded-[45px] overflow-hidden mb-2";
-                div.innerHTML = `
-                    <img src="${p.images[0]}" class="w-full h-64 object-cover">
-                    <div class="p-6 flex justify-between items-center">
-                        <div>
-                            <h3 class="font-bold text-lg text-white">${p.name}</h3>
-                            <p class="text-[10px] text-slate-500 mt-1"><i class="fa-solid fa-eye"></i> ${p.views || '30,004'} ভিউ • ${p.sales || '500'} সেলস</p>
+                const stats = getRealisticStats(child.key);
+                grid.innerHTML += `
+                    <div onclick="openProduct('${child.key}')" class="video-card">
+                        <div class="thumbnail-box">
+                            <img src="${p.images[0]}" alt="thumbnail">
                         </div>
-                        <div class="w-12 h-12 glass rounded-full flex items-center justify-center text-cyan-400"><i class="fa-solid fa-chevron-right"></i></div>
+                        <div class="p-3 space-y-1">
+                            <h3 class="font-bold text-[11px] truncate text-slate-100">${p.name}</h3>
+                            <div class="flex items-center gap-2 text-[9px] text-slate-500">
+                                <span class="flex items-center gap-1"><i class="fa-solid fa-eye text-[10px]"></i> ${stats.views}</span>
+                                <span>•</span>
+                                <span>${stats.sales} Sold</span>
+                            </div>
+                        </div>
                     </div>`;
-                div.onclick = () => openP(child.key);
-                grid.appendChild(div);
             });
         });
 
-        function openP(id) {
+        function openProduct(id) {
             db.ref('products/'+id).once('value', snap => {
-                activeP = {id, ...snap.val()};
-                document.getElementById('m-title').innerText = activeP.name;
-                document.getElementById('m-views').innerText = activeP.views || "30,004";
-                document.getElementById('m-sales').innerText = activeP.sales || "1,145";
+                activeProduct = {id, ...snap.val()};
+                adsWatched = 0;
+                const stats = getRealisticStats(id);
+                document.getElementById('modal-title').innerText = activeProduct.name;
+                document.getElementById('m-views').innerHTML = `<i class="fa-solid fa-eye"></i> ${stats.views} Views`;
+                document.getElementById('m-sales').innerHTML = `<i class="fa-solid fa-cart-check"></i> ${stats.sales} Sold`;
                 
-                const slider = document.getElementById('m-slider'); slider.innerHTML = '';
-                activeP.images.forEach(img => {
-                    slider.innerHTML += `<img src="${img}" class="snap-center">`;
-                });
+                resetAdUI();
+                renderPackages();
 
-                const list = document.getElementById('m-list'); list.innerHTML = '';
-                defaultPkgs.forEach((o, index) => {
-                    const div = document.createElement('div');
-                    div.className = "glass p-5 rounded-[25px] flex justify-between items-center opt-card";
-                    div.innerHTML = `<span class="font-bold text-sm">⏱️ ${o.min}</span><span class="text-cyan-400 font-black text-xl">৳${o.price.toLocaleString()}</span>`;
-                    div.onclick = () => {
-                        document.querySelectorAll('.opt-card').forEach(c => c.classList.remove('active'));
-                        div.classList.add('active');
-                        selectedO = o;
-                    };
-                    list.appendChild(div);
-                });
+                const slider = document.getElementById('modal-slider');
+                slider.innerHTML = '';
+                activeProduct.images.forEach(img => slider.innerHTML += `<img src="${img}">`);
                 document.getElementById('p-modal').classList.remove('hidden');
-                const curV = parseInt(String(activeP.views).replace(/,/g,'')) || 30000;
-                db.ref('products/'+id).update({ views: (curV + 1).toLocaleString() });
             });
         }
 
-        document.getElementById('buy-btn').onclick = () => {
-            if(!selectedO) return tg.showAlert("প্যাকেজ নির্বাচন করুন!");
-            const orderID = "#ORD-" + Math.floor(100000 + Math.random() * 900000);
-            
-            const message = `📦 অর্ডার
+        function renderPackages() {
+            const pkgCont = document.getElementById('pkg-list');
+            pkgCont.innerHTML = '';
+            for(let k in activeProduct.options) {
+                const o = activeProduct.options[k];
+                pkgCont.innerHTML += `
+                    <div onclick="selectPkg('${k}', ${o.price}, '${o.min}', this)" class="bg-[#121216] border border-[#1f1f23] p-4 rounded-2xl flex justify-between items-center transition-all pkg-card">
+                        <span class="font-bold text-[10px] text-slate-400 uppercase tracking-widest">${o.min}</span>
+                        <span class="text-white font-black text-lg">৳${o.price}</span>
+                    </div>`;
+            }
+        }
 
-🆔 Order ID: ${orderID}
-🚀 সার্ভিস: ${activeP.name}
-⏱️ সময়: ${selectedO.min}
-💰 মূল্য: ৳${selectedO.price.toLocaleString()}
-👤 ইউজার: @${user.username || user.first_name}
-🖼️ ছবি: ${activeP.images[0]}`;
+        function handleAds() {
+            AdController.show().then(() => {
+                adsWatched++;
+                if(adsWatched === 1) {
+                    document.getElementById('dot-1').classList.add('verify-active');
+                    document.getElementById('ad-btn-text').innerText = "Unlock Step 2";
+                } else if(adsWatched >= 2) {
+                    document.getElementById('dot-2').classList.add('verify-active');
+                    document.getElementById('ad-btn').classList.add('hidden');
+                    document.getElementById('submit-btn').classList.remove('btn-locked');
+                    document.getElementById('submit-btn').innerText = "Send Order Now";
+                }
+            }).catch(() => tg.showAlert("Complete the video to unlock."));
+        }
 
-            tg.openTelegramLink(`https://t.me/nirobking78?text=${encodeURIComponent(message)}`);
+        function resetAdUI() {
+            document.getElementById('dot-1').classList.remove('verify-active');
+            document.getElementById('dot-2').classList.remove('verify-active');
+            document.getElementById('ad-btn').classList.remove('hidden');
+            document.getElementById('ad-btn-text').innerText = "Unlock Step 1";
+            document.getElementById('submit-btn').classList.add('btn-locked');
+            document.getElementById('submit-btn').innerText = "Locked (Verify First)";
+        }
+
+        function selectPkg(id, price, min, el) {
+            document.querySelectorAll('.pkg-card').forEach(c => c.style.borderColor = "#1f1f23");
+            el.style.borderColor = "#ef4444";
+            selectedOption = { price, min };
+        }
+
+        document.getElementById('submit-btn').onclick = () => {
+            if(adsWatched < 2 || !selectedOption) return;
+            const botToken = "7964012018:AAGqVlEtHlpc4rkvs4A99in8Kr7pW2JLWpk";
+            const chatId = "7796117435";
+            const msg = `🚀 **NEW ORDER**\n\n👤 User: ${user.first_name}\n🆔 ID: \`${user.id}\`\n📦 Core: ${activeProduct.name}\n⏱️ Plan: ${selectedOption.min}\n💰 Asset: ৳${selectedOption.price}`;
+
+            fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ chat_id: chatId, text: msg, parse_mode: 'Markdown' })
+            }).then(() => {
+                tg.showAlert("আপনার অর্ডার পাঠানো হয়েছে!");
+                closeModal();
+            });
         };
 
-        function closeModal() { document.getElementById('p-modal').classList.add('hidden'); selectedO = null; }
-        window.closeModal = closeModal;
+        function closeModal() { document.getElementById('p-modal').classList.add('hidden'); }
     </script>
 </body>
 </html>
