@@ -10,7 +10,6 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;700&family=Inter:wght@400;900&display=swap');
-        
         body { font-family: 'Inter', 'Hind Siliguri', sans-serif; background: #08080a; color: white; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .scroll-area { flex: 1; overflow-y: auto; padding-bottom: 120px; }
@@ -20,20 +19,19 @@
         .banner-wrapper { display: flex; width: 300%; height: 100%; transition: transform 0.5s ease-in-out; }
         .banner-item { width: 33.333%; height: 100%; object-fit: cover; }
 
-        /* Product Cards */
+        /* কার্ড ডিজাইন */
         .video-card { background: #121216; border-radius: 18px; overflow: hidden; border: 1px solid #1f1f23; }
         .thumb-box { width: 100%; aspect-ratio: 1 / 1; background: #000; overflow: hidden; }
         .thumb-box img { width: 100%; height: 100%; object-fit: cover; }
-        .product-title { font-size: 12px; font-weight: 700; line-height: 1.3; color: #f8fafc; }
 
-        /* Stats Box */
+        /* স্ট্যাটাস বক্স */
         .stat-box { border-radius: 20px; border: 2.5px solid; padding: 15px; text-align: center; flex: 1; }
         .stat-cyan { border-color: #06b6d4; color: #06b6d4; }
         .stat-green { border-color: #10b981; color: #10b981; }
 
-        /* Package Card */
-        .pkg-card { background: #121216; border: 1px solid #1f1f23; border-radius: 18px; padding: 15px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-        .pkg-selected { border-color: #06b6d4; background: rgba(6,182,212,0.1); }
+        /* প্যাকেজ কার্ড */
+        .pkg-card { background: #121216; border: 1px solid #1f1f23; border-radius: 18px; padding: 16px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; transition: 0.3s; }
+        .pkg-selected { border-color: #06b6d4; background: rgba(6,182,212,0.1); box-shadow: 0 0 15px rgba(6,182,212,0.2); }
 
         .btn-confirm { background: linear-gradient(90deg, #06b6d4, #3b82f6); color: white; border-radius: 18px; font-weight: 800; padding: 18px; width: 100%; }
 
@@ -49,17 +47,14 @@
     <!-- Header -->
     <header class="p-4 flex justify-between items-center sticky top-0 bg-[#08080a]/95 backdrop-blur-md z-50 border-b border-[#1f1f23]">
         <div class="flex items-center gap-3">
-            <!-- নাম রিমুভ করে ছবি অ্যাড করা হয়েছে -->
-            <img src="https://ui-avatars.com/api/?background=06b6d4&color=fff&name=V" class="w-10 h-10 rounded-xl object-cover shadow-lg">
-            <h2 class="text-lg font-black text-cyan-400 tracking-tighter">ভিডিও কল সেবা</h2>
+            <img src="https://ui-avatars.com/api/?background=06b6d4&color=fff&name=V" class="w-10 h-10 rounded-xl">
+            <h2 class="text-lg font-black text-cyan-400">ভিডিও কল সেবা</h2>
         </div>
-        <div class="flex gap-2">
-            <span class="text-[9px] bg-cyan-500/10 text-cyan-500 px-2 py-1 rounded font-bold border border-cyan-500/20">LIVE ONLINE</span>
-        </div>
+        <span class="text-[9px] bg-cyan-500/10 text-cyan-500 px-2 py-1 rounded font-bold border border-cyan-500/20 uppercase tracking-widest">Online</span>
     </header>
 
     <div class="scroll-area no-scrollbar">
-        <!-- ছোট সাইজের অটো ব্যানার -->
+        <!-- অটো ব্যানার -->
         <div class="banner-container">
             <div id="banner-wrapper" class="banner-wrapper">
                 <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&q=80&w=800" class="banner-item">
@@ -68,74 +63,64 @@
             </div>
         </div>
 
-        <div class="px-5 py-4">
-            <h2 class="text-[10px] font-black uppercase tracking-[3px] text-slate-600">Exclusive Services</h2>
-        </div>
-        
+        <div class="px-5 py-4"><h2 class="text-[10px] font-black uppercase tracking-[3px] text-slate-600">Premium Selection</h2></div>
         <div id="product-grid" class="px-4 grid grid-cols-2 gap-4"></div>
     </div>
 
-    <!-- Bottom Navigation -->
+    <!-- Navigation -->
     <nav>
-        <button onclick="location.reload()" class="flex flex-col items-center gap-1 text-cyan-500">
-            <i class="fa-solid fa-house-user text-xl"></i>
-            <span class="text-[10px] font-bold">Home</span>
-        </button>
-        <button onclick="toggleProfileModal()" class="flex flex-col items-center gap-1 text-slate-500">
-            <i class="fa-solid fa-user-circle text-xl"></i>
-            <span class="text-[10px] font-bold">Profile</span>
-        </button>
-        <a href="https://t.me/nirobking78" class="flex flex-col items-center gap-1 text-slate-500">
-            <i class="fa-solid fa-headset text-xl"></i>
-            <span class="text-[10px] font-bold">Support</span>
-        </a>
+        <button onclick="location.reload()" class="flex flex-col items-center gap-1 text-cyan-500"><i class="fa-solid fa-house-user text-xl"></i><span class="text-[9px] font-bold">Home</span></button>
+        <button onclick="toggleProfileModal()" class="flex flex-col items-center gap-1 text-slate-500"><i class="fa-solid fa-user-circle text-xl"></i><span class="text-[9px] font-bold">Profile</span></button>
+        <a href="https://t.me/nirobking78" class="flex flex-col items-center gap-1 text-slate-500"><i class="fa-solid fa-headset text-xl"></i><span class="text-[9px] font-bold">Support</span></a>
     </nav>
 
     <!-- প্রোফাইল মডাল -->
     <div id="profile-overlay" class="fixed inset-0 bg-black/90 z-[200] hidden flex items-center justify-center p-6">
-        <div class="bg-[#121216] border border-[#1f1f23] rounded-3xl p-8 text-center w-full max-widest shadow-2xl">
-            <img id="profile-pic" class="w-24 h-24 rounded-full mx-auto mb-4 border-4 border-cyan-500/20">
-            <h2 id="profile-name" class="text-xl font-bold mb-1">...</h2>
-            <p id="profile-id" class="text-slate-500 text-xs mb-8 tracking-widest font-mono">...</p>
-            <button onclick="toggleProfileModal()" class="w-full bg-white/5 py-4 rounded-xl font-bold uppercase text-[10px] tracking-widest">Close Profile</button>
+        <div class="bg-[#121216] border border-[#1f1f23] rounded-3xl p-8 text-center w-full max-w-xs shadow-2xl">
+            <img id="profile-pic" class="w-20 h-20 rounded-full mx-auto mb-4 border-2 border-cyan-500 shadow-xl">
+            <h2 id="profile-name" class="text-lg font-bold mb-1">...</h2>
+            <p id="profile-id" class="text-slate-500 text-[10px] mb-6 font-mono tracking-widest">...</p>
+            <button onclick="toggleProfileModal()" class="w-full bg-white/5 py-3 rounded-xl font-bold uppercase text-[10px]">Close Profile</button>
         </div>
     </div>
 
-    <!-- সার্ভিস ডিটেইলস মডাল -->
+    <!-- সার্ভিস মডাল -->
     <div id="p-modal" class="fixed inset-0 bg-black/98 z-[100] hidden flex flex-col justify-end">
         <div class="bg-[#0f0f12] rounded-t-[40px] p-6 space-y-6 border-t border-[#1f1f23] max-h-[96vh] overflow-y-auto no-scrollbar">
             <div class="w-12 h-1 bg-white/10 mx-auto rounded-full mb-2"></div>
             
-            <div class="w-full aspect-video rounded-2xl overflow-hidden border border-[#1f1f23]">
-                <div id="modal-slider" class="modal-slider no-scrollbar"></div>
-            </div>
+            <div class="w-full aspect-video rounded-2xl overflow-hidden border border-[#1f1f23]"><div id="modal-slider" class="modal-slider no-scrollbar"></div></div>
 
-            <!-- Ad Unlock -->
+            <!-- অ্যাড লক -->
             <div id="ad-lock-view" class="bg-[#121216] p-6 rounded-3xl border border-[#1f1f23] space-y-4">
-                <div class="flex justify-between items-center">
-                    <p class="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Verification</p>
-                    <div class="flex gap-2"><div id="dot-1" class="w-4 h-2 bg-slate-800 rounded-full"></div><div id="dot-2" class="w-4 h-2 bg-slate-800 rounded-full"></div></div>
-                </div>
-                <button id="ad-btn" onclick="handleAds()" class="w-full bg-cyan-600 text-white py-4 rounded-2xl font-black uppercase text-xs shadow-lg shadow-cyan-600/20">Unlock Step 1</button>
+                <div class="flex justify-between items-center"><p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Verify Access</p><div class="flex gap-2"><div id="dot-1" class="w-4 h-1.5 bg-slate-800 rounded-full"></div><div id="dot-2" class="w-4 h-1.5 bg-slate-800 rounded-full"></div></div></div>
+                <button id="ad-btn" onclick="handleAds()" class="w-full bg-cyan-600 text-white py-4 rounded-2xl font-black uppercase text-xs">Unlock Step 1</button>
             </div>
 
-            <!-- Unlocked Content -->
-            <div id="unlocked-content" class="hidden space-y-6 pb-12">
+            <!-- আনলক কন্টেন্ট -->
+            <div id="unlocked-content" class="hidden space-y-8 pb-12">
                 <div class="flex gap-4">
-                    <div class="stat-box stat-cyan"><p class="text-[9px] font-black opacity-50">VIEWS / ভিউ</p><h3 id="m-views" class="text-2xl font-black">0</h3></div>
-                    <div class="stat-box stat-green"><p class="text-[9px] font-black opacity-50">SALES / সেলস</p><h3 id="m-sales" class="text-2xl font-black">0</h3></div>
+                    <div class="stat-box stat-cyan"><p class="text-[10px] font-bold">VIEWS</p><h3 id="m-views" class="text-xl font-black">0</h3></div>
+                    <div class="stat-box stat-green"><p class="text-[10px] font-bold">SALES</p><h3 id="m-sales" class="text-xl font-black">0</h3></div>
                 </div>
 
-                <div class="text-center px-4"><h2 class="text-xl font-bold leading-relaxed">💋 নতুন কালেকশনের স্পেশাল ভিডিও 🌹 👄 কল ও প্রিমিয়াম সার্ভিস কালেকশন 💋</h2></div>
+                <div class="text-center px-4"><h2 class="text-lg font-bold leading-relaxed">💋 নতুন কালেকশনের স্পেশাল ভিডিও 🌹 👄 কল ও প্রিমিয়াম সার্ভিস কালেকশন 💋</h2></div>
 
-                <div class="border border-dashed border-slate-700 p-5 rounded-2xl text-[11px] text-slate-300 space-y-3">
-                    <p class="text-cyan-500 font-bold uppercase tracking-widest mb-1">আমাদের নিয়মাবলি / Rules</p>
+                <div class="border border-dashed border-slate-800 p-5 rounded-2xl text-[11px] text-slate-300 space-y-3">
+                    <p class="text-cyan-500 font-bold uppercase tracking-widest mb-1 font-inter">Rules / নিয়মাবলি</p>
                     <p>● আমরা আগে থেকে কোনো কিছু দেখাই না।</p>
                     <p>● আপনার ইচ্ছা হলে কাজ করবেন, জোর নেই। 😊</p>
                     <p>● কাজ শুরুর আগে পেমেন্ট সম্পন্ন করতে হবে।</p>
                 </div>
 
-                <div id="pkg-list" class="space-y-2"></div>
+                <div class="space-y-6">
+                    <h4 class="text-center text-cyan-500 text-[10px] font-black uppercase tracking-[3px]">🌿 💎 মিনিটভিত্তিক প্যাকেজ 💎 🌿</h4>
+                    <div id="minute-pkg" class="space-y-2"></div>
+
+                    <h4 class="text-center text-cyan-500 text-[10px] font-black uppercase tracking-[3px] mt-6">🌿 💎 বড় বাজেটের প্যাকেজ 💎 🌿</h4>
+                    <div id="budget-pkg" class="space-y-2"></div>
+                </div>
+
                 <button onclick="sendOrder()" class="btn-confirm shadow-xl">CONFIRM ORDER / অর্ডার কনফার্ম</button>
             </div>
             <button onclick="closeModal()" class="w-full text-slate-600 text-[10px] py-4 uppercase font-bold tracking-widest">Return Home</button>
@@ -160,54 +145,37 @@
         tg.expand();
 
         const AdController = window.Adsgram.init({ blockId: "45518" });
-        let adsWatched = 0, isWaiting = false;
-        let activeProduct = null, selectedOption = null;
+        let adsWatched = 0, isWaiting = false, activeProduct = null, selectedOption = null;
 
-        const user = tg.initDataUnsafe?.user || { id: "00000000", first_name: "Premium User" };
+        const user = tg.initDataUnsafe?.user || { id: "00000000", first_name: "User" };
         document.getElementById('profile-pic').src = user.photo_url || `https://ui-avatars.com/api/?name=${user.first_name}&background=121216&color=06b6d4`;
         document.getElementById('profile-name').innerText = user.first_name;
-        document.getElementById('profile-id').innerText = "ID: " + user.id;
+        document.getElementById('profile-id').innerText = "Telegram ID: " + user.id;
 
         // অটো ব্যানার
-        let currentSlide = 0;
-        setInterval(() => {
-            currentSlide = (currentSlide + 1) % 3;
-            document.getElementById('banner-wrapper').style.transform = `translateX(-${currentSlide * 33.333}%)`;
-        }, 3500);
+        let slide = 0;
+        setInterval(() => { slide = (slide + 1) % 3; document.getElementById('banner-wrapper').style.transform = `translateX(-${slide * 33.333}%)`; }, 3500);
 
         function toggleProfileModal() { document.getElementById('profile-overlay').classList.toggle('hidden'); }
 
         db.ref('products').on('value', snap => {
-            const grid = document.getElementById('product-grid');
-            grid.innerHTML = '';
+            const grid = document.getElementById('product-grid'); grid.innerHTML = '';
             snap.forEach(child => {
                 const p = child.val();
-                const views = (400000 + Math.floor(Math.random()*300000)).toLocaleString();
-                grid.innerHTML += `
-                    <div onclick="openProduct('${child.key}')" class="video-card">
-                        <div class="thumb-box"><img src="${p.images[0]}"></div>
-                        <div class="p-3"><h3 class="product-title truncate">${p.name}</h3>
-                        <p class="text-[9px] text-slate-500 mt-1 font-bold"><i class="fa-solid fa-eye text-cyan-500"></i> ${views}</p></div>
-                    </div>`;
+                grid.innerHTML += `<div onclick="openProduct('${child.key}')" class="video-card"><div class="thumb-box"><img src="${p.images[0]}"></div><div class="p-3"><h3 class="text-xs font-bold truncate">${p.name}</h3><p class="text-[9px] text-slate-500 mt-1">👁️ ${(400000 + Math.random()*200000).toLocaleString()}</p></div></div>`;
             });
         });
 
         function openProduct(id) {
             db.ref('products/'+id).once('value', snap => {
                 activeProduct = {id, ...snap.val()};
-                adsWatched = 0;
-                const slider = document.getElementById('modal-slider');
-                slider.innerHTML = '';
+                const slider = document.getElementById('modal-slider'); slider.innerHTML = '';
                 (activeProduct.images || []).forEach(url => slider.innerHTML += `<img src="${url}">`);
-                
                 document.getElementById('m-views').innerText = (400000 + Math.floor(Math.random()*250000)).toLocaleString();
                 document.getElementById('m-sales').innerText = (1200 + Math.floor(Math.random()*1000)).toLocaleString();
-                
                 document.getElementById('ad-lock-view').classList.remove('hidden');
                 document.getElementById('unlocked-content').classList.add('hidden');
                 document.getElementById('ad-btn').innerText = "Unlock Step 1";
-                document.getElementById('dot-1').style.background = "#1f1f23";
-                document.getElementById('dot-2').style.background = "#1f1f23";
                 renderPackages();
                 document.getElementById('p-modal').classList.remove('hidden');
             });
@@ -218,60 +186,56 @@
             AdController.show().then(() => {
                 adsWatched++;
                 if (adsWatched === 1) {
-                    document.getElementById('dot-1').style.background = "#06b6d4";
-                    isWaiting = true;
-                    let timeLeft = 10;
-                    const btn = document.getElementById('ad-btn');
-                    const timer = setInterval(() => {
-                        btn.innerText = `Wait ${timeLeft}s...`;
-                        timeLeft--;
-                        if (timeLeft < 0) {
-                            clearInterval(timer);
-                            isWaiting = false;
-                            btn.innerText = "Unlock Step 2";
-                        }
-                    }, 1000);
+                    document.getElementById('dot-1').style.background = "#06b6d4"; isWaiting = true;
+                    let time = 10; const btn = document.getElementById('ad-btn');
+                    const timer = setInterval(() => { btn.innerText = `Wait ${time}s...`; time--; if (time < 0) { clearInterval(timer); isWaiting = false; btn.innerText = "Unlock Final Step"; } }, 1000);
                 } else if (adsWatched >= 2) {
                     document.getElementById('dot-2').style.background = "#06b6d4";
                     document.getElementById('ad-lock-view').classList.add('hidden');
                     document.getElementById('unlocked-content').classList.remove('hidden');
                 }
-            }).catch(() => tg.showAlert("Ad Error!"));
+            }).catch(() => tg.showAlert("Ad failed!"));
         }
 
         function renderPackages() {
-            const cont = document.getElementById('pkg-list');
-            cont.innerHTML = '';
-            for(let k in activeProduct.options) {
-                const o = activeProduct.options[k];
-                cont.innerHTML += `
-                    <div onclick="selectPkg('${k}', ${o.price}, '${o.min}', this)" class="pkg-card transition-all">
-                        <span class="text-xs font-bold text-slate-300">⏱️ ${o.min}</span>
-                        <span class="text-cyan-400 font-black text-lg">৳${o.price.toLocaleString()}</span>
-                    </div>`;
-            }
-        }
+            const minPkg = document.getElementById('minute-pkg'); const budPkg = document.getElementById('budget-pkg');
+            minPkg.innerHTML = ''; budPkg.innerHTML = '';
+            
+            // মিনিট প্যাকেজ লিষ্ট
+            const mData = [
+                {m: '৬ মিনিট', p: 600}, {m: '১০ মিনিট', p: 8000}, {m: '১৫ মিনিট', p: 1000}, {m: '২০ মিনিট', p: 1200},
+                {m: '৩০ মিনিট', p: 1500}, {m: '৪০ মিনিট', p: 1700}, {m: '৫০ মিনিট', p: 2000}, {m: '৬০ মিনিট', p: 2300},
+                {m: '৯০ মিনিট', p: 3000}, {m: '১২০ মিনিট', p: 3800}
+            ];
+            // বাজেট প্যাকেজ লিষ্ট
+            const bData = [
+                {m: '৩ দিন / ৭২ ঘণ্টা', p: 12000}, {m: '৪ দিন / ৯৬ ঘণ্টা', p: 18000},
+                {m: '৫ দিন / ১২০ ঘণ্টা', p: 25000}, {m: '৭ দিন / ১৬৮ ঘণ্টা', p: 35000}
+            ];
 
-        function selectPkg(id, price, min, el) {
-            document.querySelectorAll('.pkg-card').forEach(c => c.classList.remove('pkg-selected'));
-            el.classList.add('pkg-selected');
-            selectedOption = { price, min };
+            const createCard = (d, container) => {
+                const div = document.createElement('div');
+                div.className = 'pkg-card';
+                div.innerHTML = `<span class="text-xs font-bold">⏱️ ${d.m}</span><span class="text-cyan-400 font-black">৳${d.p.toLocaleString()}</span>`;
+                div.onclick = () => { document.querySelectorAll('.pkg-card').forEach(c => c.classList.remove('pkg-selected')); div.classList.add('pkg-selected'); selectedOption = d; };
+                container.appendChild(div);
+            };
+
+            mData.forEach(d => createCard(d, minPkg));
+            bData.forEach(d => createCard(d, budPkg));
         }
 
         function sendOrder() {
             if(!selectedOption) return tg.showAlert("প্যাকেজ নির্বাচন করুন!");
             const botToken = "7964012018:AAGqVlEtHlpc4rkvs4A99in8Kr7pW2JLWpk";
             const chatId = "7796117435";
-            const message = `🛍️ **NEW PREMIUM ORDER**\n\n👤 Customer: ${user.first_name}\n🆔 ID: \`${user.id}\`\n🔗 Link: [Profile](tg://user?id=${user.id})\n\n📦 Service: ${activeProduct.name}\n⏱️ Time: ${selectedOption.min}\n💰 Amount: ৳${selectedOption.price}\n🛡️ Security: Verified 2/2`;
+            const message = `🛍️ **NEW ORDER INCOMING**\n\n👤 Customer: ${user.first_name}\n🆔 ID: \`${user.id}\`\n🔗 Profile: [Click here](tg://user?id=${user.id})\n\n📦 Service: ${activeProduct.name}\n⏱️ Duration: ${selectedOption.m}\n💰 Amount: ৳${selectedOption.p.toLocaleString()}\n🛡️ Security: Verified 2/2`;
 
             fetch(`https://api.telegram.org/bot${botToken}/sendPhoto`, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({ chat_id: chatId, photo: activeProduct.images[0], caption: message, parse_mode: 'Markdown' })
-            }).then(() => {
-                tg.showAlert("অর্ডার পাঠানো হয়েছে!");
-                closeModal();
-            });
+            }).then(() => { tg.showAlert("অর্ডার পাঠানো হয়েছে!"); closeModal(); });
         }
 
         function closeModal() { document.getElementById('p-modal').classList.add('hidden'); selectedOption = null; }
