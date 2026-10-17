@@ -9,7 +9,7 @@
     <!-- Telegram SDK -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <!-- Adsterra SDK -->
-    <script src='//libtl.com/sdk.js' data-zone='9506873' data-sdk='show_9506873'></script>
+    <script src='//libtl.com/sdk.js' data-zone='9406863' data-sdk='show_9406863'></script>
     
     <script>
         tailwind.config = {
@@ -49,8 +49,8 @@
             <div class="relative group">
                 <button class="text-lg p-1"><i class="fas fa-ellipsis-v"></i></button>
                 <div class="absolute right-0 mt-2 w-48 bg-white dark:bg-darkCard shadow-2xl rounded-2xl border dark:border-slate-800 hidden group-hover:block overflow-hidden">
-                    <a href="https://t.me/APEXREWARDS" target="_blank" class="block px-4 py-3 text-xs font-bold hover:bg-slate-50 dark:hover:bg-slate-800 border-b dark:border-slate-800"><i class="fas fa-bullhorn mr-2 text-blue-500"></i> Channel</a>
-                    <a href="https://t.me/SHOPBASE_BD" target="_blank" class="block px-4 py-3 text-xs font-bold hover:bg-slate-50 dark:hover:bg-slate-800 text-green-500"><i class="fas fa-headset mr-2"></i> Admin</a>
+                    <a href="https://t.me/videocallservicebd" target="_blank" class="block px-4 py-3 text-xs font-bold hover:bg-slate-50 dark:hover:bg-slate-800 border-b dark:border-slate-800"><i class="fas fa-bullhorn mr-2 text-blue-500"></i> Channel</a>
+                    <a href="https://t.me/videocallservicebd" target="_blank" class="block px-4 py-3 text-xs font-bold hover:bg-slate-50 dark:hover:bg-slate-800 text-green-500"><i class="fas fa-headset mr-2"></i> Admin</a>
                 </div>
             </div>
         </div>
@@ -141,7 +141,7 @@
                 <span><i class="fas fa-wallet mr-2"></i> MY WALLET</span>
                 <i class="fas fa-chevron-right text-[8px]"></i>
             </button>
-            <a href="https://t.me/SHOPBASE_BD" class="w-full p-4 bg-white dark:bg-darkCard rounded-2xl font-black text-[10px] flex justify-between items-center border dark:border-slate-800 shadow-sm">
+            <a href="https://t.me/videocallservicebd" class="w-full p-4 bg-white dark:bg-darkCard rounded-2xl font-black text-[10px] flex justify-between items-center border dark:border-slate-800 shadow-sm">
                 <span><i class="fas fa-headset mr-2 text-green-500"></i> SUPPORT CENTER</span>
                 <i class="fas fa-chevron-right text-[8px]"></i>
             </a>
@@ -159,7 +159,7 @@
         <button onclick="switchTab('profile')" id="nav-profile" class="flex flex-col items-center opacity-30 transition-all">
             <i class="fas fa-user-circle text-lg"></i><span class="text-[8px] font-black mt-1 uppercase">Profile</span>
         </button>
-        <a href="https://t.me/SHOPBASE_BD" class="flex flex-col items-center opacity-30">
+        <a href="https://t.me/videocallservicebd" class="flex flex-col items-center opacity-30">
             <i class="fas fa-headset text-lg"></i><span class="text-[8px] font-black mt-1 uppercase">Support</span>
         </a>
     </nav>
@@ -262,7 +262,7 @@
             const s = document.getElementById('dep-sender').value, tx = document.getElementById('dep-txid').value, am = document.getElementById('dep-amount').value;
             if(!sMethod || !s || !tx || !am) return alert("Please fill all details!");
             const msg = `--- NEW DEPOSIT REQUEST ---\nMethod: ${sMethod}\nAmount: ${am} TK\nSender: ${s}\nTxID: ${tx}\nUser: ${user ? '@'+user.username : 'Guest'}\nDate: ${new Date().toLocaleString()}`;
-            window.open(`https://t.me/SHOPBASE_BD?text=${encodeURIComponent(msg)}`, '_blank');
+            window.open(`https://t.me/videocallservicebd?text=${encodeURIComponent(msg)}`, '_blank');
         };
 
         window.shareCode = (title) => {
@@ -287,7 +287,7 @@
             if(c >= req) return window.open(btn.dataset.url, '_blank');
             btn.disabled = true; btn.innerHTML = "LOADING...";
             try {
-                await show_9506873(); c++; localStorage.setItem('c_'+id, c);
+                await show_9406863(); c++; localStorage.setItem('c_'+id, c);
                 if(c >= req) { btn.innerHTML = "DOWNLOAD"; btn.disabled = false; }
                 else {
                     let s = waitSec; const itv = setInterval(() => { btn.innerHTML = "WAIT "+s+"S"; if(s-- <= 0) { clearInterval(itv); btn.innerHTML = `UNLOCK (${c}/${req})`; btn.disabled = false; } }, 1000);
