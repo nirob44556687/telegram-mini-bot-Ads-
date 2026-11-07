@@ -348,7 +348,7 @@
       max-width: 96%;
     }
 
-    /* CARD INFO AREA (NO THREE DOTS - BEAUTIFUL CLEAN TITLE) */
+    /* CARD INFO AREA (NO THREE DOTS) */
     .card-info-area {
       padding: 12px 14px 14px 14px;
     }
@@ -388,7 +388,7 @@
       display: flex;
       align-items: center;
       gap: 6px;
-      margin-left: 46px; /* avatar offset */
+      margin-left: 46px;
       margin-bottom: 8px;
     }
     .card-sub-stats strong { color: #fff; }
@@ -479,7 +479,7 @@
       font-weight: 800;
     }
 
-    /* ================= 5. TUTORIAL VIEW (ADMIN LOADED VIDEO) ================= */
+    /* ================= 5. TUTORIAL VIEW ================= */
     .tutorial-container {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
@@ -502,7 +502,7 @@
       object-fit: contain;
     }
 
-    /* ================= 6. CHANNELS TAB (WITH TELEGRAM VERIFIED BADGES) ================= */
+    /* ================= 6. CHANNELS TAB ================= */
     .tg-channel-card {
       background: #141420;
       border-radius: 16px;
@@ -563,7 +563,6 @@
       margin-top: 2px;
     }
 
-    /* TELEGRAM VERIFIED BADGE */
     .tg-verified-icon {
       font-size: 17px;
       color: #38bdf8;
@@ -847,7 +846,7 @@
     <!-- ================= MAIN SCROLL CONTENT ================= -->
     <main class="app-main">
 
-      <!-- ================= TAB: HOME (AUTO TOP-RANKED VIDEO) ================= -->
+      <!-- ================= TAB: HOME ================= -->
       <section id="view-home" class="view-section active">
         <div id="home-feed-container">
           <div class="empty-state-box">
@@ -896,7 +895,7 @@
         </div>
       </section>
 
-      <!-- ================= TAB: CHANNELS (WITH TELEGRAM VERIFIED BADGE) ================= -->
+      <!-- ================= TAB: CHANNELS ================= -->
       <section id="view-channels" class="view-section">
         <button class="section-pill-tag">
           <span class="material-symbols-rounded">send</span>
@@ -904,7 +903,6 @@
         </button>
 
         <div class="channels-grid-list">
-          <!-- Channel 1 -->
           <a href="https://t.me/videocallservicebd" target="_blank" class="tg-channel-card c-blue">
             <div class="ch-info-flex">
               <div class="ch-icon-badge">
@@ -924,7 +922,6 @@
             </div>
           </a>
 
-          <!-- Channel 2 -->
           <a href="https://t.me/+M2C0YyslaYc4NDQ1" target="_blank" class="tg-channel-card c-gold">
             <div class="ch-info-flex">
               <div class="ch-icon-badge">
@@ -944,7 +941,6 @@
             </div>
           </a>
 
-          <!-- Channel 3 -->
           <a href="https://t.me/REDVIRALZONE" target="_blank" class="tg-channel-card c-red">
             <div class="ch-info-flex">
               <div class="ch-icon-badge">
@@ -1122,8 +1118,25 @@
     const db = getFirestore(app);
     const auth = getAuth(app);
 
-    const ADSGRAM_BLOCK_ID = "42922";
+    // ==========================================
+    // ADSGRAM CONTROLLER SETUP (BLOCK ID: 58596)
+    // ==========================================
+    let ADSGRAM_BLOCK_ID = "58596";
     let AdController = null;
+
+    function initAdsgramEngine() {
+      try {
+        if (window.Adsgram) {
+          AdController = window.Adsgram.init({ 
+            blockId: ADSGRAM_BLOCK_ID,
+            debug: false
+          });
+          console.log("Adsgram Controller Ready with Block ID:", ADSGRAM_BLOCK_ID);
+        }
+      } catch (err) {
+        console.warn("Adsgram Init Notice:", err);
+      }
+    }
 
     // 1. EXTRACT REAL TELEGRAM USER DATA
     let tgUser = {
@@ -1171,12 +1184,8 @@
     renderUserAvatar("h-avatar-img", "h-avatar-fallback", tgUser.photo, tgUser.name);
     renderUserAvatar("p-avatar-img", "p-avatar-fallback", tgUser.photo, tgUser.name);
 
-    // Adsgram Setup
-    try {
-      if (window.Adsgram) {
-        AdController = window.Adsgram.init({ blockId: ADSGRAM_BLOCK_ID, debug: false });
-      }
-    } catch(e) {}
+    // Initial Engine Start
+    initAdsgramEngine();
 
     // 2. FIRESTORE AUTH & USER RECORD
     let userFavorites = new Set();
@@ -1184,6 +1193,16 @@
     async function initUser() {
       try {
         await signInAnonymously(auth);
+
+        // Fetch custom Block ID from Firebase if available
+        try {
+          const cfgSnap = await getDoc(doc(db, "settings", "ads_config"));
+          if (cfgSnap.exists() && cfgSnap.data().adsgramBlockId) {
+            ADSGRAM_BLOCK_ID = cfgSnap.data().adsgramBlockId;
+            initAdsgramEngine();
+          }
+        } catch(e) {}
+
         const ref = doc(db, "users", tgUser.id);
         const snap = await getDoc(ref);
         if (!snap.exists()) {
@@ -1229,7 +1248,6 @@
           const autoViews = Number(data.autoViews) || 0;
           const totalViews = realViews + autoViews;
 
-          // 16:9 or 9:16 aspect ratio support
           const ratio = (data.aspectRatio === "9:16" || data.ratio === "9:16") ? "ratio-9-16" : "ratio-16-9";
 
           videos.push({
@@ -1257,7 +1275,7 @@
           return;
         }
 
-        // সর্বোচ্চ ভিউ পাওয়া ভিডিও সবার উপরে স্বয়ংক্রিয়ভাবে অবস্থান করবে
+        // Auto rank highest views on top
         videos.sort((a, b) => b.views - a.views);
 
         renderCards("home-feed-container", videos, true);
@@ -1405,18 +1423,38 @@
       renderCards("favorites-feed-container", favList, false);
     }
 
-    // 5. 3-STAGE ADSGRAM AD ENGINE WITH 10-SEC COUNTDOWN
+    // ==========================================
+    // 5. 3-STAGE ADSGRAM AD (BLOCK ID: 58596)
+    // ==========================================
     let activeVideoForUnlock = null;
     let timerCountdownInterval = null;
 
     function triggerAdCheckpoint(video) {
       activeVideoForUnlock = video;
 
+      // Make sure controller is initialized with 58596
+      if (!AdController && window.Adsgram) {
+        initAdsgramEngine();
+      }
+
       if (AdController) {
         AdController.show()
-          .then(() => onAdStepCompleted())
-          .catch(() => alert("Please watch the full ad to proceed!"));
+          .then((res) => {
+            console.log("Adsgram 58596 Completed:", res);
+            onAdStepCompleted();
+          })
+          .catch((res) => {
+            console.warn("Adsgram 58596 Notice:", res);
+            // If Adsgram network has no inventory right now or throws load error
+            if (res && res.error && (res.state === 'load' || String(res.description).toLowerCase().includes('not found') || String(res.description).toLowerCase().includes('no ad'))) {
+              console.log("Auto proceeding due to network fill notice");
+              onAdStepCompleted();
+            } else {
+              alert("দয়া করে পুরো বিজ্ঞাপনটি দেখুন!");
+            }
+          });
       } else {
+        // Fallback simulation for browser test
         onAdStepCompleted();
       }
     }
@@ -1479,7 +1517,7 @@
       }, 1000);
     }
 
-    // 6. VIDEO PLAYER
+    // 6. FULLSCREEN VIDEO PLAYER
     const pOverlay = document.getElementById("player-overlay");
     const activeVid = document.getElementById("active-player-video");
 
@@ -1501,7 +1539,7 @@
       renderCards("home-feed-container", videos, true);
     };
 
-    // 7. TUTORIAL: AUTO-LOAD FROM FIREBASE SETTINGS (ADMIN MANAGED)
+    // 7. TUTORIAL: AUTO-LOAD FROM FIREBASE SETTINGS
     async function loadAdminTutorialVideo() {
       const videoEl = document.getElementById("tutorial-video-el");
       try {
@@ -1544,7 +1582,7 @@
       }
     };
 
-    // Initialize Everything
+    // Initialize Everything Clean
     await initUser();
     await loadFirebaseVideos();
     await loadAdminTutorialVideo();
