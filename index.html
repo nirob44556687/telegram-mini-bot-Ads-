@@ -1,316 +1,1562 @@
 <!DOCTYPE html>
-<html lang="en" class="light">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>DOWNLOAD FREE CODE | Official</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <!-- Telegram SDK -->
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <!-- Adsterra SDK -->
-    <script src='//libtl.com/sdk.js' data-zone='9406863' data-sdk='show_9406863'></script>
-    
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: { extend: { colors: { darkBg: '#0f172a', darkCard: '#1e293b' } } }
-        }
-    </script>
-    <style>
-        body { -webkit-tap-highlight-color: transparent; scrollbar-width: none; overflow-x: hidden; transition: background 0.3s; }
-        body::-webkit-scrollbar { display: none; }
-        .slider-wrapper { display: flex; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
-        .glass { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(15px); }
-        .dark .glass { background: rgba(30, 41, 59, 0.8); }
-        .animate-marquee { display: inline-block; white-space: nowrap; animation: marquee 20s linear infinite; }
-        @keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
-        .tab-content { display: none; animation: slideIn 0.4s ease-out; }
-        .active-tab { display: block; }
-        @keyframes slideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-    </style>
-</head>
-<body class="bg-slate-50 dark:bg-darkBg text-slate-900 dark:text-slate-100 font-sans min-h-screen pb-28">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>REDVIRALZONE - Telegram Mini App</title>
 
-    <!-- Sticky Header -->
-    <header class="glass sticky top-0 z-[100] border-b dark:border-slate-800 px-4 py-3 flex justify-between items-center">
-        <div class="flex items-center gap-3">
-            <img id="header-photo" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" class="w-10 h-10 rounded-full border-2 border-blue-500 bg-white p-0.5">
-            <div>
-                <h2 id="header-name" class="text-xs font-black leading-none uppercase tracking-tighter">Guest User</h2>
-                <div class="flex items-center gap-1 mt-1">
-                    <span class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
-                    <span class="text-[7px] font-bold text-green-500 uppercase tracking-widest">Active</span>
-                </div>
-            </div>
+  <!-- Telegram WebApp SDK -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+  <!-- Adsgram Official SDK -->
+  <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
+
+  <!-- Google Fonts & Material Symbols -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0" />
+
+  <style>
+    :root {
+      --bg: #0b0b12;
+      --card-bg: #13131e;
+      --card-border: #23161c;
+      --primary-red: #F02745;
+      --primary-red-hover: #d3122f;
+      --red-glow: rgba(240, 39, 69, 0.35);
+      --badge-blue: #2563eb;
+      --badge-green: #10b981;
+      --tg-blue: #229ED9;
+      --vip-gold: #f59e0b;
+      --text: #ffffff;
+      --text-muted: #8e8ea6;
+      --nav-bg: #101018;
+      --nav-border: #1d1722;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', 'Hind Siliguri', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+      height: 100vh;
+      width: 100vw;
+    }
+
+    #app-container {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      max-width: 480px;
+      margin: 0 auto;
+      position: relative;
+      background: var(--bg);
+    }
+
+    /* ================= 1. HEADER (WITH YOUR ACTUAL LOGO) ================= */
+    .app-header {
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      background: #11111a;
+      border-bottom: 1px solid var(--card-border);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* Real Image Logo Styling */
+    .brand-logo-wrap {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      padding: 1.5px;
+      background: linear-gradient(135deg, #F02745, #ff6b81, #7a0c1e);
+      box-shadow: 0 0 14px var(--red-glow);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .brand-logo-img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .brand-title {
+      font-size: 18px;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: -0.5px;
+    }
+    .brand-title span { color: var(--primary-red); }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .hdr-icon-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      background: #181824;
+      border: 1px solid #282028;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #d1d1e0;
+      cursor: pointer;
+      position: relative;
+    }
+    .hdr-icon-btn span { font-size: 20px; }
+
+    .notif-dot {
+      position: absolute;
+      top: 8px;
+      right: 9px;
+      width: 7px;
+      height: 7px;
+      background: var(--primary-red);
+      border-radius: 50%;
+      border: 1.5px solid #181824;
+    }
+
+    /* ================= QUICK HOME TELEGRAM STRIP ================= */
+    .home-tg-strip {
+      padding: 10px 14px 4px 14px;
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .home-tg-strip::-webkit-scrollbar { display: none; }
+
+    .tg-chip-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #fff;
+      text-decoration: none;
+      white-space: nowrap;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: #161622;
+      transition: all 0.2s ease;
+    }
+    .tg-chip-btn.blue {
+      border-color: rgba(34, 158, 217, 0.5);
+      background: rgba(34, 158, 217, 0.12);
+      color: #38bdf8;
+    }
+    .tg-chip-btn.gold {
+      border-color: rgba(245, 158, 11, 0.5);
+      background: rgba(245, 158, 11, 0.12);
+      color: #fbbf24;
+    }
+    .tg-chip-btn.red {
+      border-color: rgba(240, 39, 69, 0.5);
+      background: rgba(240, 39, 69, 0.12);
+      color: #ff5e79;
+    }
+
+    /* ================= MAIN CONTENT SCROLL ================= */
+    .app-main {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px 14px 80px 14px;
+    }
+
+    .view-section {
+      display: none;
+      animation: fadeIn 0.2s ease-out;
+    }
+    .view-section.active {
+      display: block;
+    }
+
+    /* PILL BUTTONS */
+    .pill-header-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: linear-gradient(90deg, #F02745, #b8152e);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 8px 18px;
+      border-radius: 20px;
+      margin-bottom: 16px;
+      border: none;
+      box-shadow: 0 4px 12px var(--red-glow);
+    }
+    .pill-header-btn span { font-size: 16px; }
+
+    /* ================= 2. 16:9 STANDARD VIDEO CARDS ================= */
+    .feed-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      overflow: hidden;
+      margin-bottom: 18px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+    }
+
+    /* 16:9 Standard Compact Aspect Ratio (NOT overly big) */
+    .thumb-collage-box {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      max-height: 230px;
+      background: #000;
+      overflow: hidden;
+    }
+    .thumb-split-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .badge-new-pill {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: var(--badge-green);
+      color: #fff;
+      font-size: 10.5px;
+      font-weight: 800;
+      padding: 3px 10px;
+      border-radius: 5px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+    }
+
+    .btn-fav-round {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: rgba(18, 18, 28, 0.7);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      cursor: pointer;
+    }
+    .btn-fav-round span { font-size: 18px; }
+    .btn-fav-round.active { color: var(--primary-red); }
+
+    .thumb-overlay-center {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      width: 92%;
+    }
+    .pill-social-tag {
+      background: var(--badge-blue);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 3px 12px;
+      border-radius: 6px;
+    }
+    .banner-title-overlay {
+      background: rgba(15, 15, 24, 0.9);
+      backdrop-filter: blur(6px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 5px 14px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #fff;
+      text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 96%;
+    }
+
+    .card-info-area {
+      padding: 12px 14px 14px 14px;
+    }
+
+    .meta-user-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .circle-avatar-badge {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #F02745, #7a0c1e);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      font-weight: 900;
+      color: #fff;
+      flex-shrink: 0;
+      border: 1.5px solid var(--primary-red);
+    }
+
+    .meta-texts {
+      flex: 1;
+      overflow: hidden;
+    }
+    .card-main-title {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.35;
+      margin-bottom: 3px;
+    }
+    .card-sub-stats {
+      font-size: 11px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .card-sub-stats strong { color: #fff; font-weight: 700; }
+    .fire-tag { color: var(--primary-red); font-weight: 700; }
+
+    .btn-more-dots {
+      background: #181826;
+      border: 1px solid #251c24;
+      color: #9898b0;
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .expire-notice {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 10.5px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      padding-left: 2px;
+    }
+
+    /* 3-AD STEPPER (REDVIRALZONE THEME) */
+    .ad-stepper-line {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      margin: 14px 20px 18px 20px;
+    }
+    .stepper-bg-bar {
+      position: absolute;
+      top: 15px;
+      left: 10px;
+      right: 10px;
+      height: 2px;
+      background: #252028;
+      z-index: 1;
+    }
+
+    .step-item {
+      position: relative;
+      z-index: 3;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+    }
+    .step-circle {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: #161622;
+      border: 2px solid #2b1e25;
+      color: var(--text-muted);
+      font-size: 11.5px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+    .step-item.active .step-circle {
+      background: var(--primary-red);
+      border-color: #ff5e79;
+      color: #fff;
+      box-shadow: 0 0 10px var(--red-glow);
+    }
+    .step-item.completed .step-circle {
+      background: #10b981;
+      border-color: #10b981;
+      color: #fff;
+    }
+    .step-label {
+      font-size: 9.5px;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+    .step-item.active .step-label { color: #fff; }
+
+    /* UNLOCK BUTTON */
+    .btn-unlock-big {
+      width: 100%;
+      background: linear-gradient(90deg, #F02745, #b8152e);
+      border: none;
+      padding: 13px 18px;
+      border-radius: 12px;
+      color: #fff;
+      font-size: 14.5px;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      position: relative;
+      box-shadow: 0 4px 16px var(--red-glow);
+    }
+    .btn-unlock-big:active { transform: scale(0.99); }
+    .btn-unlock-big span.material-symbols-rounded { font-size: 18px; }
+
+    .unlock-step-tag {
+      position: absolute;
+      right: 14px;
+      background: rgba(255, 255, 255, 0.25);
+      padding: 2px 9px;
+      border-radius: 16px;
+      font-size: 10.5px;
+      font-weight: 800;
+    }
+
+    /* ================= 3. BEAUTIFUL TELEGRAM CHANNEL CARDS ================= */
+    .channels-header-info {
+      text-align: center;
+      margin-bottom: 18px;
+      padding: 10px;
+    }
+    .channels-header-info h3 {
+      font-size: 18px;
+      font-weight: 900;
+      margin-bottom: 4px;
+    }
+    .channels-header-info p {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .channel-box-premium {
+      background: #141420;
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      text-decoration: none;
+      color: #fff;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4);
+      transition: all 0.2s ease;
+    }
+    .channel-box-premium:active { transform: scale(0.98); }
+
+    /* Gradient highlight side strips */
+    .channel-box-premium::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+    }
+
+    /* Channel 1: Blue Theme */
+    .channel-box-premium.theme-blue {
+      border-color: rgba(34, 158, 217, 0.35);
+      background: linear-gradient(135deg, rgba(34, 158, 217, 0.12) 0%, #13141f 70%);
+    }
+    .channel-box-premium.theme-blue::before { background: var(--tg-blue); }
+    .channel-box-premium.theme-blue .ch-icon-glow {
+      background: radial-gradient(circle, rgba(34, 158, 217, 0.3) 0%, rgba(34, 158, 217, 0.05) 100%);
+      border: 1px solid rgba(34, 158, 217, 0.4);
+      color: #38bdf8;
+    }
+    .channel-box-premium.theme-blue .btn-ch-action {
+      background: linear-gradient(90deg, #0284c7, #0ea5e9);
+      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);
+    }
+
+    /* Channel 2: Gold VIP Theme */
+    .channel-box-premium.theme-gold {
+      border-color: rgba(245, 158, 11, 0.35);
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.12) 0%, #13141f 70%);
+    }
+    .channel-box-premium.theme-gold::before { background: var(--vip-gold); }
+    .channel-box-premium.theme-gold .ch-icon-glow {
+      background: radial-gradient(circle, rgba(245, 158, 11, 0.3) 0%, rgba(245, 158, 11, 0.05) 100%);
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      color: #fbbf24;
+    }
+    .channel-box-premium.theme-gold .btn-ch-action {
+      background: linear-gradient(90deg, #d97706, #f59e0b);
+      box-shadow: 0 4px 12px rgba(217, 119, 6, 0.3);
+    }
+
+    /* Channel 3: Red Viral Zone Theme */
+    .channel-box-premium.theme-red {
+      border-color: rgba(240, 39, 69, 0.4);
+      background: linear-gradient(135deg, rgba(240, 39, 69, 0.15) 0%, #13141f 70%);
+    }
+    .channel-box-premium.theme-red::before { background: var(--primary-red); }
+    .channel-box-premium.theme-red .ch-icon-glow {
+      background: radial-gradient(circle, rgba(240, 39, 69, 0.35) 0%, rgba(240, 39, 69, 0.05) 100%);
+      border: 1px solid rgba(240, 39, 69, 0.5);
+      color: #ff5e79;
+    }
+    .channel-box-premium.theme-red .btn-ch-action {
+      background: linear-gradient(90deg, #dc2626, #F02745);
+      box-shadow: 0 4px 12px var(--red-glow);
+    }
+
+    .ch-meta-flex {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .ch-icon-glow {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .ch-icon-glow span { font-size: 26px; }
+
+    .ch-name-group h4 {
+      font-size: 15px;
+      font-weight: 800;
+      margin-bottom: 3px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .ch-name-group p {
+      font-size: 11.5px;
+      color: var(--text-muted);
+    }
+
+    .btn-ch-action {
+      padding: 7px 14px;
+      border-radius: 20px;
+      font-size: 11.5px;
+      font-weight: 800;
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+    }
+    .btn-ch-action span { font-size: 15px; }
+
+    /* ================= 4. TUTORIAL VIEW ================= */
+    .tutorial-player-box {
+      background: #000;
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      overflow: hidden;
+      width: 100%;
+      aspect-ratio: 9 / 16;
+      max-height: 520px;
+    }
+    .tutorial-player-box video {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    /* ================= 5. PROFILE VIEW (ZERO-INITIALIZED) ================= */
+    .profile-wrap-center {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 10px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .profile-avatar-ring {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      padding: 3px;
+      background: linear-gradient(135deg, #F02745, #ff6b81, #7a0c1e);
+      box-shadow: 0 0 25px var(--red-glow);
+      margin-bottom: 12px;
+    }
+    .profile-avatar-ring img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      background: #14141e;
+    }
+    .profile-avatar-fallback {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: #25131b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .profile-display-name {
+      font-size: 17px;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+    .profile-username-tag {
+      font-size: 12px;
+      color: var(--primary-red);
+      font-weight: 700;
+    }
+
+    /* Real Zero-Based Stats Block */
+    .profile-stats-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 16px 10px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      text-align: center;
+      margin-bottom: 18px;
+    }
+    .p-stat-col .p-num {
+      font-size: 22px;
+      font-weight: 900;
+      color: var(--primary-red);
+      margin-bottom: 4px;
+    }
+    .p-stat-col .p-lbl {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .profile-menu-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .profile-menu-item {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .menu-item-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* ================= 10-SEC COUNTDOWN MODAL ================= */
+    .ad-countdown-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.9);
+      backdrop-filter: blur(8px);
+      z-index: 2100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .countdown-card-inner {
+      background: #181520;
+      border: 1.5px solid var(--primary-red);
+      border-radius: 20px;
+      width: 100%;
+      max-width: 320px;
+      padding: 26px 20px;
+      text-align: center;
+      box-shadow: 0 8px 35px rgba(240, 39, 69, 0.4);
+    }
+    .timer-big-num {
+      font-size: 48px;
+      font-weight: 900;
+      color: var(--primary-red);
+      margin: 10px 0;
+      line-height: 1;
+    }
+
+    /* ================= FULLSCREEN PLAYER ================= */
+    .player-overlay {
+      position: fixed;
+      inset: 0;
+      background: #000;
+      z-index: 2000;
+      display: none;
+      flex-direction: column;
+    }
+    .player-top-header {
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 14px;
+      background: rgba(16, 16, 26, 0.95);
+    }
+    .btn-player-back {
+      background: none;
+      border: none;
+      color: #fff;
+      cursor: pointer;
+    }
+    .player-video-wrap {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: #000;
+    }
+    .player-video-wrap video {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    .player-watermark-tag {
+      position: absolute;
+      top: 10%;
+      left: 10%;
+      color: rgba(255, 255, 255, 0.25);
+      font-size: 11px;
+      font-weight: 800;
+      pointer-events: none;
+    }
+    .player-details-scroll {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+    }
+
+    /* ================= BOTTOM NAVIGATION ================= */
+    .bottom-navbar {
+      height: 64px;
+      background: var(--nav-bg);
+      border-top: 1px solid var(--nav-border);
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      max-width: 480px;
+      margin: 0 auto;
+      display: flex;
+      z-index: 100;
+    }
+
+    .nav-tab-item {
+      flex: 1;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      cursor: pointer;
+      transition: color 0.15s ease;
+    }
+    .nav-tab-item span.material-symbols-rounded { font-size: 22px; }
+    .nav-tab-item span.tab-txt { font-size: 10px; font-weight: 700; }
+    .nav-tab-item.active {
+      color: var(--primary-red);
+    }
+
+    /* EMPTY STATE */
+    .empty-state-box {
+      text-align: center;
+      padding: 50px 20px;
+      color: var(--text-muted);
+    }
+    .empty-state-box span { font-size: 44px; color: var(--primary-red); margin-bottom: 8px; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body oncontextmenu="return false;">
+
+  <div id="app-container">
+
+    <!-- ================= TOP HEADER (WITH YOUR ACTUAL LOGO) ================= -->
+    <header class="app-header">
+      <div class="brand-wrap">
+        <div class="brand-logo-wrap">
+          <img src="https://i.postimg.cc/HLH6L590/IMG-20261107-230123-031.jpg" alt="Logo" class="brand-logo-img">
         </div>
-        <div class="flex items-center gap-3">
-            <button id="themeToggle" class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 text-sm"><i class="fas fa-moon dark:fa-sun"></i></button>
-            <div class="relative group">
-                <button class="text-lg p-1"><i class="fas fa-ellipsis-v"></i></button>
-                <div class="absolute right-0 mt-2 w-48 bg-white dark:bg-darkCard shadow-2xl rounded-2xl border dark:border-slate-800 hidden group-hover:block overflow-hidden">
-                    <a href="https://t.me/videocallservicebd" target="_blank" class="block px-4 py-3 text-xs font-bold hover:bg-slate-50 dark:hover:bg-slate-800 border-b dark:border-slate-800"><i class="fas fa-bullhorn mr-2 text-blue-500"></i> Channel</a>
-                    <a href="https://t.me/videocallservicebd" target="_blank" class="block px-4 py-3 text-xs font-bold hover:bg-slate-50 dark:hover:bg-slate-800 text-green-500"><i class="fas fa-headset mr-2"></i> Admin</a>
-                </div>
-            </div>
-        </div>
+        <div class="brand-title">RED<span>VIRALZONE</span></div>
+      </div>
+
+      <div class="header-actions">
+        <button class="hdr-icon-btn" id="btn-search-trigger" title="Search">
+          <span class="material-symbols-rounded">search</span>
+        </button>
+        <button class="hdr-icon-btn" id="btn-notif" title="Notifications">
+          <span class="material-symbols-rounded">notifications</span>
+          <span class="notif-dot"></span>
+        </button>
+        <button class="hdr-icon-btn" id="btn-theme" title="Dark Theme">
+          <span class="material-symbols-rounded">dark_mode</span>
+        </button>
+      </div>
     </header>
 
-    <!-- 1. HOME TAB -->
-    <div id="home-tab" class="tab-content active-tab px-4">
-        <div class="bg-blue-600 text-white text-[9px] py-1.5 overflow-hidden font-bold mt-4 rounded-xl shadow-lg">
-            <div class="animate-marquee">⚡ Welcome to DOWNLOAD FREE CODE | Premium Scripts Store | Support @SHOPBASE_BD ⚡</div>
-        </div>
-
-        <div id="ad-container-1" class="my-5 flex justify-center min-h-[50px] overflow-hidden rounded-xl"></div>
-
-        <!-- HERO SLIDER SECTION (BANNERS) -->
-        <div class="relative w-full h-44 md:h-64 bg-slate-200 dark:bg-slate-800 rounded-[2.5rem] overflow-hidden shadow-2xl mb-8">
-            <div id="slider-wrap" class="slider-wrapper h-full"></div>
-            <div id="slider-dots" class="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2"></div>
-        </div>
-
-        <!-- Premium Section -->
-        <div class="mb-4 px-1 flex justify-between items-center">
-            <h2 class="text-lg font-black tracking-tight text-orange-500 italic"><i class="fas fa-crown mr-1"></i> PREMIUM</h2>
-            <span class="text-[8px] bg-orange-100 dark:bg-orange-900/30 text-orange-600 px-2 py-0.5 rounded-full font-black">PAID</span>
-        </div>
-        <div id="premium-grid" class="grid grid-cols-2 gap-3 mb-10"></div>
-
-        <!-- Mid Ad -->
-        <div id="ad-container-2" class="my-8 flex justify-center min-h-[50px] overflow-hidden rounded-xl"></div>
-
-        <!-- Free Section -->
-        <div class="mb-4 px-1 flex justify-between items-center">
-            <h2 class="text-lg font-black tracking-tight text-blue-600 italic"><i class="fas fa-gift mr-1"></i> FREE CODE</h2>
-            <span class="text-[8px] bg-blue-100 dark:bg-blue-900/30 text-blue-600 px-2 py-0.5 rounded-full font-black">ADS</span>
-        </div>
-        <div id="free-grid" class="grid grid-cols-2 gap-3"></div>
+    <!-- QUICK TELEGRAM CHANNELS ACCESS BAR -->
+    <div class="home-tg-strip">
+      <a href="https://t.me/videocallservicebd" target="_blank" class="tg-chip-btn blue">
+        <span class="material-symbols-rounded" style="font-size:14px;">send</span>
+        <span>Officials</span>
+      </a>
+      <a href="https://t.me/+M2C0YyslaYc4NDQ1" target="_blank" class="tg-chip-btn gold">
+        <span class="material-symbols-rounded" style="font-size:14px;">star</span>
+        <span>VIP Channel</span>
+      </a>
+      <a href="https://t.me/REDVIRALZONE" target="_blank" class="tg-chip-btn red">
+        <span class="material-symbols-rounded" style="font-size:14px;">local_fire_department</span>
+        <span>REDVIRALZONE</span>
+      </a>
     </div>
 
-    <!-- 2. DEPOSIT TAB -->
-    <div id="deposit-tab" class="tab-content px-4 py-6">
-        <div class="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-[2.5rem] p-8 text-white shadow-2xl mb-8 text-center relative overflow-hidden">
-            <p class="text-[10px] font-bold opacity-60 uppercase mb-1 tracking-widest">Your Balance</p>
-            <h2 class="text-4xl font-black italic tracking-tighter">৳<span id="display-balance">0.00</span></h2>
-            <i class="fas fa-wallet absolute -bottom-4 -right-4 text-white opacity-10 text-8xl"></i>
+    <!-- ================= MAIN CONTENT VIEWS ================= -->
+    <main class="app-main">
+
+      <!-- ================= 1. TAB: HOME ================= -->
+      <section id="view-home" class="view-section active">
+        <!-- Live Firebase Feed loaded here -->
+        <div id="home-feed-container">
+          <div class="empty-state-box">
+            <span class="material-symbols-rounded">hourglass_empty</span>
+            <p>লোড হচ্ছে... ফায়ারবেস থেকে ভিডিও আনা হচ্ছে</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 2. TAB: FAVORITES ================= -->
+      <section id="view-favorites" class="view-section">
+        <button class="pill-header-btn">
+          <span class="material-symbols-rounded">favorite</span>
+          <span>Your Favorites</span>
+        </button>
+        <div id="favorites-feed-container">
+          <div class="empty-state-box">
+            <span class="material-symbols-rounded">heart_broken</span>
+            <p>কোনো ফেভারিট ভিডিও যুক্ত করা হয়নি (০)</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 3. TAB: TUTORIAL ================= -->
+      <section id="view-tutorial" class="view-section">
+        <button class="pill-header-btn">
+          <span class="material-symbols-rounded">info</span>
+          <span>Tutorial</span>
+        </button>
+
+        <div class="tutorial-player-box">
+          <video 
+            id="tutorial-video-el" 
+            controls 
+            playsinline 
+            webkit-playsinline 
+            controlsList="nodownload noplaybackrate"
+            poster="https://i.postimg.cc/HLH6L590/IMG-20261107-230123-031.jpg"
+            src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4">
+          </video>
+        </div>
+      </section>
+
+      <!-- ================= 4. TAB: CHANNELS (PREMIUM BEAUTIFUL DESIGN) ================= -->
+      <section id="view-channels" class="view-section">
+        <div class="channels-header-info">
+          <h3>Official Communities</h3>
+          <p>Join our verified Telegram network for instant video updates</p>
         </div>
 
-        <div class="bg-white dark:bg-darkCard rounded-[2.5rem] p-8 shadow-xl border dark:border-slate-800">
-            <h3 class="text-xl font-black mb-6"><i class="fas fa-plus-circle text-green-500 mr-1"></i> Add Money</h3>
-            <div class="space-y-4">
-                <div class="grid grid-cols-2 gap-3">
-                    <button onclick="selectPay('Bkash', this)" class="pay-btn border-2 border-slate-100 dark:border-slate-800 p-4 rounded-3xl text-sm font-black text-pink-600">Bkash</button>
-                    <button onclick="selectPay('Nagad', this)" class="pay-btn border-2 border-slate-100 dark:border-slate-800 p-4 rounded-3xl text-sm font-black text-orange-500">Nagad</button>
-                </div>
-                <div id="pay-box" class="bg-blue-50 dark:bg-blue-900/10 p-4 rounded-2xl text-[10px] font-bold hidden border border-blue-100 dark:border-blue-900/20">
-                    <p id="pay-number-display" class="uppercase text-blue-600 tracking-wider"></p>
-                </div>
-                <input type="number" id="dep-sender" placeholder="Your Number" class="w-full p-4 bg-slate-50 dark:bg-slate-800 rounded-2xl outline-none text-xs font-bold border-none">
-                <input type="text" id="dep-txid" placeholder="Transaction ID (TxID)" class="w-full p-4 bg-slate-50 dark:bg-slate-800 rounded-2xl outline-none text-xs font-bold uppercase border-none">
-                <input type="number" id="dep-amount" placeholder="Amount (TK)" class="w-full p-4 bg-slate-50 dark:bg-slate-800 rounded-2xl outline-none text-xs font-bold border-none">
-                <button onclick="submitDep()" class="w-full py-4 bg-blue-600 text-white rounded-2xl font-black shadow-lg shadow-blue-500/20 active:scale-95 transition-all">SUBMIT DEPOSIT</button>
+        <div class="channels-list-wrap">
+          <!-- Channel 1: Blue Telegram Theme -->
+          <a href="https://t.me/videocallservicebd" target="_blank" class="channel-box-premium theme-blue">
+            <div class="ch-meta-flex">
+              <div class="ch-icon-glow">
+                <span class="material-symbols-rounded">send</span>
+              </div>
+              <div class="ch-name-group">
+                <h4>Officials <span class="material-symbols-rounded" style="font-size:16px; color:#38bdf8;">verified</span></h4>
+                <p>Join For new viral videos daily</p>
+              </div>
             </div>
+            <div class="btn-ch-action">
+              <span>JOIN</span>
+              <span class="material-symbols-rounded">arrow_forward</span>
+            </div>
+          </a>
+
+          <!-- Channel 2: Gold VIP Channel Theme -->
+          <a href="https://t.me/+M2C0YyslaYc4NDQ1" target="_blank" class="channel-box-premium theme-gold">
+            <div class="ch-meta-flex">
+              <div class="ch-icon-glow">
+                <span class="material-symbols-rounded">star</span>
+              </div>
+              <div class="ch-name-group">
+                <h4>Backup Chanel <span class="material-symbols-rounded" style="font-size:16px; color:#fbbf24;">workspace_premium</span></h4>
+                <p>VIP Private Access Link</p>
+              </div>
+            </div>
+            <div class="btn-ch-action">
+              <span>JOIN VIP</span>
+              <span class="material-symbols-rounded">lock_open</span>
+            </div>
+          </a>
+
+          <!-- Channel 3: Signature Red Brand Channel Theme -->
+          <a href="https://t.me/REDVIRALZONE" target="_blank" class="channel-box-premium theme-red">
+            <div class="ch-meta-flex">
+              <div class="ch-icon-glow">
+                <span class="material-symbols-rounded">local_fire_department</span>
+              </div>
+              <div class="ch-name-group">
+                <h4>REDVIRALZONE <span class="material-symbols-rounded" style="font-size:16px; color:#ff5e79;">whatshot</span></h4>
+                <p>Main Official Community Hub</p>
+              </div>
+            </div>
+            <div class="btn-ch-action">
+              <span>JOIN</span>
+              <span class="material-symbols-rounded">arrow_forward</span>
+            </div>
+          </a>
         </div>
+      </section>
+
+      <!-- ================= 5. TAB: PROFILE (ALL ZERO INITIALIZED) ================= -->
+      <section id="view-profile" class="view-section">
+        <div class="profile-wrap-center">
+          <div class="profile-avatar-ring">
+            <img id="p-avatar-img" src="" alt="Avatar">
+            <div id="p-avatar-fallback" class="profile-avatar-fallback">U</div>
+          </div>
+          <div class="profile-display-name" id="p-display-name">Telegram User</div>
+          <div class="profile-username-tag" id="p-username-tag">@username</div>
+        </div>
+
+        <!-- Real Zero-Based Stats Block -->
+        <div class="profile-stats-card">
+          <div class="p-stat-col">
+            <div class="p-num" id="stat-fav-count">0</div>
+            <div class="p-lbl">Favorites</div>
+          </div>
+          <div class="p-stat-col">
+            <div class="p-num" id="stat-unlocked-count">0</div>
+            <div class="p-lbl">Unlocked</div>
+          </div>
+          <div class="p-stat-col">
+            <div class="p-num" id="stat-watched-count">0</div>
+            <div class="p-lbl">Watched Ads</div>
+          </div>
+        </div>
+
+        <!-- Menu Navigation List -->
+        <div class="profile-menu-list">
+          <div class="profile-menu-item" id="p-menu-notif">
+            <div class="menu-item-left">
+              <span class="material-symbols-rounded" style="color:#eab308;">notifications</span>
+              <span>Notifications</span>
+            </div>
+            <span class="material-symbols-rounded" style="color:var(--text-muted);">chevron_right</span>
+          </div>
+
+          <div class="profile-menu-item" id="p-menu-share">
+            <div class="menu-item-left">
+              <span class="material-symbols-rounded" style="color:#10b981;">share</span>
+              <span>Share App</span>
+            </div>
+            <span class="material-symbols-rounded" style="color:var(--text-muted);">chevron_right</span>
+          </div>
+
+          <div class="profile-menu-item" onclick="switchTab('view-home')">
+            <div class="menu-item-left">
+              <span class="material-symbols-rounded" style="color:var(--primary-red);">home</span>
+              <span>Home</span>
+            </div>
+            <span class="material-symbols-rounded" style="color:var(--text-muted);">chevron_right</span>
+          </div>
+
+          <div class="profile-menu-item" onclick="switchTab('view-favorites')">
+            <div class="menu-item-left">
+              <span class="material-symbols-rounded" style="color:#ef4444;">favorite</span>
+              <span>Favourite</span>
+            </div>
+            <span class="material-symbols-rounded" style="color:var(--text-muted);">chevron_right</span>
+          </div>
+
+          <div class="profile-menu-item" onclick="switchTab('view-channels')">
+            <div class="menu-item-left">
+              <span class="material-symbols-rounded" style="color:#38bdf8;">send</span>
+              <span>Channels</span>
+            </div>
+            <span class="material-symbols-rounded" style="color:var(--text-muted);">chevron_right</span>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- ================= 10-SEC COUNTDOWN BETWEEN ADS ================= -->
+    <div id="ad-countdown-modal" class="ad-countdown-modal">
+      <div class="countdown-card-inner">
+        <span class="material-symbols-rounded" style="color:var(--primary-red); font-size:40px;">hourglass_top</span>
+        <h3 style="font-size:16px; font-weight:800; margin-top:6px;">Next Ad Unlocking</h3>
+        <p style="font-size:12px; color:var(--text-muted); margin-top:4px;">Please wait before the next checkpoint</p>
+        <div class="timer-big-num" id="timer-countdown-val">10</div>
+        <small style="color:var(--primary-red); font-size:11px; font-weight:800;">REDVIRALZONE VERIFICATION</small>
+      </div>
     </div>
 
-    <!-- 3. PROFILE TAB -->
-    <div id="profile-tab" class="tab-content px-4 py-10 text-center">
-        <div class="relative w-32 h-32 mx-auto mb-6">
-            <img id="profile-photo" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" class="w-full h-full rounded-full border-4 border-blue-600 p-1 bg-white shadow-2xl">
-            <div class="absolute bottom-2 right-2 bg-green-500 w-6 h-6 rounded-full border-4 border-slate-50 dark:border-darkBg"></div>
-        </div>
-        <h2 id="profile-name" class="text-2xl font-black uppercase tracking-tighter">Guest User</h2>
-        <p id="profile-id" class="text-[10px] opacity-40 font-bold mt-1 tracking-widest uppercase">ID: 0000000000</p>
-        
-        <div class="grid grid-cols-2 gap-4 mt-10">
-            <div class="bg-white dark:bg-darkCard p-6 rounded-[2rem] shadow-sm border dark:border-slate-800">
-                <i class="fas fa-crown text-orange-500 text-2xl mb-2"></i>
-                <p class="text-[9px] font-bold opacity-50 uppercase tracking-widest">Level</p>
-                <h4 class="text-xs font-black">VIP USER</h4>
-            </div>
-            <div class="bg-white dark:bg-darkCard p-6 rounded-[2rem] shadow-sm border dark:border-slate-800">
-                <i class="fas fa-check-double text-blue-500 text-2xl mb-2"></i>
-                <p class="text-[9px] font-bold opacity-50 uppercase tracking-widest">Verified</p>
-                <h4 class="text-xs font-black text-green-500 uppercase">TRUE</h4>
-            </div>
-        </div>
+    <!-- ================= DEDICATED FULLSCREEN PLAYER ================= -->
+    <div id="player-overlay" class="player-overlay">
+      <div class="player-top-header">
+        <button class="btn-player-back" id="btn-player-close">
+          <span class="material-symbols-rounded">arrow_back</span>
+        </button>
+        <span style="font-size:14px; font-weight:800; color:#fff;" id="player-head-title">REDVIRALZONE</span>
+        <div style="width:24px;"></div>
+      </div>
 
-        <div class="mt-10 space-y-3">
-            <button onclick="switchTab('deposit')" class="w-full p-4 bg-blue-600 text-white rounded-2xl font-black text-[10px] flex justify-between items-center shadow-lg shadow-blue-500/20">
-                <span><i class="fas fa-wallet mr-2"></i> MY WALLET</span>
-                <i class="fas fa-chevron-right text-[8px]"></i>
-            </button>
-            <a href="https://t.me/videocallservicebd" class="w-full p-4 bg-white dark:bg-darkCard rounded-2xl font-black text-[10px] flex justify-between items-center border dark:border-slate-800 shadow-sm">
-                <span><i class="fas fa-headset mr-2 text-green-500"></i> SUPPORT CENTER</span>
-                <i class="fas fa-chevron-right text-[8px]"></i>
-            </a>
-        </div>
+      <div class="player-video-wrap">
+        <div class="player-watermark-tag" id="watermark-tag">REDVIRALZONE</div>
+        <video 
+          id="active-player-video" 
+          controls 
+          playsinline 
+          webkit-playsinline 
+          controlsList="nodownload noplaybackrate">
+        </video>
+      </div>
+
+      <div class="player-details-scroll">
+        <h3 id="player-active-title" style="font-size:16px; font-weight:700; margin-bottom:6px;">Title</h3>
+        <p id="player-active-views" style="font-size:12px; color:var(--text-muted); margin-bottom:12px;">0 views</p>
+        <p id="player-active-desc" style="font-size:13px; color:#cbd5e1; line-height:1.4;">Video description</p>
+      </div>
     </div>
 
-    <!-- Bottom Nav -->
-    <nav class="fixed bottom-0 left-0 right-0 glass border-t dark:border-slate-800 h-20 flex items-center justify-around px-4 z-[200] rounded-t-[2.5rem] shadow-2xl">
-        <button onclick="switchTab('home')" id="nav-home" class="flex flex-col items-center text-blue-600 transition-all">
-            <i class="fas fa-home text-lg"></i><span class="text-[8px] font-black mt-1 uppercase">Home</span>
-        </button>
-        <button onclick="switchTab('deposit')" id="nav-deposit" class="flex flex-col items-center opacity-30 transition-all">
-            <i class="fas fa-wallet text-lg"></i><span class="text-[8px] font-black mt-1 uppercase">Deposit</span>
-        </button>
-        <button onclick="switchTab('profile')" id="nav-profile" class="flex flex-col items-center opacity-30 transition-all">
-            <i class="fas fa-user-circle text-lg"></i><span class="text-[8px] font-black mt-1 uppercase">Profile</span>
-        </button>
-        <a href="https://t.me/videocallservicebd" class="flex flex-col items-center opacity-30">
-            <i class="fas fa-headset text-lg"></i><span class="text-[8px] font-black mt-1 uppercase">Support</span>
-        </a>
+    <!-- ================= BOTTOM NAVIGATION ================= -->
+    <nav class="bottom-navbar">
+      <button class="nav-tab-item active" data-view="view-home">
+        <span class="material-symbols-rounded">home</span>
+        <span class="tab-txt">Home</span>
+      </button>
+
+      <button class="nav-tab-item" data-view="view-favorites">
+        <span class="material-symbols-rounded">favorite</span>
+        <span class="tab-txt">Favorites</span>
+      </button>
+
+      <button class="nav-tab-item" data-view="view-tutorial">
+        <span class="material-symbols-rounded">info</span>
+        <span class="tab-txt">Tutorial</span>
+      </button>
+
+      <button class="nav-tab-item" data-view="view-channels">
+        <span class="material-symbols-rounded">send</span>
+        <span class="tab-txt">Channels</span>
+      </button>
+
+      <button class="nav-tab-item" data-view="view-profile">
+        <span class="material-symbols-rounded">person</span>
+        <span class="tab-txt">Profile</span>
+      </button>
     </nav>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getFirestore, collection, getDocs, doc, getDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  </div>
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyBQ8DkVDx4DCrEVLN3LFTnEER0YLa1UqIQ",
-            authDomain: "free-download-code-2cf68.firebaseapp.com",
-            databaseURL: "https://free-download-code-2cf68-default-rtdb.firebaseio.com",
-            projectId: "free-download-code-2cf68",
-            storageBucket: "free-download-code-2cf68.firebasestorage.app",
-            messagingSenderId: "632394494942",
-            appId: "1:632394494942:web:8bde8ba728c6b7e748a34f"
-        };
-        
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const tg = window.Telegram.WebApp; tg.expand();
+  <!-- FIREBASE & REAL-TIME LOGIC -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
+    import { 
+      getFirestore, collection, doc, getDoc, getDocs, setDoc, updateDoc, 
+      query, where, increment, serverTimestamp 
+    } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
+    import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
 
-        let sMethod = '', waitSec = 10, payInfo = {};
+    // Your Firebase Credentials
+    const firebaseConfig = {
+      apiKey: "AIzaSyBQ8DkVDx4DCrEVLN3LFTnEER0YLa1UqIQ",
+      authDomain: "free-download-code-2cf68.firebaseapp.com",
+      databaseURL: "https://free-download-code-2cf68-default-rtdb.firebaseio.com",
+      projectId: "free-download-code-2cf68",
+      storageBucket: "free-download-code-2cf68.firebasestorage.app",
+      messagingSenderId: "632394494942",
+      appId: "1:632394494942:web:8bde8ba728c6b7e748a34f"
+    };
 
-        // Profile Integration
-        const user = tg.initDataUnsafe.user;
-        if(user) {
-            const name = user.first_name + (user.last_name ? ' ' + user.last_name : '');
-            document.getElementById('header-name').textContent = name;
-            document.getElementById('profile-name').textContent = name;
-            document.getElementById('profile-id').textContent = "ID: " + user.id;
-            if(user.photo_url) {
-                document.getElementById('header-photo').src = user.photo_url;
-                document.getElementById('profile-photo').src = user.photo_url;
-            }
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+
+    const ADSGRAM_BLOCK_ID = "42922";
+    let AdController = null;
+
+    // 1. EXTRACT TELEGRAM USER
+    let tgUser = {
+      id: "987654321",
+      name: "Guest User",
+      handle: "@guest",
+      photo: ""
+    };
+
+    if (window.Telegram?.WebApp) {
+      window.Telegram.WebApp.ready();
+      window.Telegram.WebApp.expand();
+      const u = window.Telegram.WebApp.initDataUnsafe?.user;
+      if (u) {
+        tgUser.id = String(u.id);
+        tgUser.name = u.first_name + (u.last_name ? " " + u.last_name : "");
+        tgUser.handle = u.username ? "@" + u.username : "@" + u.first_name.toLowerCase();
+        tgUser.photo = u.photo_url || "";
+      }
+    }
+
+    document.getElementById("p-display-name").innerText = tgUser.name;
+    document.getElementById("p-username-tag").innerText = tgUser.handle;
+    document.getElementById("watermark-tag").innerText = `${tgUser.id} • ${tgUser.name}`;
+
+    const pImg = document.getElementById("p-avatar-img");
+    const pFallback = document.getElementById("p-avatar-fallback");
+    if (tgUser.photo) {
+      pImg.src = tgUser.photo;
+      pImg.onload = () => { pImg.style.display = "block"; pFallback.style.display = "none"; };
+      pImg.onerror = () => { pImg.style.display = "none"; pFallback.style.display = "flex"; };
+    } else {
+      pImg.style.display = "none";
+      pFallback.style.display = "flex";
+      pFallback.innerText = (tgUser.name[0] || "U").toUpperCase();
+    }
+
+    // Adsgram
+    try {
+      if (window.Adsgram) {
+        AdController = window.Adsgram.init({ blockId: ADSGRAM_BLOCK_ID, debug: false });
+      }
+    } catch(e) {}
+
+    // 2. USER STATE (ALL ZERO INITIALIZED)
+    let userFavorites = new Set();
+
+    async function initUser() {
+      try {
+        await signInAnonymously(auth);
+        const ref = doc(db, "users", tgUser.id);
+        const snap = await getDoc(ref);
+        if (!snap.exists()) {
+          await setDoc(ref, {
+            id: tgUser.id,
+            name: tgUser.name,
+            handle: tgUser.handle,
+            favoritesCount: 0,
+            unlockedCount: 0,
+            watchedAdsCount: 0,
+            favorites: [],
+            createdAt: serverTimestamp()
+          });
+          document.getElementById("stat-fav-count").innerText = "0";
+          document.getElementById("stat-unlocked-count").innerText = "0";
+          document.getElementById("stat-watched-count").innerText = "0";
+        } else {
+          const d = snap.data();
+          document.getElementById("stat-fav-count").innerText = d.favoritesCount || 0;
+          document.getElementById("stat-unlocked-count").innerText = d.unlockedCount || 0;
+          document.getElementById("stat-watched-count").innerText = d.watchedAdsCount || 0;
+          if (Array.isArray(d.favorites)) {
+            userFavorites = new Set(d.favorites);
+          }
+        }
+      } catch(e) {}
+    }
+
+    // 3. FETCH VIDEOS FROM REAL FIREBASE
+    let videos = [];
+
+    async function loadFirebaseVideos() {
+      const container = document.getElementById("home-feed-container");
+      try {
+        const q = query(collection(db, "videos"), where("isPublished", "==", true));
+        const snap = await getDocs(q);
+        videos = [];
+
+        snap.forEach(d => {
+          const data = d.data();
+          videos.push({
+            id: d.id,
+            title: data.title || "Untitled Video",
+            category: data.category || "General",
+            overlayTitle: data.overlayTitle || data.title || "REDVIRALZONE",
+            views: data.viewsCount || 0,
+            likes: data.likesCount || 0,
+            thumbnail: data.thumbnailUrl || "https://i.postimg.cc/HLH6L590/IMG-20261107-230123-031.jpg",
+            videoUrl: data.videoUrl || "",
+            currentStep: 1
+          });
+        });
+
+        if (videos.length === 0) {
+          container.innerHTML = `
+            <div class="empty-state-box">
+              <span class="material-symbols-rounded">movie</span>
+              <p>এখনো কোনো ভিডিও আপলোড করা হয়নি।</p>
+              <small style="color:#666;">অ্যাডমিন প্যানেল থেকে ভিডিও যুক্ত করুন।</small>
+            </div>
+          `;
+          return;
         }
 
-        async function init() {
-            // Load Payment Info
-            const pSnap = await getDoc(doc(db, "settings", "payment"));
-            if (pSnap.exists()) payInfo = pSnap.data();
+        renderCards("home-feed-container", videos);
+        renderFavorites();
+      } catch (err) {
+        container.innerHTML = `
+          <div class="empty-state-box">
+            <span class="material-symbols-rounded">error_outline</span>
+            <p>ফায়ারবেস থেকে ভিডিও লোড করা যাচ্ছে না।</p>
+          </div>
+        `;
+      }
+    }
 
-            // Load Ads & Settings
-            const adsSnap = await getDoc(doc(db, "settings", "ads"));
-            if (adsSnap.exists()) {
-                const d = adsSnap.data();
-                renderAd('ad-container-1', d.adSlot1);
-                renderAd('ad-container-2', d.adSlot2);
-            }
-            const setSnap = await getDoc(doc(db, "settings", "general"));
-            if (setSnap.exists()) waitSec = setSnap.data().timerDuration || 10;
-       
+    // 4. RENDER 16:9 CARDS
+    function renderCards(containerId, list) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = "";
 
-            // --- LOAD FILES ---
-            const fSnap = await getDocs(query(collection(db, "files"), orderBy("createdAt", "desc")));
-            const fGrid = document.getElementById('free-grid'), pGrid = document.getElementById('premium-grid');
-            fGrid.innerHTML = ''; pGrid.innerHTML = '';
+      if (list.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state-box">
+            <span class="material-symbols-rounded">heart_broken</span>
+            <p>কোনো ভিডিও নেই</p>
+          </div>
+        `;
+        return;
+      }
 
-            fSnap.forEach(d => {
-                const f = d.data();
-                const isPaid = f.price > 0;
-                // BIG FAKE STATS
-                const v = (Math.floor(Math.random() * (90 - 15) + 15)).toFixed(1) + "K";
-                const dl = (Math.floor(Math.random() * (25 - 5) + 5)).toFixed(1) + "K";
+      list.forEach(v => {
+        const isFav = userFavorites.has(v.id);
+        const card = document.createElement("div");
+        card.className = "feed-card";
+        card.innerHTML = `
+          <!-- 16:9 Thumbnail Area -->
+          <div class="thumb-collage-box">
+            <img class="thumb-split-img" src="${v.thumbnail}" alt="Thumbnail">
+            <span class="badge-new-pill">NEW</span>
+            <button class="btn-fav-round ${isFav ? 'active' : ''}" data-id="${v.id}">
+              <span class="material-symbols-rounded">${isFav ? 'favorite' : 'favorite_border'}</span>
+            </button>
 
-                const card = `
-                    <div class="bg-white dark:bg-darkCard rounded-[2rem] p-3 shadow-sm border dark:border-slate-800 transition-all active:scale-95">
-                        <div class="relative mb-3">
-                            <img src="${f.thumbnailUrl}" class="w-full h-28 object-cover rounded-3xl">
-                            <span class="absolute top-2 left-2 ${isPaid ? 'bg-orange-500' : 'bg-blue-600'} text-white text-[7px] font-black px-2 py-0.5 rounded-full uppercase shadow-lg">${isPaid ? 'Paid' : 'Free'}</span>
-                        </div>
-                        <div class="flex justify-between items-center gap-1">
-                            <h3 class="font-bold text-[9px] truncate uppercase flex-1">${f.title}</h3>
-                            <button onclick="shareCode('${f.title}')" class="text-blue-500 text-[10px]"><i class="fas fa-share-alt"></i></button>
-                        </div>
-                        <div class="flex justify-between text-[7px] opacity-40 font-black mt-1 mb-3 uppercase">
-                            <span><i class="fas fa-eye"></i> ${v}</span>
-                            <span><i class="fas fa-download"></i> ${dl}</span>
-                        </div>
-                        <button onclick="handleAction(this)" data-id="${d.id}" data-url="${f.downloadUrl}" data-req="${f.requiredAds}" data-price="${f.price}"
-                            class="w-full py-2.5 rounded-2xl text-[9px] font-black ${isPaid ? 'bg-orange-500 shadow-orange-500/20' : 'bg-slate-900 dark:bg-blue-600 shadow-blue-500/20'} text-white shadow-lg">
-                            ${isPaid ? 'BUY: '+f.price+'TK' : 'GET FREE'}
-                        </button>
-                    </div>`;
-                if(isPaid) pGrid.innerHTML += card; else fGrid.innerHTML += card;
-            });
+            <!-- Overlay Elements -->
+            <div class="thumb-overlay-center">
+              <span class="pill-social-tag">${v.category}</span>
+              <div class="banner-title-overlay">${v.overlayTitle}</div>
+            </div>
+          </div>
+
+          <!-- Info & Stepper -->
+          <div class="card-info-area">
+            <div class="meta-user-row">
+              <div class="circle-avatar-badge">${(v.title[0] || 'R').toUpperCase()}</div>
+              <div class="meta-texts">
+                <h3 class="card-main-title">${v.title}</h3>
+                <div class="card-sub-stats">
+                  <strong>REDVIRALZONE</strong>
+                  <span>•</span>
+                  <span>👁 ${Number(v.views).toLocaleString()}</span>
+                  <span>•</span>
+                  <span>❤️ ${Number(v.likes).toLocaleString()}</span>
+                  <span>Viral <span class="fire-tag">🔥</span></span>
+                </div>
+              </div>
+              <button class="btn-more-dots">
+                <span class="material-symbols-rounded">more_vert</span>
+              </button>
+            </div>
+
+            <div class="expire-notice">
+              <span class="material-symbols-rounded" style="font-size:16px;">expand_more</span>
+              <span>Watch quickly before it expires</span>
+            </div>
+
+            <!-- Stepper -->
+            <div class="ad-stepper-line" id="stepper-${v.id}">
+              <div class="stepper-bg-bar"></div>
+
+              <div class="step-item ${v.currentStep === 1 ? 'active' : (v.currentStep > 1 ? 'completed' : '')}">
+                <div class="step-circle">
+                  <span class="material-symbols-rounded" style="font-size:16px;">${v.currentStep > 1 ? 'check' : 'play_arrow'}</span>
+                </div>
+                <span class="step-label">AD 1</span>
+              </div>
+
+              <div class="step-item ${v.currentStep === 2 ? 'active' : (v.currentStep > 2 ? 'completed' : '')}">
+                <div class="step-circle">
+                  <span class="material-symbols-rounded" style="font-size:16px;">${v.currentStep > 2 ? 'check' : (v.currentStep === 2 ? 'play_arrow' : '')}</span>
+                  ${v.currentStep < 2 ? '2' : ''}
+                </div>
+                <span class="step-label">AD 2</span>
+              </div>
+
+              <div class="step-item ${v.currentStep === 3 ? 'active' : (v.currentStep > 3 ? 'completed' : '')}">
+                <div class="step-circle">
+                  <span class="material-symbols-rounded" style="font-size:16px;">${v.currentStep > 3 ? 'check' : (v.currentStep === 3 ? 'play_arrow' : '')}</span>
+                  ${v.currentStep < 3 ? '3' : ''}
+                </div>
+                <span class="step-label">AD 3</span>
+              </div>
+            </div>
+
+            <!-- Unlock Button -->
+            <button class="btn-unlock-big" data-id="${v.id}">
+              <span class="material-symbols-rounded">lock</span>
+              <span>UNLOCK</span>
+              <span class="unlock-step-tag">${v.currentStep}/3</span>
+            </button>
+          </div>
+        `;
+
+        card.querySelector(".btn-fav-round").onclick = (e) => {
+          e.stopPropagation();
+          toggleFavorite(v.id);
+        };
+
+        card.querySelector(".btn-unlock-big").onclick = () => {
+          triggerAdCheckpoint(v);
+        };
+
+        container.appendChild(card);
+      });
+    }
+
+    // FAVORITES
+    async function toggleFavorite(id) {
+      if (userFavorites.has(id)) userFavorites.delete(id);
+      else userFavorites.add(id);
+
+      const favCount = userFavorites.size;
+      document.getElementById("stat-fav-count").innerText = favCount;
+
+      try {
+        await updateDoc(doc(db, "users", tgUser.id), {
+          favoritesCount: favCount,
+          favorites: Array.from(userFavorites)
+        });
+      } catch(e) {}
+
+      renderCards("home-feed-container", videos);
+      renderFavorites();
+    }
+
+    function renderFavorites() {
+      const favList = videos.filter(v => userFavorites.has(v.id));
+      renderCards("favorites-feed-container", favList);
+    }
+
+    // 5. 3-STAGE ADSGRAM AD SYSTEM WITH 10-SEC COUNTDOWN
+    let activeVideoForUnlock = null;
+    let timerCountdownInterval = null;
+
+    function triggerAdCheckpoint(video) {
+      activeVideoForUnlock = video;
+
+      if (AdController) {
+        AdController.show()
+          .then(() => onAdStepCompleted())
+          .catch(() => {
+            alert("Please watch the full ad to proceed!");
+          });
+      } else {
+        onAdStepCompleted();
+      }
+    }
+
+    async function onAdStepCompleted() {
+      const v = activeVideoForUnlock;
+      if (!v) return;
+
+      try {
+        await updateDoc(doc(db, "users", tgUser.id), {
+          watchedAdsCount: increment(1)
+        });
+        const currentAds = Number(document.getElementById("stat-watched-count").innerText) + 1;
+        document.getElementById("stat-watched-count").innerText = currentAds;
+      } catch(e) {}
+
+      if (v.currentStep < 3) {
+        startTenSecondCooldown(() => {
+          v.currentStep++;
+          renderCards("home-feed-container", videos);
+        });
+      } else {
+        v.currentStep = 3;
+        try {
+          await updateDoc(doc(db, "users", tgUser.id), {
+            unlockedCount: increment(1)
+          });
+          const curUnlocked = Number(document.getElementById("stat-unlocked-count").innerText) + 1;
+          document.getElementById("stat-unlocked-count").innerText = curUnlocked;
+
+          await updateDoc(doc(db, "videos", v.id), {
+            viewsCount: increment(1)
+          });
+          v.views = Number(v.views) + 1;
+        } catch(e) {}
+
+        launchVideoPlayer(v);
+      }
+    }
+
+    function startTenSecondCooldown(onComplete) {
+      const modal = document.getElementById("ad-countdown-modal");
+      const numEl = document.getElementById("timer-countdown-val");
+      let count = 10;
+
+      modal.style.display = "flex";
+      numEl.innerText = count;
+
+      if (timerCountdownInterval) clearInterval(timerCountdownInterval);
+
+      timerCountdownInterval = setInterval(() => {
+        count--;
+        numEl.innerText = count;
+
+        if (count <= 0) {
+          clearInterval(timerCountdownInterval);
+          modal.style.display = "none";
+          if (onComplete) onComplete();
         }
+      }, 1000);
+    }
 
-        // Actions
-        window.selectPay = (m, btn) => {
-            sMethod = m;
-            document.querySelectorAll('.pay-btn').forEach(b => b.classList.remove('border-blue-500', 'bg-blue-50', 'dark:bg-blue-900/10'));
-            btn.classList.add('border-blue-500', 'bg-blue-50', 'dark:bg-blue-900/10');
-            const num = m === 'Bkash' ? payInfo.bkash : payInfo.nagad;
-            document.getElementById('pay-number-display').innerHTML = `Send Money To (${m}): <span class="text-blue-500 font-black tracking-widest ml-1">${num || 'Not Set'}</span>`;
-            document.getElementById('pay-box').classList.remove('hidden');
-        };
+    // 6. VIDEO PLAYER
+    const pOverlay = document.getElementById("player-overlay");
+    const activeVid = document.getElementById("active-player-video");
 
-        window.submitDep = () => {
-            const s = document.getElementById('dep-sender').value, tx = document.getElementById('dep-txid').value, am = document.getElementById('dep-amount').value;
-            if(!sMethod || !s || !tx || !am) return alert("Please fill all details!");
-            const msg = `--- NEW DEPOSIT REQUEST ---\nMethod: ${sMethod}\nAmount: ${am} TK\nSender: ${s}\nTxID: ${tx}\nUser: ${user ? '@'+user.username : 'Guest'}\nDate: ${new Date().toLocaleString()}`;
-            window.open(`https://t.me/videocallservicebd?text=${encodeURIComponent(msg)}`, '_blank');
-        };
+    function launchVideoPlayer(v) {
+      pOverlay.style.display = "flex";
+      document.getElementById("player-head-title").innerText = v.title;
+      document.getElementById("player-active-title").innerText = v.title;
+      document.getElementById("player-active-views").innerText = `${Number(v.views).toLocaleString()} views • HD Stream`;
+      document.getElementById("player-active-desc").innerText = v.overlayTitle || v.title;
 
-        window.shareCode = (title) => {
-            const text = `Hey! Check out this awesome script: ${title} 🚀 Download it now for free on DOWNLOAD FREE CODE!`;
-            if (navigator.share) navigator.share({ title: 'DF CODE', text: text, url: window.location.href });
-            else window.open(`https://t.me/share/url?url=${encodeURIComponent(window.location.href)}&text=${encodeURIComponent(text)}`);
-        };
+      activeVid.src = v.videoUrl;
+      activeVid.play();
+    }
 
-        window.switchTab = (tab) => {
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active-tab'));
-            document.querySelectorAll('nav button').forEach(b => b.classList.add('opacity-30'));
-            document.querySelectorAll('nav button').forEach(b => b.classList.remove('text-blue-600'));
-            document.getElementById(tab+'-tab').classList.add('active-tab');
-            document.getElementById('nav-'+tab).classList.remove('opacity-30');
-            document.getElementById('nav-'+tab).classList.add('text-blue-600');
-        };
+    document.getElementById("btn-player-close").onclick = () => {
+      activeVid.pause();
+      activeVid.src = "";
+      pOverlay.style.display = "none";
+      renderCards("home-feed-container", videos);
+    };
 
-        window.handleAction = async (btn) => {
-            if(parseInt(btn.dataset.price) > 0) return switchTab('deposit');
-            const id = btn.dataset.id, req = parseInt(btn.dataset.req);
-            let c = parseInt(localStorage.getItem('c_'+id) || 0);
-            if(c >= req) return window.open(btn.dataset.url, '_blank');
-            btn.disabled = true; btn.innerHTML = "LOADING...";
-            try {
-                await show_9406863(); c++; localStorage.setItem('c_'+id, c);
-                if(c >= req) { btn.innerHTML = "DOWNLOAD"; btn.disabled = false; }
-                else {
-                    let s = waitSec; const itv = setInterval(() => { btn.innerHTML = "WAIT "+s+"S"; if(s-- <= 0) { clearInterval(itv); btn.innerHTML = `UNLOCK (${c}/${req})`; btn.disabled = false; } }, 1000);
-                }
-            } catch { btn.disabled = false; }
-        };
+    // 7. BOTTOM NAVIGATION
+    window.switchTab = function(targetViewId) {
+      document.querySelectorAll(".nav-tab-item").forEach(b => {
+        if (b.getAttribute("data-view") === targetViewId) b.classList.add("active");
+        else b.classList.remove("active");
+      });
 
-        function renderAd(id, code) {
-            const c = document.getElementById(id); if(!c || !code) return;
-            c.innerHTML = code;
-            Array.from(c.getElementsByTagName('script')).forEach(s => {
-                const n = document.createElement('script');
-                Array.from(s.attributes).forEach(a => n.setAttribute(a.name, a.value));
-                n.innerHTML = s.innerHTML; s.parentNode.replaceChild(n, s);
-            });
-        }
+      document.querySelectorAll(".view-section").forEach(sec => {
+        if (sec.id === targetViewId) sec.classList.add("active");
+        else sec.classList.remove("active");
+      });
+    };
 
-        document.getElementById('themeToggle').onclick = () => {
-            document.documentElement.classList.toggle('dark');
-            localStorage.theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
-        };
+    document.querySelectorAll(".nav-tab-item").forEach(tab => {
+      tab.onclick = () => {
+        const viewId = tab.getAttribute("data-view");
+        window.switchTab(viewId);
+      };
+    });
 
-        init();
-    </script>
+    // Share Button
+    document.getElementById("p-menu-share").onclick = () => {
+      if (navigator.share) {
+        navigator.share({
+          title: "REDVIRALZONE Telegram App",
+          text: "Watch viral videos on REDVIRALZONE!",
+          url: window.location.href
+        });
+      } else {
+        alert("Link copied to clipboard!");
+      }
+    };
+
+    // Initialize Clean
+    await initUser();
+    await loadFirebaseVideos();
+  </script>
 </body>
 </html>
