@@ -100,6 +100,38 @@
     .btn-unlock-big { width: 100%; background: linear-gradient(90deg, #F02745, #b8152e); border: none; padding: 12px 14px; border-radius: 10px; color: #fff; font-size: 14px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; position: relative; box-shadow: 0 4px 14px var(--red-glow); }
     .unlock-step-tag { position: absolute; right: 12px; background: rgba(255, 255, 255, 0.25); padding: 2px 8px; border-radius: 14px; font-size: 10px; font-weight: 800; }
 
+    /* ================= TUTORIAL SECTION (DIRECT LOAD FROM ADMIN) ================= */
+    .tutorial-clean-box {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      overflow: hidden;
+      padding: 12px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+    }
+    .tutorial-screen-wrap {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: #000;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.08);
+      position: relative;
+    }
+    .tutorial-screen-wrap video {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+    .tutorial-notice-text {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 10px;
+      text-align: center;
+      line-height: 1.4;
+    }
+
     /* MULTI-PART BUTTONS IN PLAYER */
     .player-parts-shelf { margin-top: 14px; padding-bottom: 10px; border-bottom: 1px solid #222; }
     .player-parts-shelf h4 { font-size: 12px; color: #fbbf24; margin-bottom: 8px; text-transform: uppercase; font-weight: 800; }
@@ -222,16 +254,27 @@
         </div>
       </section>
 
-      <!-- TAB: TUTORIAL -->
+      <!-- TAB: TUTORIAL (LOADS DIRECTLY FROM ADMIN SETTINGS) -->
       <section id="view-tutorial" class="view-section">
         <button class="section-pill-tag">
           <span class="material-symbols-rounded">info</span>
           <span>Tutorial</span>
         </button>
-        <div style="background:var(--card-bg); border:1px solid var(--card-border); border-radius:16px; padding:12px;">
-          <div style="width:100%; aspect-ratio:16/9; background:#000; border-radius:12px; overflow:hidden;">
-            <video id="tutorial-video-el" controls playsinline webkit-playsinline controlsList="nodownload noplaybackrate" poster="https://i.postimg.cc/HLH6L590/IMG-20261107-230123-031.jpg" src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"></video>
+        
+        <div class="tutorial-clean-box">
+          <div class="tutorial-screen-wrap">
+            <video 
+              id="tutorial-video-el" 
+              controls 
+              playsinline 
+              webkit-playsinline 
+              controlsList="nodownload noplaybackrate" 
+              poster="https://i.postimg.cc/HLH6L590/IMG-20261107-230123-031.jpg">
+            </video>
           </div>
+          <p class="tutorial-notice-text">
+            টিউটোরিয়াল ভিডিওটি দেখে জেনে নিন কীভাবে যেকোনো ভিডিও সহজে আনলক করে উপভোগ করবেন।
+          </p>
         </div>
       </section>
 
@@ -370,11 +413,11 @@
 
   </div>
 
-  <!-- FIREBASE & APPLICATION LOGIC -->
+  <!-- FIREBASE & REAL-TIME LOGIC -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
     import { 
-      getFirestore, collection, doc, getDoc, getDocs, setDoc, updateDoc, 
+      getFirestore, collection, doc, getDoc, getDocs, setDoc, updateDoc, onSnapshot,
       query, where, increment, serverTimestamp 
     } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
     import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
@@ -393,7 +436,6 @@
     const db = getFirestore(app);
     const auth = getAuth(app);
 
-    // আপনার নতুন ডাইরেক্ট স্মার্টলিংক (কোনো ভিডিও অ্যাড নেই)
     let DIRECT_AD_URL = "https://auctionr.org/4/c1034da336206e50c9d99d0da9283198";
     let COOLDOWN_SECONDS = 10;
 
@@ -440,7 +482,7 @@
       try {
         await signInAnonymously(auth);
 
-        // Fetch Direct Ad URL
+        // Fetch Direct Ad settings from Firebase
         try {
           const cfgSnap = await getDoc(doc(db, "settings", "ads_config"));
           if (cfgSnap.exists()) {
@@ -476,13 +518,13 @@
 
     let videos = [];
 
-    async function loadFirebaseVideos() {
+    // REAL-TIME LISTENER FOR VIDEOS
+    function listenToVideos() {
       const container = document.getElementById("home-feed-container");
-      try {
-        const q = query(collection(db, "videos"), where("isPublished", "==", true));
-        const snap = await getDocs(q);
-        videos = [];
+      const q = query(collection(db, "videos"), where("isPublished", "==", true));
 
+      onSnapshot(q, (snap) => {
+        videos = [];
         snap.forEach(d => {
           const data = d.data();
           const realViews = Number(data.viewsCount) || 0;
@@ -519,9 +561,7 @@
         videos.sort((a, b) => b.views - a.views);
         renderCards("home-feed-container", videos, true);
         renderFavorites();
-      } catch (err) {
-        container.innerHTML = `<div class="empty-state-box"><p>ভিডিও লোড করা যাচ্ছে না</p></div>`;
-      }
+      });
     }
 
     function renderCards(containerId, list, isHome = false) {
@@ -623,16 +663,13 @@
       renderCards("favorites-feed-container", favList, false);
     }
 
-    // ==========================================
-    // DIRECT AD LINK UNLOCK ENGINE
-    // ==========================================
+    // DIRECT AD UNLOCK ENGINE
     let activeVideoForUnlock = null;
     let timerCountdownInterval = null;
 
     function triggerDirectAdCheckpoint(video) {
       activeVideoForUnlock = video;
 
-      // সরাসরি আপনার অ্যাড লিংক ওপেন হবে (কোনো ভিডিও বিজ্ঞাপন নেই)
       try {
         if (window.Telegram?.WebApp && window.Telegram.WebApp.openLink) {
           window.Telegram.WebApp.openLink(DIRECT_AD_URL);
@@ -743,14 +780,17 @@
       renderCards("home-feed-container", videos, true);
     };
 
-    async function loadAdminTutorialVideo() {
+    // LOAD TUTORIAL VIDEO DIRECTLY FROM ADMIN SETTINGS
+    function listenToTutorialVideo() {
       const videoEl = document.getElementById("tutorial-video-el");
-      try {
-        const snap = await getDoc(doc(db, "settings", "tutorial_config"));
+      const tutDoc = doc(db, "settings", "tutorial_config");
+
+      onSnapshot(tutDoc, (snap) => {
         if (snap.exists() && snap.data().videoUrl) {
           videoEl.src = snap.data().videoUrl;
+          videoEl.load();
         }
-      } catch(e) {}
+      });
     }
 
     window.switchTab = function(targetViewId) {
@@ -768,9 +808,10 @@
       tab.onclick = () => window.switchTab(tab.getAttribute("data-view"));
     });
 
+    // START
     await initUser();
-    await loadFirebaseVideos();
-    await loadAdminTutorialVideo();
+    listenToVideos();
+    listenToTutorialVideo();
   </script>
 </body>
 </html>
