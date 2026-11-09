@@ -8,9 +8,6 @@
   <!-- Telegram WebApp SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
-  <!-- Adsgram Official SDK -->
-  <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
-
   <!-- Google Fonts & Material Symbols -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -27,782 +24,138 @@
       --red-glow: rgba(240, 39, 69, 0.4);
       --badge-blue: #2563eb;
       --badge-green: #10b981;
-      --tg-blue: #229ED9;
-      --vip-gold: #f59e0b;
       --text: #ffffff;
       --text-muted: #8e8ea6;
       --nav-bg: #0f0f18;
       --nav-border: #1b1622;
     }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-      user-select: none;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; }
+    html, body { width: 100%; height: 100%; background-color: var(--bg); color: var(--text); overflow-x: hidden; font-family: 'Plus Jakarta Sans', 'Hind Siliguri', sans-serif; }
+    #app-container { width: 100%; min-height: 100vh; display: flex; flex-direction: column; position: relative; background: var(--bg); }
 
-    html, body {
-      width: 100%;
-      height: 100%;
-      background-color: var(--bg);
-      color: var(--text);
-      overflow-x: hidden;
-      font-family: 'Plus Jakarta Sans', 'Hind Siliguri', sans-serif;
-    }
-
-    #app-container {
-      width: 100%;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      position: relative;
-      background: var(--bg);
-    }
-
-    /* ================= HEADER ================= */
-    .app-header {
-      height: 60px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 14px;
-      background: #101018;
-      border-bottom: 1px solid var(--card-border);
-      position: sticky;
-      top: 0;
-      z-index: 50;
-    }
-
-    .brand-wrap {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .brand-logo-wrap {
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      padding: 1.5px;
-      background: linear-gradient(135deg, #F02745, #ff6b81, #7a0c1e);
-      box-shadow: 0 0 12px var(--red-glow);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-    }
-    .brand-logo-img {
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      object-fit: cover;
-    }
-
-    .brand-title {
-      font-size: 16.5px;
-      font-weight: 900;
-      color: #fff;
-      letter-spacing: -0.4px;
-    }
+    /* HEADER */
+    .app-header { height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 14px; background: #101018; border-bottom: 1px solid var(--card-border); position: sticky; top: 0; z-index: 50; }
+    .brand-wrap { display: flex; align-items: center; gap: 8px; }
+    .brand-logo-wrap { width: 38px; height: 38px; border-radius: 50%; padding: 1.5px; background: linear-gradient(135deg, #F02745, #ff6b81, #7a0c1e); box-shadow: 0 0 12px var(--red-glow); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+    .brand-logo-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+    .brand-title { font-size: 16.5px; font-weight: 900; color: #fff; letter-spacing: -0.4px; }
     .brand-title span { color: var(--primary-red); }
 
-    /* REAL TG USER CHIP */
-    .header-user-chip {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      background: #161624;
-      padding: 3px 8px 3px 5px;
-      border-radius: 20px;
-      border: 1px solid #281e26;
-      cursor: pointer;
-      max-width: 55%;
-    }
-    .h-user-details {
-      display: flex;
-      flex-direction: column;
-      text-align: right;
-      overflow: hidden;
-      line-height: 1.1;
-    }
-    .h-user-name {
-      font-size: 11.5px;
-      font-weight: 700;
-      color: #fff;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .h-user-handle {
-      font-size: 9.5px;
-      color: var(--primary-red);
-      font-weight: 700;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .h-avatar-box {
-      width: 30px;
-      height: 30px;
-      min-width: 30px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #F02745, #7a0c1e);
-      border: 1.5px solid var(--primary-red);
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .h-avatar-img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: none;
-    }
-    .h-avatar-fallback {
-      font-size: 13px;
-      font-weight: 800;
-      color: #fff;
-    }
+    .header-user-chip { display: flex; align-items: center; gap: 7px; background: #161624; padding: 3px 8px 3px 5px; border-radius: 20px; border: 1px solid #281e26; cursor: pointer; max-width: 55%; }
+    .h-user-details { display: flex; flex-direction: column; text-align: right; overflow: hidden; line-height: 1.1; }
+    .h-user-name { font-size: 11.5px; font-weight: 700; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .h-user-handle { font-size: 9.5px; color: var(--primary-red); font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .h-avatar-box { width: 30px; height: 30px; min-width: 30px; border-radius: 50%; background: linear-gradient(135deg, #F02745, #7a0c1e); border: 1.5px solid var(--primary-red); overflow: hidden; display: flex; align-items: center; justify-content: center; }
+    .h-avatar-img { width: 100%; height: 100%; object-fit: cover; display: none; }
+    .h-avatar-fallback { font-size: 13px; font-weight: 800; color: #fff; }
 
-    /* ================= COMPACT CHANNELS STRIP ================= */
-    .channel-strip-wrap {
-      padding: 8px 12px 2px 12px;
-      display: flex;
-      gap: 8px;
-      overflow-x: auto;
-      scrollbar-width: none;
-    }
+    /* CHANNELS STRIP */
+    .channel-strip-wrap { padding: 8px 12px 2px 12px; display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; }
     .channel-strip-wrap::-webkit-scrollbar { display: none; }
+    .ch-btn-compact { display: inline-flex; align-items: center; gap: 5px; padding: 6px 12px; border-radius: 20px; font-size: 11px; font-weight: 800; text-decoration: none; white-space: nowrap; border: 1px solid rgba(255, 255, 255, 0.08); background: #14141e; }
+    .ch-btn-compact.blue { border-color: rgba(34, 158, 217, 0.4); background: rgba(34, 158, 217, 0.12); color: #38bdf8; }
+    .ch-btn-compact.gold { border-color: rgba(245, 158, 11, 0.4); background: rgba(245, 158, 11, 0.12); color: #fbbf24; }
+    .ch-btn-compact.red { border-color: rgba(240, 39, 69, 0.4); background: rgba(240, 39, 69, 0.12); color: #ff5e79; }
+    .tg-verified-icon { font-size: 15px; color: #38bdf8; }
 
-    .ch-btn-compact {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      padding: 6px 12px;
-      border-radius: 20px;
-      font-size: 11px;
-      font-weight: 800;
-      text-decoration: none;
-      white-space: nowrap;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      background: #14141e;
-    }
-    .ch-btn-compact.blue {
-      border-color: rgba(34, 158, 217, 0.4);
-      background: rgba(34, 158, 217, 0.12);
-      color: #38bdf8;
-    }
-    .ch-btn-compact.gold {
-      border-color: rgba(245, 158, 11, 0.4);
-      background: rgba(245, 158, 11, 0.12);
-      color: #fbbf24;
-    }
-    .ch-btn-compact.red {
-      border-color: rgba(240, 39, 69, 0.4);
-      background: rgba(240, 39, 69, 0.12);
-      color: #ff5e79;
-    }
+    /* MAIN */
+    .app-main { flex: 1; overflow-y: auto; padding: 10px 12px 75px 12px; }
+    .view-section { display: none; animation: fadeIn 0.2s ease-out; }
+    .view-section.active { display: block; }
+    .section-pill-tag { display: inline-flex; align-items: center; gap: 6px; background: linear-gradient(90deg, #F02745, #b8152e); color: #fff; font-size: 12px; font-weight: 800; padding: 6px 14px; border-radius: 16px; margin-bottom: 12px; border: none; box-shadow: 0 4px 10px var(--red-glow); }
 
-    /* ================= MAIN SCROLL VIEW ================= */
-    .app-main {
-      flex: 1;
-      overflow-y: auto;
-      padding: 10px 12px 75px 12px;
-    }
+    /* 16:9 & 9:16 FEED CARDS */
+    .feed-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 16px; overflow: hidden; margin-bottom: 16px; box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35); position: relative; }
+    .feed-card.top-rank-card { border: 1.5px solid var(--primary-red); box-shadow: 0 0 18px var(--red-glow); }
+    .top-rank-badge { position: absolute; top: 10px; left: 10px; background: var(--primary-red); color: #fff; font-size: 10px; font-weight: 900; padding: 3px 8px; border-radius: 4px; z-index: 10; display: flex; align-items: center; gap: 3px; }
+    .thumb-dynamic-box { position: relative; width: 100%; background: #000; overflow: hidden; }
+    .thumb-dynamic-box.ratio-16-9 { aspect-ratio: 16 / 9; max-height: 230px; }
+    .thumb-dynamic-box.ratio-9-16 { aspect-ratio: 9 / 16; max-height: 480px; }
+    .thumb-actual-img { width: 100%; height: 100%; object-fit: cover; }
 
-    .view-section {
-      display: none;
-      animation: fadeIn 0.2s ease-out;
-    }
-    .view-section.active {
-      display: block;
-    }
-
-    .section-pill-tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: linear-gradient(90deg, #F02745, #b8152e);
-      color: #fff;
-      font-size: 12px;
-      font-weight: 800;
-      padding: 6px 14px;
-      border-radius: 16px;
-      margin-bottom: 12px;
-      border: none;
-      box-shadow: 0 4px 10px var(--red-glow);
-    }
-    .section-pill-tag span { font-size: 15px; }
-
-    /* ================= DYNAMIC 16:9 & 9:16 VIDEO CARDS ================= */
-    .feed-card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 16px;
-      overflow: hidden;
-      margin-bottom: 16px;
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
-      position: relative;
-    }
-
-    .feed-card.top-rank-card {
-      border: 1.5px solid var(--primary-red);
-      box-shadow: 0 0 18px var(--red-glow);
-    }
-
-    .top-rank-badge {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      background: var(--primary-red);
-      color: #fff;
-      font-size: 10px;
-      font-weight: 900;
-      padding: 3px 8px;
-      border-radius: 4px;
-      z-index: 10;
-      display: flex;
-      align-items: center;
-      gap: 3px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.5);
-    }
-
-    /* DYNAMIC ASPECT RATIOS (16:9 and 9:16) */
-    .thumb-dynamic-box {
-      position: relative;
-      width: 100%;
-      background: #000;
-      overflow: hidden;
-    }
-    .thumb-dynamic-box.ratio-16-9 {
-      aspect-ratio: 16 / 9;
-      max-height: 230px;
-    }
-    .thumb-dynamic-box.ratio-9-16 {
-      aspect-ratio: 9 / 16;
-      max-height: 480px;
-    }
-    .thumb-actual-img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .btn-fav-circle {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      background: rgba(15, 15, 24, 0.7);
-      backdrop-filter: blur(6px);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
-      cursor: pointer;
-      z-index: 5;
-    }
-    .btn-fav-circle span { font-size: 18px; }
+    .btn-fav-circle { position: absolute; top: 10px; right: 10px; width: 34px; height: 34px; border-radius: 50%; background: rgba(15, 15, 24, 0.7); backdrop-filter: blur(6px); border: 1px solid rgba(255, 255, 255, 0.15); display: flex; align-items: center; justify-content: center; color: #fff; cursor: pointer; z-index: 5; }
     .btn-fav-circle.active { color: var(--primary-red); }
+    .thumb-overlay-bar { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 4px; width: 94%; z-index: 5; }
+    .tag-category-pill { background: var(--badge-blue); color: #fff; font-size: 10.5px; font-weight: 800; padding: 3px 12px; border-radius: 5px; }
+    .tag-title-overlay { background: rgba(14, 14, 22, 0.92); backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.15); padding: 5px 14px; border-radius: 6px; font-size: 13px; font-weight: 700; color: #fff; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 96%; }
 
-    .thumb-overlay-bar {
-      position: absolute;
-      bottom: 8px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-      width: 94%;
-      z-index: 5;
-    }
-    .tag-category-pill {
-      background: var(--badge-blue);
-      color: #fff;
-      font-size: 10.5px;
-      font-weight: 800;
-      padding: 3px 12px;
-      border-radius: 5px;
-      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.4);
-    }
-    .tag-title-overlay {
-      background: rgba(14, 14, 22, 0.92);
-      backdrop-filter: blur(8px);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      padding: 5px 14px;
-      border-radius: 6px;
-      font-size: 13px;
-      font-weight: 700;
-      color: #fff;
-      text-align: center;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      max-width: 96%;
-    }
-
-    /* CARD INFO AREA (NO THREE DOTS) */
-    .card-info-area {
-      padding: 12px 14px 14px 14px;
-    }
-
-    .clean-title-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 6px;
-    }
-    .circle-avatar-badge {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #F02745, #7a0c1e);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 15px;
-      font-weight: 900;
-      color: #fff;
-      flex-shrink: 0;
-      border: 1px solid var(--primary-red);
-    }
-    .stylish-video-title {
-      font-size: 14px;
-      font-weight: 800;
-      color: #fff;
-      line-height: 1.35;
-      letter-spacing: -0.2px;
-      flex: 1;
-    }
-
-    .card-sub-stats {
-      font-size: 11px;
-      color: var(--text-muted);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      margin-left: 46px;
-      margin-bottom: 8px;
-    }
-    .card-sub-stats strong { color: #fff; }
+    /* CARD INFO & STEPPER */
+    .card-info-area { padding: 12px 14px 14px 14px; }
+    .clean-title-row { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+    .circle-avatar-badge { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, #F02745, #7a0c1e); display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 900; color: #fff; flex-shrink: 0; border: 1px solid var(--primary-red); }
+    .stylish-video-title { font-size: 14px; font-weight: 800; color: #fff; line-height: 1.35; flex: 1; }
+    .card-sub-stats { font-size: 11px; color: var(--text-muted); display: flex; align-items: center; gap: 6px; margin-left: 46px; margin-bottom: 8px; }
     .fire-tag { color: var(--primary-red); font-weight: 700; }
 
-    /* Stepper */
-    .ad-stepper-line {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: relative;
-      margin: 12px 16px 14px 16px;
-    }
-    .stepper-bg-bar {
-      position: absolute;
-      top: 13px;
-      left: 10px;
-      right: 10px;
-      height: 2px;
-      background: #252028;
-      z-index: 1;
-    }
-    .step-item {
-      position: relative;
-      z-index: 3;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-    }
-    .step-circle {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      background: #161622;
-      border: 1.5px solid #2b1e25;
-      color: var(--text-muted);
-      font-size: 11px;
-      font-weight: 800;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .step-item.active .step-circle {
-      background: var(--primary-red);
-      border-color: #ff5e79;
-      color: #fff;
-      box-shadow: 0 0 10px var(--red-glow);
-    }
-    .step-item.completed .step-circle {
-      background: #10b981;
-      border-color: #10b981;
-      color: #fff;
-    }
-    .step-label {
-      font-size: 9px;
-      font-weight: 700;
-      color: var(--text-muted);
-    }
+    .ad-stepper-line { display: flex; align-items: center; justify-content: space-between; position: relative; margin: 12px 16px 14px 16px; }
+    .stepper-bg-bar { position: absolute; top: 13px; left: 10px; right: 10px; height: 2px; background: #252028; z-index: 1; }
+    .step-item { position: relative; z-index: 3; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+    .step-circle { width: 28px; height: 28px; border-radius: 50%; background: #161622; border: 1.5px solid #2b1e25; color: var(--text-muted); font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center; }
+    .step-item.active .step-circle { background: var(--primary-red); border-color: #ff5e79; color: #fff; box-shadow: 0 0 10px var(--red-glow); }
+    .step-item.completed .step-circle { background: #10b981; border-color: #10b981; color: #fff; }
+    .step-label { font-size: 9px; font-weight: 700; color: var(--text-muted); }
     .step-item.active .step-label { color: #fff; }
 
-    /* Unlock Button */
-    .btn-unlock-big {
-      width: 100%;
-      background: linear-gradient(90deg, #F02745, #b8152e);
-      border: none;
-      padding: 12px 14px;
-      border-radius: 10px;
-      color: #fff;
-      font-size: 14px;
-      font-weight: 800;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      position: relative;
-      box-shadow: 0 4px 14px var(--red-glow);
-    }
-    .btn-unlock-big:active { transform: scale(0.99); }
-    .unlock-step-tag {
-      position: absolute;
-      right: 12px;
-      background: rgba(255, 255, 255, 0.25);
-      padding: 2px 8px;
-      border-radius: 14px;
-      font-size: 10px;
-      font-weight: 800;
-    }
+    .btn-unlock-big { width: 100%; background: linear-gradient(90deg, #F02745, #b8152e); border: none; padding: 12px 14px; border-radius: 10px; color: #fff; font-size: 14px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; position: relative; box-shadow: 0 4px 14px var(--red-glow); }
+    .unlock-step-tag { position: absolute; right: 12px; background: rgba(255, 255, 255, 0.25); padding: 2px 8px; border-radius: 14px; font-size: 10px; font-weight: 800; }
 
-    /* ================= 5. TUTORIAL VIEW ================= */
-    .tutorial-container {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 16px;
-      overflow: hidden;
-      padding: 12px;
-    }
-    .tutorial-video-holder {
-      width: 100%;
-      aspect-ratio: 16 / 9;
-      background: #000;
-      border-radius: 12px;
-      overflow: hidden;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      position: relative;
-    }
-    .tutorial-video-holder video {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-    }
+    /* MULTI-PART BUTTONS IN PLAYER */
+    .player-parts-shelf { margin-top: 14px; padding-bottom: 10px; border-bottom: 1px solid #222; }
+    .player-parts-shelf h4 { font-size: 12px; color: #fbbf24; margin-bottom: 8px; text-transform: uppercase; font-weight: 800; }
+    .parts-buttons-row { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; }
+    .btn-part-switch { background: #1c1c2d; border: 1px solid #33334d; color: #fff; padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; white-space: nowrap; }
+    .btn-part-switch.active { background: var(--primary-red); border-color: var(--primary-red); }
 
-    /* ================= 6. CHANNELS TAB ================= */
-    .tg-channel-card {
-      background: #141420;
-      border-radius: 16px;
-      padding: 16px;
-      margin-bottom: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      text-decoration: none;
-      color: #fff;
-      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4);
-      transition: all 0.2s ease;
-      position: relative;
-    }
-    .tg-channel-card:active { transform: scale(0.98); }
+    /* 10-SEC COUNTDOWN */
+    .ad-countdown-modal { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.92); backdrop-filter: blur(8px); z-index: 2100; display: none; align-items: center; justify-content: center; padding: 20px; }
+    .countdown-card-inner { background: #181520; border: 1.5px solid var(--primary-red); border-radius: 20px; width: 100%; max-width: 300px; padding: 24px 18px; text-align: center; box-shadow: 0 8px 30px rgba(240, 39, 69, 0.4); }
+    .timer-big-num { font-size: 44px; font-weight: 900; color: var(--primary-red); margin: 8px 0; line-height: 1; }
 
-    .tg-channel-card.c-blue {
-      border-color: rgba(34, 158, 217, 0.35);
-      background: linear-gradient(135deg, rgba(34, 158, 217, 0.12) 0%, #13141f 75%);
-    }
-    .tg-channel-card.c-gold {
-      border-color: rgba(245, 158, 11, 0.35);
-      background: linear-gradient(135deg, rgba(245, 158, 11, 0.12) 0%, #13141f 75%);
-    }
-    .tg-channel-card.c-red {
-      border-color: rgba(240, 39, 69, 0.4);
-      background: linear-gradient(135deg, rgba(240, 39, 69, 0.14) 0%, #13141f 75%);
-    }
+    /* PLAYER */
+    .player-overlay { position: fixed; inset: 0; background: #000; z-index: 2000; display: none; flex-direction: column; }
+    .player-top-header { height: 48px; display: flex; align-items: center; justify-content: space-between; padding: 0 14px; background: rgba(16, 16, 26, 0.95); }
+    .btn-player-back { background: none; border: none; color: #fff; cursor: pointer; }
+    .player-video-wrap { position: relative; width: 100%; aspect-ratio: 16 / 9; background: #000; }
+    .player-video-wrap video { width: 100%; height: 100%; object-fit: contain; }
+    .player-watermark-tag { position: absolute; top: 10%; left: 10%; color: rgba(255, 255, 255, 0.25); font-size: 11px; font-weight: 800; pointer-events: none; }
+    .player-details-scroll { flex: 1; overflow-y: auto; padding: 14px; }
 
-    .ch-info-flex {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .ch-icon-badge {
-      width: 44px;
-      height: 44px;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .c-blue .ch-icon-badge { background: rgba(34, 158, 217, 0.2); color: #38bdf8; border: 1px solid rgba(34, 158, 217, 0.4); }
-    .c-gold .ch-icon-badge { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); }
-    .c-red .ch-icon-badge { background: rgba(240, 39, 69, 0.2); color: #ff5e79; border: 1px solid rgba(240, 39, 69, 0.4); }
+    /* CHANNELS */
+    .tg-channel-card { background: #141420; border-radius: 16px; padding: 16px; margin-bottom: 12px; border: 1px solid rgba(255, 255, 255, 0.08); display: flex; align-items: center; justify-content: space-between; text-decoration: none; color: #fff; }
+    .ch-info-flex { display: flex; align-items: center; gap: 12px; }
+    .ch-icon-badge { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; background: rgba(240, 39, 69, 0.15); color: var(--primary-red); }
+    .btn-ch-join-gradient { padding: 7px 16px; border-radius: 20px; font-size: 11.5px; font-weight: 800; color: #fff; background: linear-gradient(90deg, #dc2626, #F02745); }
 
-    .ch-details-group h4 {
-      font-size: 14.5px;
-      font-weight: 800;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-    .ch-details-group p {
-      font-size: 11.5px;
-      color: var(--text-muted);
-      margin-top: 2px;
-    }
+    /* PROFILE */
+    .profile-wrap-center { display: flex; flex-direction: column; align-items: center; margin-top: 10px; margin-bottom: 16px; text-align: center; }
+    .profile-avatar-ring { width: 86px; height: 86px; border-radius: 50%; padding: 3px; background: linear-gradient(135deg, #F02745, #ff6b81, #7a0c1e); box-shadow: 0 0 20px var(--red-glow); margin-bottom: 10px; }
+    .profile-avatar-ring img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+    .profile-avatar-fallback { width: 100%; height: 100%; border-radius: 50%; background: #25131b; display: flex; align-items: center; justify-content: center; font-size: 30px; font-weight: 800; color: #fff; }
+    .profile-display-name { font-size: 16px; font-weight: 800; color: #fff; margin-bottom: 2px; }
+    .profile-username-tag { font-size: 12px; color: var(--primary-red); font-weight: 700; }
+    .profile-stats-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 14px; padding: 14px 10px; display: grid; grid-template-columns: repeat(3, 1fr); text-align: center; margin-bottom: 16px; }
+    .p-stat-col .p-num { font-size: 20px; font-weight: 900; color: var(--primary-red); margin-bottom: 2px; }
+    .p-stat-col .p-lbl { font-size: 10.5px; color: var(--text-muted); font-weight: 600; }
 
-    .tg-verified-icon {
-      font-size: 17px;
-      color: #38bdf8;
-      filter: drop-shadow(0 0 5px rgba(56, 189, 248, 0.6));
-    }
-    .tg-verified-icon.gold {
-      color: #fbbf24;
-      filter: drop-shadow(0 0 5px rgba(251, 191, 36, 0.6));
-    }
-
-    .btn-ch-join-gradient {
-      padding: 7px 16px;
-      border-radius: 20px;
-      font-size: 11.5px;
-      font-weight: 800;
-      color: #fff;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
-    .c-blue .btn-ch-join-gradient { background: linear-gradient(90deg, #0284c7, #0ea5e9); box-shadow: 0 4px 10px rgba(2, 132, 199, 0.3); }
-    .c-gold .btn-ch-join-gradient { background: linear-gradient(90deg, #d97706, #f59e0b); box-shadow: 0 4px 10px rgba(217, 119, 6, 0.3); }
-    .c-red .btn-ch-join-gradient { background: linear-gradient(90deg, #dc2626, #F02745); box-shadow: 0 4px 10px var(--red-glow); }
-
-    /* ================= 7. PROFILE TAB ================= */
-    .profile-wrap-center {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin-top: 10px;
-      margin-bottom: 16px;
-      text-align: center;
-    }
-    .profile-avatar-ring {
-      width: 86px;
-      height: 86px;
-      border-radius: 50%;
-      padding: 3px;
-      background: linear-gradient(135deg, #F02745, #ff6b81, #7a0c1e);
-      box-shadow: 0 0 20px var(--red-glow);
-      margin-bottom: 10px;
-    }
-    .profile-avatar-ring img {
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      object-fit: cover;
-      background: #14141e;
-    }
-    .profile-avatar-fallback {
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      background: #25131b;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 30px;
-      font-weight: 800;
-      color: #fff;
-    }
-    .profile-display-name {
-      font-size: 16px;
-      font-weight: 800;
-      color: #fff;
-      margin-bottom: 2px;
-    }
-    .profile-username-tag {
-      font-size: 12px;
-      color: var(--primary-red);
-      font-weight: 700;
-    }
-
-    .profile-stats-card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 14px;
-      padding: 14px 10px;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      text-align: center;
-      margin-bottom: 16px;
-    }
-    .p-stat-col .p-num {
-      font-size: 20px;
-      font-weight: 900;
-      color: var(--primary-red);
-      margin-bottom: 2px;
-    }
-    .p-stat-col .p-lbl {
-      font-size: 10.5px;
-      color: var(--text-muted);
-      font-weight: 600;
-    }
-
-    .profile-menu-list {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-    .profile-menu-item {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 12px;
-      padding: 12px 14px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      cursor: pointer;
-      color: #fff;
-      font-size: 13.5px;
-      font-weight: 600;
-    }
-
-    /* ================= 10-SEC COUNTDOWN ================= */
-    .ad-countdown-modal {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.9);
-      backdrop-filter: blur(8px);
-      z-index: 2100;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-    .countdown-card-inner {
-      background: #181520;
-      border: 1.5px solid var(--primary-red);
-      border-radius: 20px;
-      width: 100%;
-      max-width: 300px;
-      padding: 24px 18px;
-      text-align: center;
-      box-shadow: 0 8px 30px rgba(240, 39, 69, 0.4);
-    }
-    .timer-big-num {
-      font-size: 44px;
-      font-weight: 900;
-      color: var(--primary-red);
-      margin: 8px 0;
-      line-height: 1;
-    }
-
-    /* ================= FULLSCREEN PLAYER ================= */
-    .player-overlay {
-      position: fixed;
-      inset: 0;
-      background: #000;
-      z-index: 2000;
-      display: none;
-      flex-direction: column;
-    }
-    .player-top-header {
-      height: 48px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 14px;
-      background: rgba(16, 16, 26, 0.95);
-    }
-    .btn-player-back {
-      background: none;
-      border: none;
-      color: #fff;
-      cursor: pointer;
-    }
-    .player-video-wrap {
-      position: relative;
-      width: 100%;
-      aspect-ratio: 16 / 9;
-      background: #000;
-    }
-    .player-video-wrap video {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-    }
-    .player-watermark-tag {
-      position: absolute;
-      top: 10%;
-      left: 10%;
-      color: rgba(255, 255, 255, 0.25);
-      font-size: 11px;
-      font-weight: 800;
-      pointer-events: none;
-    }
-    .player-details-scroll {
-      flex: 1;
-      overflow-y: auto;
-      padding: 14px;
-    }
-
-    /* ================= BOTTOM NAVBAR ================= */
-    .bottom-navbar {
-      height: 60px;
-      background: var(--nav-bg);
-      border-top: 1px solid var(--nav-border);
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      width: 100%;
-      display: flex;
-      z-index: 100;
-    }
-    .nav-tab-item {
-      flex: 1;
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 2px;
-      cursor: pointer;
-    }
+    /* BOTTOM NAVBAR */
+    .bottom-navbar { height: 60px; background: var(--nav-bg); border-top: 1px solid var(--nav-border); position: fixed; bottom: 0; left: 0; right: 0; width: 100%; display: flex; z-index: 100; }
+    .nav-tab-item { flex: 1; background: none; border: none; color: var(--text-muted); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; cursor: pointer; }
     .nav-tab-item span.material-symbols-rounded { font-size: 20px; }
     .nav-tab-item span.tab-txt { font-size: 9.5px; font-weight: 700; }
     .nav-tab-item.active { color: var(--primary-red); }
 
-    .empty-state-box {
-      text-align: center;
-      padding: 50px 16px;
-      color: var(--text-muted);
-    }
+    .empty-state-box { text-align: center; padding: 50px 16px; color: var(--text-muted); }
     .empty-state-box span { font-size: 40px; color: var(--primary-red); margin-bottom: 6px; }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(4px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
   </style>
 </head>
 <body oncontextmenu="return false;">
 
   <div id="app-container">
 
-    <!-- ================= 1. HEADER ================= -->
+    <!-- HEADER -->
     <header class="app-header">
       <div class="brand-wrap">
         <div class="brand-logo-wrap">
@@ -811,7 +164,6 @@
         <div class="brand-title">RED<span>VIRALZONE</span></div>
       </div>
 
-      <!-- Real Telegram User Chip -->
       <div class="header-user-chip" id="top-user-chip" onclick="switchTab('view-profile')">
         <div class="h-user-details">
           <span class="h-user-name" id="h-user-name">Telegram User</span>
@@ -824,29 +176,29 @@
       </div>
     </header>
 
-    <!-- SHORT CHANNELS STRIP WITH VERIFIED BADGE -->
+    <!-- SHORT CHANNELS STRIP -->
     <div class="channel-strip-wrap">
       <a href="https://t.me/videocallservicebd" target="_blank" class="ch-btn-compact blue">
         <span class="material-symbols-rounded" style="font-size:14px;">send</span>
         <span>Officials</span>
-        <span class="material-symbols-rounded tg-verified-icon" style="font-size:13px;">verified</span>
+        <span class="material-symbols-rounded tg-verified-icon">verified</span>
       </a>
       <a href="https://t.me/+M2C0YyslaYc4NDQ1" target="_blank" class="ch-btn-compact gold">
         <span class="material-symbols-rounded" style="font-size:14px;">star</span>
         <span>VIP Backup</span>
-        <span class="material-symbols-rounded tg-verified-icon gold" style="font-size:13px;">verified</span>
+        <span class="material-symbols-rounded tg-verified-icon" style="color:#fbbf24;">verified</span>
       </a>
       <a href="https://t.me/REDVIRALZONE" target="_blank" class="ch-btn-compact red">
         <span class="material-symbols-rounded" style="font-size:14px;">local_fire_department</span>
         <span>RED VIRAL</span>
-        <span class="material-symbols-rounded tg-verified-icon" style="font-size:13px;">verified</span>
+        <span class="material-symbols-rounded tg-verified-icon" style="color:#ff5e79;">verified</span>
       </a>
     </div>
 
-    <!-- ================= MAIN SCROLL CONTENT ================= -->
+    <!-- MAIN SCROLL CONTENT -->
     <main class="app-main">
 
-      <!-- ================= TAB: HOME ================= -->
+      <!-- TAB: HOME -->
       <section id="view-home" class="view-section active">
         <div id="home-feed-container">
           <div class="empty-state-box">
@@ -856,7 +208,7 @@
         </div>
       </section>
 
-      <!-- ================= TAB: FAVORITES ================= -->
+      <!-- TAB: FAVORITES -->
       <section id="view-favorites" class="view-section">
         <button class="section-pill-tag">
           <span class="material-symbols-rounded">favorite</span>
@@ -870,99 +222,60 @@
         </div>
       </section>
 
-      <!-- ================= TAB: TUTORIAL (LOADED FROM ADMIN) ================= -->
+      <!-- TAB: TUTORIAL -->
       <section id="view-tutorial" class="view-section">
         <button class="section-pill-tag">
           <span class="material-symbols-rounded">info</span>
           <span>Tutorial</span>
         </button>
-
-        <div class="tutorial-container">
-          <div class="tutorial-video-holder">
-            <video 
-              id="tutorial-video-el" 
-              controls 
-              playsinline 
-              webkit-playsinline 
-              controlsList="nodownload noplaybackrate"
-              poster="https://i.postimg.cc/HLH6L590/IMG-20261107-230123-031.jpg"
-              src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4">
-            </video>
+        <div style="background:var(--card-bg); border:1px solid var(--card-border); border-radius:16px; padding:12px;">
+          <div style="width:100%; aspect-ratio:16/9; background:#000; border-radius:12px; overflow:hidden;">
+            <video id="tutorial-video-el" controls playsinline webkit-playsinline controlsList="nodownload noplaybackrate" poster="https://i.postimg.cc/HLH6L590/IMG-20261107-230123-031.jpg" src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"></video>
           </div>
-          <p style="font-size:12px; color:var(--text-muted); margin-top:10px; text-align:center;">
-            ভিডিওটি সম্পূর্ণ দেখে জেনে নিন কীভাবে নিরাপদে ভিডিও দেখবেন।
-          </p>
         </div>
       </section>
 
-      <!-- ================= TAB: CHANNELS ================= -->
+      <!-- TAB: CHANNELS -->
       <section id="view-channels" class="view-section">
         <button class="section-pill-tag">
           <span class="material-symbols-rounded">send</span>
           <span>Verified Channels</span>
         </button>
-
         <div class="channels-grid-list">
-          <a href="https://t.me/videocallservicebd" target="_blank" class="tg-channel-card c-blue">
+          <a href="https://t.me/videocallservicebd" target="_blank" class="tg-channel-card">
             <div class="ch-info-flex">
-              <div class="ch-icon-badge">
-                <span class="material-symbols-rounded">send</span>
-              </div>
-              <div class="ch-details-group">
-                <h4>
-                  <span>Officials</span>
-                  <span class="material-symbols-rounded tg-verified-icon">verified</span>
-                </h4>
-                <p>Main Updates & Feeds</p>
+              <div class="ch-icon-badge"><span class="material-symbols-rounded">send</span></div>
+              <div>
+                <h4 style="font-size:14px; font-weight:800;">Officials <span class="material-symbols-rounded tg-verified-icon">verified</span></h4>
+                <p style="font-size:11px; color:var(--text-muted);">Main Feeds</p>
               </div>
             </div>
-            <div class="btn-ch-join-gradient">
-              <span>JOIN</span>
-              <span class="material-symbols-rounded" style="font-size:15px;">arrow_forward</span>
-            </div>
+            <div class="btn-ch-join-gradient">JOIN</div>
           </a>
-
-          <a href="https://t.me/+M2C0YyslaYc4NDQ1" target="_blank" class="tg-channel-card c-gold">
+          <a href="https://t.me/+M2C0YyslaYc4NDQ1" target="_blank" class="tg-channel-card">
             <div class="ch-info-flex">
-              <div class="ch-icon-badge">
-                <span class="material-symbols-rounded">star</span>
-              </div>
-              <div class="ch-details-group">
-                <h4>
-                  <span>VIP Backup</span>
-                  <span class="material-symbols-rounded tg-verified-icon gold">verified</span>
-                </h4>
-                <p>Private VIP Backup Link</p>
+              <div class="ch-icon-badge"><span class="material-symbols-rounded">star</span></div>
+              <div>
+                <h4 style="font-size:14px; font-weight:800;">VIP Backup <span class="material-symbols-rounded tg-verified-icon" style="color:#fbbf24;">verified</span></h4>
+                <p style="font-size:11px; color:var(--text-muted);">VIP Link</p>
               </div>
             </div>
-            <div class="btn-ch-join-gradient">
-              <span>JOIN VIP</span>
-              <span class="material-symbols-rounded" style="font-size:15px;">lock_open</span>
-            </div>
+            <div class="btn-ch-join-gradient">JOIN VIP</div>
           </a>
-
-          <a href="https://t.me/REDVIRALZONE" target="_blank" class="tg-channel-card c-red">
+          <a href="https://t.me/REDVIRALZONE" target="_blank" class="tg-channel-card">
             <div class="ch-info-flex">
-              <div class="ch-icon-badge">
-                <span class="material-symbols-rounded">local_fire_department</span>
-              </div>
-              <div class="ch-details-group">
-                <h4>
-                  <span>RED VIRAL</span>
-                  <span class="material-symbols-rounded tg-verified-icon">verified</span>
-                </h4>
-                <p>Official Viral Zone Hub</p>
+              <div class="ch-icon-badge"><span class="material-symbols-rounded">local_fire_department</span></div>
+              <div>
+                <h4 style="font-size:14px; font-weight:800;">RED VIRAL <span class="material-symbols-rounded tg-verified-icon" style="color:#ff5e79;">verified</span></h4>
+                <p style="font-size:11px; color:var(--text-muted);">Official Hub</p>
               </div>
             </div>
-            <div class="btn-ch-join-gradient">
-              <span>JOIN</span>
-              <span class="material-symbols-rounded" style="font-size:15px;">arrow_forward</span>
-            </div>
+            <div class="btn-ch-join-gradient">JOIN</div>
           </a>
         </div>
       </section>
 
-      <!-- ================= TAB: PROFILE ================= -->
+      <!-- TAB: PROFILE -->
       <section id="view-profile" class="view-section">
         <div class="profile-wrap-center">
           <div class="profile-avatar-ring">
@@ -987,45 +300,11 @@
             <div class="p-lbl">Watched Ads</div>
           </div>
         </div>
-
-        <div class="profile-menu-list">
-          <div class="profile-menu-item" id="p-menu-share">
-            <div class="menu-item-left">
-              <span class="material-symbols-rounded" style="color:#10b981;">share</span>
-              <span>Share App</span>
-            </div>
-            <span class="material-symbols-rounded" style="color:var(--text-muted);">chevron_right</span>
-          </div>
-
-          <div class="profile-menu-item" onclick="switchTab('view-home')">
-            <div class="menu-item-left">
-              <span class="material-symbols-rounded" style="color:var(--primary-red);">home</span>
-              <span>Home</span>
-            </div>
-            <span class="material-symbols-rounded" style="color:var(--text-muted);">chevron_right</span>
-          </div>
-
-          <div class="profile-menu-item" onclick="switchTab('view-tutorial')">
-            <div class="menu-item-left">
-              <span class="material-symbols-rounded" style="color:#38bdf8;">info</span>
-              <span>Tutorial</span>
-            </div>
-            <span class="material-symbols-rounded" style="color:var(--text-muted);">chevron_right</span>
-          </div>
-
-          <div class="profile-menu-item" onclick="switchTab('view-channels')">
-            <div class="menu-item-left">
-              <span class="material-symbols-rounded" style="color:#fbbf24;">send</span>
-              <span>Channels</span>
-            </div>
-            <span class="material-symbols-rounded" style="color:var(--text-muted);">chevron_right</span>
-          </div>
-        </div>
       </section>
 
     </main>
 
-    <!-- 10-SEC COUNTDOWN MODAL -->
+    <!-- 10-SEC COUNTDOWN -->
     <div id="ad-countdown-modal" class="ad-countdown-modal">
       <div class="countdown-card-inner">
         <span class="material-symbols-rounded" style="color:var(--primary-red); font-size:36px;">hourglass_top</span>
@@ -1036,7 +315,7 @@
       </div>
     </div>
 
-    <!-- FULLSCREEN VIDEO PLAYER -->
+    <!-- FULLSCREEN VIDEO PLAYER (WITH MULTI-PART SUPPORT) -->
     <div id="player-overlay" class="player-overlay">
       <div class="player-top-header">
         <button class="btn-player-back" id="btn-player-close">
@@ -1048,19 +327,20 @@
 
       <div class="player-video-wrap">
         <div class="player-watermark-tag" id="watermark-tag">REDVIRALZONE</div>
-        <video 
-          id="active-player-video" 
-          controls 
-          playsinline 
-          webkit-playsinline 
-          controlsList="nodownload noplaybackrate">
-        </video>
+        <video id="active-player-video" controls playsinline webkit-playsinline controlsList="nodownload noplaybackrate"></video>
       </div>
 
       <div class="player-details-scroll">
         <h3 id="player-active-title" style="font-size:15px; font-weight:700; margin-bottom:4px;">Title</h3>
         <p id="player-active-views" style="font-size:11.5px; color:var(--text-muted); margin-bottom:10px;">0 views</p>
-        <p id="player-active-desc" style="font-size:12.5px; color:#cbd5e1; line-height:1.4;">Video description</p>
+
+        <!-- MULTI-PART BUTTONS SHELF -->
+        <div class="player-parts-shelf" id="player-parts-box" style="display:none;">
+          <h4>Select Video Part:</h4>
+          <div class="parts-buttons-row" id="parts-button-container"></div>
+        </div>
+
+        <p id="player-active-desc" style="font-size:12.5px; color:#cbd5e1; line-height:1.4; margin-top:10px;">Video description</p>
       </div>
     </div>
 
@@ -1070,22 +350,18 @@
         <span class="material-symbols-rounded">home</span>
         <span class="tab-txt">Home</span>
       </button>
-
       <button class="nav-tab-item" data-view="view-favorites">
         <span class="material-symbols-rounded">favorite</span>
         <span class="tab-txt">Favorites</span>
       </button>
-
       <button class="nav-tab-item" data-view="view-tutorial">
         <span class="material-symbols-rounded">info</span>
         <span class="tab-txt">Tutorial</span>
       </button>
-
       <button class="nav-tab-item" data-view="view-channels">
         <span class="material-symbols-rounded">send</span>
         <span class="tab-txt">Channels</span>
       </button>
-
       <button class="nav-tab-item" data-view="view-profile">
         <span class="material-symbols-rounded">person</span>
         <span class="tab-txt">Profile</span>
@@ -1094,7 +370,7 @@
 
   </div>
 
-  <!-- FIREBASE & CORE APPLICATION LOGIC -->
+  <!-- FIREBASE & APPLICATION LOGIC -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
     import { 
@@ -1103,7 +379,6 @@
     } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
     import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
 
-    // Your Firebase Credentials
     const firebaseConfig = {
       apiKey: "AIzaSyBQ8DkVDx4DCrEVLN3LFTnEER0YLa1UqIQ",
       authDomain: "free-download-code-2cf68.firebaseapp.com",
@@ -1118,39 +393,16 @@
     const db = getFirestore(app);
     const auth = getAuth(app);
 
-    // ==========================================
-    // ADSGRAM CONTROLLER SETUP (BLOCK ID: 58596)
-    // ==========================================
-    let ADSGRAM_BLOCK_ID = "58596";
-    let AdController = null;
+    // আপনার নতুন ডাইরেক্ট স্মার্টলিংক (কোনো ভিডিও অ্যাড নেই)
+    let DIRECT_AD_URL = "https://auctionr.org/4/c1034da336206e50c9d99d0da9283198";
+    let COOLDOWN_SECONDS = 10;
 
-    function initAdsgramEngine() {
-      try {
-        if (window.Adsgram) {
-          AdController = window.Adsgram.init({ 
-            blockId: ADSGRAM_BLOCK_ID,
-            debug: false
-          });
-          console.log("Adsgram Controller Ready with Block ID:", ADSGRAM_BLOCK_ID);
-        }
-      } catch (err) {
-        console.warn("Adsgram Init Notice:", err);
-      }
-    }
-
-    // 1. EXTRACT REAL TELEGRAM USER DATA
-    let tgUser = {
-      id: "987654321",
-      name: "Guest User",
-      handle: "@guest",
-      photo: ""
-    };
+    let tgUser = { id: "987654321", name: "Guest User", handle: "@guest", photo: "" };
 
     if (window.Telegram?.WebApp) {
       const tg = window.Telegram.WebApp;
       tg.ready();
       tg.expand();
-
       const u = tg.initDataUnsafe?.user;
       if (u) {
         tgUser.id = String(u.id);
@@ -1160,7 +412,6 @@
       }
     }
 
-    // Set Header User Details
     document.getElementById("h-user-name").innerText = tgUser.name;
     document.getElementById("h-user-handle").innerText = tgUser.handle;
     document.getElementById("p-display-name").innerText = tgUser.name;
@@ -1180,26 +431,22 @@
         fb.innerText = (name[0] || "U").toUpperCase();
       }
     }
-
     renderUserAvatar("h-avatar-img", "h-avatar-fallback", tgUser.photo, tgUser.name);
     renderUserAvatar("p-avatar-img", "p-avatar-fallback", tgUser.photo, tgUser.name);
 
-    // Initial Engine Start
-    initAdsgramEngine();
-
-    // 2. FIRESTORE AUTH & USER RECORD
     let userFavorites = new Set();
 
     async function initUser() {
       try {
         await signInAnonymously(auth);
 
-        // Fetch custom Block ID from Firebase if available
+        // Fetch Direct Ad URL
         try {
           const cfgSnap = await getDoc(doc(db, "settings", "ads_config"));
-          if (cfgSnap.exists() && cfgSnap.data().adsgramBlockId) {
-            ADSGRAM_BLOCK_ID = cfgSnap.data().adsgramBlockId;
-            initAdsgramEngine();
+          if (cfgSnap.exists()) {
+            const d = cfgSnap.data();
+            if (d.directAdUrl) DIRECT_AD_URL = d.directAdUrl;
+            if (d.cooldownSeconds) COOLDOWN_SECONDS = Number(d.cooldownSeconds);
           }
         } catch(e) {}
 
@@ -1217,22 +464,16 @@
             favorites: [],
             createdAt: serverTimestamp()
           });
-          document.getElementById("stat-fav-count").innerText = "0";
-          document.getElementById("stat-unlocked-count").innerText = "0";
-          document.getElementById("stat-watched-count").innerText = "0";
         } else {
           const d = snap.data();
           document.getElementById("stat-fav-count").innerText = d.favoritesCount || 0;
           document.getElementById("stat-unlocked-count").innerText = d.unlockedCount || 0;
           document.getElementById("stat-watched-count").innerText = d.watchedAdsCount || 0;
-          if (Array.isArray(d.favorites)) {
-            userFavorites = new Set(d.favorites);
-          }
+          if (Array.isArray(d.favorites)) userFavorites = new Set(d.favorites);
         }
       } catch(e) {}
     }
 
-    // 3. FETCH VIDEOS SUPPORTING 16:9 & 9:16 + AUTO-VIEW RANKING
     let videos = [];
 
     async function loadFirebaseVideos() {
@@ -1247,8 +488,7 @@
           const realViews = Number(data.viewsCount) || 0;
           const autoViews = Number(data.autoViews) || 0;
           const totalViews = realViews + autoViews;
-
-          const ratio = (data.aspectRatio === "9:16" || data.ratio === "9:16") ? "ratio-9-16" : "ratio-16-9";
+          const ratio = (data.aspectRatio === "9:16") ? "ratio-9-16" : "ratio-16-9";
 
           videos.push({
             id: d.id,
@@ -1259,6 +499,7 @@
             likes: Number(data.likesCount) || 0,
             thumbnail: data.thumbnailUrl || "https://i.postimg.cc/HLH6L590/IMG-20261107-230123-031.jpg",
             videoUrl: data.videoUrl || "",
+            parts: data.parts || [data.videoUrl],
             ratioClass: ratio,
             currentStep: 1
           });
@@ -1269,41 +510,23 @@
             <div class="empty-state-box">
               <span class="material-symbols-rounded">movie</span>
               <p>এখনো কোনো ভিডিও আপলোড করা হয়নি।</p>
-              <small style="color:#666;">অ্যাডমিন প্যানেল থেকে ভিডিও যুক্ত করুন।</small>
+              <small style="color:#666;">অ্যাডমিন প্যানেল থেকে লিংক পোস্ট করুন।</small>
             </div>
           `;
           return;
         }
 
-        // Auto rank highest views on top
         videos.sort((a, b) => b.views - a.views);
-
         renderCards("home-feed-container", videos, true);
         renderFavorites();
       } catch (err) {
-        container.innerHTML = `
-          <div class="empty-state-box">
-            <span class="material-symbols-rounded">error_outline</span>
-            <p>ফায়ারবেস থেকে ভিডিও লোড করা যাচ্ছে না।</p>
-          </div>
-        `;
+        container.innerHTML = `<div class="empty-state-box"><p>ভিডিও লোড করা যাচ্ছে না</p></div>`;
       }
     }
 
-    // 4. RENDER DYNAMIC 16:9 / 9:16 CARDS (NO THREE DOTS)
     function renderCards(containerId, list, isHome = false) {
       const container = document.getElementById(containerId);
       container.innerHTML = "";
-
-      if (list.length === 0) {
-        container.innerHTML = `
-          <div class="empty-state-box">
-            <span class="material-symbols-rounded">heart_broken</span>
-            <p>কোনো ভিডিও নেই</p>
-          </div>
-        `;
-        return;
-      }
 
       list.forEach((v, index) => {
         const isFav = userFavorites.has(v.id);
@@ -1312,34 +535,24 @@
         const card = document.createElement("div");
         card.className = `feed-card ${isTopRanked ? 'top-rank-card' : ''}`;
         card.innerHTML = `
-          ${isTopRanked ? `
-            <div class="top-rank-badge">
-              <span class="material-symbols-rounded" style="font-size:12px;">whatshot</span>
-              <span>#1 TOP VIRAL</span>
-            </div>
-          ` : ''}
+          ${isTopRanked ? `<div class="top-rank-badge"><span class="material-symbols-rounded" style="font-size:12px;">whatshot</span><span>#1 TOP VIRAL</span></div>` : ''}
 
-          <!-- Dynamic Aspect Ratio Container (16:9 or 9:16) -->
           <div class="thumb-dynamic-box ${v.ratioClass}">
             <img class="thumb-actual-img" src="${v.thumbnail}" alt="Thumbnail">
             <button class="btn-fav-circle ${isFav ? 'active' : ''}" data-id="${v.id}">
               <span class="material-symbols-rounded">${isFav ? 'favorite' : 'favorite_border'}</span>
             </button>
-
-            <!-- Overlay Elements -->
             <div class="thumb-overlay-bar">
               <span class="tag-category-pill">${v.category}</span>
               <div class="tag-title-overlay">${v.overlayTitle}</div>
             </div>
           </div>
 
-          <!-- Info Area without Three-Dots -->
           <div class="card-info-area">
             <div class="clean-title-row">
               <div class="circle-avatar-badge">${(v.title[0] || 'R').toUpperCase()}</div>
               <h3 class="stylish-video-title">${v.title}</h3>
             </div>
-
             <div class="card-sub-stats">
               <strong>REDVIRALZONE</strong>
               <span>•</span>
@@ -1352,32 +565,20 @@
             <!-- Stepper -->
             <div class="ad-stepper-line" id="stepper-${v.id}">
               <div class="stepper-bg-bar"></div>
-
               <div class="step-item ${v.currentStep === 1 ? 'active' : (v.currentStep > 1 ? 'completed' : '')}">
-                <div class="step-circle">
-                  <span class="material-symbols-rounded" style="font-size:15px;">${v.currentStep > 1 ? 'check' : 'play_arrow'}</span>
-                </div>
+                <div class="step-circle"><span class="material-symbols-rounded" style="font-size:15px;">${v.currentStep > 1 ? 'check' : 'play_arrow'}</span></div>
                 <span class="step-label">AD 1</span>
               </div>
-
               <div class="step-item ${v.currentStep === 2 ? 'active' : (v.currentStep > 2 ? 'completed' : '')}">
-                <div class="step-circle">
-                  <span class="material-symbols-rounded" style="font-size:15px;">${v.currentStep > 2 ? 'check' : (v.currentStep === 2 ? 'play_arrow' : '')}</span>
-                  ${v.currentStep < 2 ? '2' : ''}
-                </div>
+                <div class="step-circle"><span class="material-symbols-rounded" style="font-size:15px;">${v.currentStep > 2 ? 'check' : (v.currentStep === 2 ? 'play_arrow' : '')}</span>${v.currentStep < 2 ? '2' : ''}</div>
                 <span class="step-label">AD 2</span>
               </div>
-
               <div class="step-item ${v.currentStep === 3 ? 'active' : (v.currentStep > 3 ? 'completed' : '')}">
-                <div class="step-circle">
-                  <span class="material-symbols-rounded" style="font-size:15px;">${v.currentStep > 3 ? 'check' : (v.currentStep === 3 ? 'play_arrow' : '')}</span>
-                  ${v.currentStep < 3 ? '3' : ''}
-                </div>
+                <div class="step-circle"><span class="material-symbols-rounded" style="font-size:15px;">${v.currentStep > 3 ? 'check' : (v.currentStep === 3 ? 'play_arrow' : '')}</span>${v.currentStep < 3 ? '3' : ''}</div>
                 <span class="step-label">AD 3</span>
               </div>
             </div>
 
-            <!-- Unlock Button -->
             <button class="btn-unlock-big" data-id="${v.id}">
               <span class="material-symbols-rounded">lock</span>
               <span>UNLOCK</span>
@@ -1392,14 +593,13 @@
         };
 
         card.querySelector(".btn-unlock-big").onclick = () => {
-          triggerAdCheckpoint(v);
+          triggerDirectAdCheckpoint(v);
         };
 
         container.appendChild(card);
       });
     }
 
-    // FAVORITES
     async function toggleFavorite(id) {
       if (userFavorites.has(id)) userFavorites.delete(id);
       else userFavorites.add(id);
@@ -1424,39 +624,26 @@
     }
 
     // ==========================================
-    // 5. 3-STAGE ADSGRAM AD (BLOCK ID: 58596)
+    // DIRECT AD LINK UNLOCK ENGINE
     // ==========================================
     let activeVideoForUnlock = null;
     let timerCountdownInterval = null;
 
-    function triggerAdCheckpoint(video) {
+    function triggerDirectAdCheckpoint(video) {
       activeVideoForUnlock = video;
 
-      // Make sure controller is initialized with 58596
-      if (!AdController && window.Adsgram) {
-        initAdsgramEngine();
+      // সরাসরি আপনার অ্যাড লিংক ওপেন হবে (কোনো ভিডিও বিজ্ঞাপন নেই)
+      try {
+        if (window.Telegram?.WebApp && window.Telegram.WebApp.openLink) {
+          window.Telegram.WebApp.openLink(DIRECT_AD_URL);
+        } else {
+          window.open(DIRECT_AD_URL, "_blank");
+        }
+      } catch(e) {
+        window.open(DIRECT_AD_URL, "_blank");
       }
 
-      if (AdController) {
-        AdController.show()
-          .then((res) => {
-            console.log("Adsgram 58596 Completed:", res);
-            onAdStepCompleted();
-          })
-          .catch((res) => {
-            console.warn("Adsgram 58596 Notice:", res);
-            // If Adsgram network has no inventory right now or throws load error
-            if (res && res.error && (res.state === 'load' || String(res.description).toLowerCase().includes('not found') || String(res.description).toLowerCase().includes('no ad'))) {
-              console.log("Auto proceeding due to network fill notice");
-              onAdStepCompleted();
-            } else {
-              alert("দয়া করে পুরো বিজ্ঞাপনটি দেখুন!");
-            }
-          });
-      } else {
-        // Fallback simulation for browser test
-        onAdStepCompleted();
-      }
+      onAdStepCompleted();
     }
 
     async function onAdStepCompleted() {
@@ -1479,15 +666,11 @@
       } else {
         v.currentStep = 3;
         try {
-          await updateDoc(doc(db, "users", tgUser.id), {
-            unlockedCount: increment(1)
-          });
+          await updateDoc(doc(db, "users", tgUser.id), { unlockedCount: increment(1) });
           const curUnlocked = Number(document.getElementById("stat-unlocked-count").innerText) + 1;
           document.getElementById("stat-unlocked-count").innerText = curUnlocked;
 
-          await updateDoc(doc(db, "videos", v.id), {
-            viewsCount: increment(1)
-          });
+          await updateDoc(doc(db, "videos", v.id), { viewsCount: increment(1) });
           v.views = Number(v.views) + 1;
         } catch(e) {}
 
@@ -1498,7 +681,7 @@
     function startTenSecondCooldown(onComplete) {
       const modal = document.getElementById("ad-countdown-modal");
       const numEl = document.getElementById("timer-countdown-val");
-      let count = 10;
+      let count = COOLDOWN_SECONDS;
 
       modal.style.display = "flex";
       numEl.innerText = count;
@@ -1517,9 +700,11 @@
       }, 1000);
     }
 
-    // 6. FULLSCREEN VIDEO PLAYER
+    // FULLSCREEN VIDEO PLAYER
     const pOverlay = document.getElementById("player-overlay");
     const activeVid = document.getElementById("active-player-video");
+    const partsShelf = document.getElementById("player-parts-box");
+    const partsContainer = document.getElementById("parts-button-container");
 
     function launchVideoPlayer(v) {
       pOverlay.style.display = "flex";
@@ -1528,7 +713,26 @@
       document.getElementById("player-active-views").innerText = `${Number(v.views).toLocaleString()} views • HD Stream`;
       document.getElementById("player-active-desc").innerText = v.overlayTitle || v.title;
 
-      activeVid.src = v.videoUrl;
+      if (v.parts && v.parts.length > 1) {
+        partsShelf.style.display = "block";
+        partsContainer.innerHTML = "";
+        v.parts.forEach((url, i) => {
+          const btn = document.createElement("button");
+          btn.className = `btn-part-switch ${i === 0 ? 'active' : ''}`;
+          btn.innerText = `Part ${i + 1}`;
+          btn.onclick = () => {
+            document.querySelectorAll(".btn-part-switch").forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+            activeVid.src = url;
+            activeVid.play();
+          };
+          partsContainer.appendChild(btn);
+        });
+      } else {
+        partsShelf.style.display = "none";
+      }
+
+      activeVid.src = (v.parts && v.parts.length > 0) ? v.parts[0] : v.videoUrl;
       activeVid.play();
     }
 
@@ -1539,7 +743,6 @@
       renderCards("home-feed-container", videos, true);
     };
 
-    // 7. TUTORIAL: AUTO-LOAD FROM FIREBASE SETTINGS
     async function loadAdminTutorialVideo() {
       const videoEl = document.getElementById("tutorial-video-el");
       try {
@@ -1550,13 +753,11 @@
       } catch(e) {}
     }
 
-    // 8. NAVIGATION
     window.switchTab = function(targetViewId) {
       document.querySelectorAll(".nav-tab-item").forEach(b => {
         if (b.getAttribute("data-view") === targetViewId) b.classList.add("active");
         else b.classList.remove("active");
       });
-
       document.querySelectorAll(".view-section").forEach(sec => {
         if (sec.id === targetViewId) sec.classList.add("active");
         else sec.classList.remove("active");
@@ -1564,25 +765,9 @@
     };
 
     document.querySelectorAll(".nav-tab-item").forEach(tab => {
-      tab.onclick = () => {
-        const viewId = tab.getAttribute("data-view");
-        window.switchTab(viewId);
-      };
+      tab.onclick = () => window.switchTab(tab.getAttribute("data-view"));
     });
 
-    document.getElementById("p-menu-share").onclick = () => {
-      if (navigator.share) {
-        navigator.share({
-          title: "REDVIRALZONE Telegram App",
-          text: "Watch trending videos on REDVIRALZONE!",
-          url: window.location.href
-        });
-      } else {
-        alert("Link copied!");
-      }
-    };
-
-    // Initialize Everything Clean
     await initUser();
     await loadFirebaseVideos();
     await loadAdminTutorialVideo();
