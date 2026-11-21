@@ -1,817 +1,485 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>REDVIRALZONE</title>
-
-  <!-- Telegram WebApp SDK -->
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
-
-  <!-- Google Fonts & Material Symbols -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0" />
-
-  <style>
-    :root {
-      --bg: #0a0a10;
-      --card-bg: #13131e;
-      --card-border: #1f1823;
-      --primary-red: #F02745;
-      --primary-red-hover: #d3122f;
-      --red-glow: rgba(240, 39, 69, 0.4);
-      --badge-blue: #2563eb;
-      --badge-green: #10b981;
-      --text: #ffffff;
-      --text-muted: #8e8ea6;
-      --nav-bg: #0f0f18;
-      --nav-border: #1b1622;
-    }
-
-    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; }
-    html, body { width: 100%; height: 100%; background-color: var(--bg); color: var(--text); overflow-x: hidden; font-family: 'Plus Jakarta Sans', 'Hind Siliguri', sans-serif; }
-    #app-container { width: 100%; min-height: 100vh; display: flex; flex-direction: column; position: relative; background: var(--bg); }
-
-    /* HEADER */
-    .app-header { height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 14px; background: #101018; border-bottom: 1px solid var(--card-border); position: sticky; top: 0; z-index: 50; }
-    .brand-wrap { display: flex; align-items: center; gap: 8px; }
-    .brand-logo-wrap { width: 38px; height: 38px; border-radius: 50%; padding: 1.5px; background: linear-gradient(135deg, #F02745, #ff6b81, #7a0c1e); box-shadow: 0 0 12px var(--red-glow); display: flex; align-items: center; justify-content: center; overflow: hidden; }
-    .brand-logo-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
-    .brand-title { font-size: 16.5px; font-weight: 900; color: #fff; letter-spacing: -0.4px; }
-    .brand-title span { color: var(--primary-red); }
-
-    .header-user-chip { display: flex; align-items: center; gap: 7px; background: #161624; padding: 3px 8px 3px 5px; border-radius: 20px; border: 1px solid #281e26; cursor: pointer; max-width: 55%; }
-    .h-user-details { display: flex; flex-direction: column; text-align: right; overflow: hidden; line-height: 1.1; }
-    .h-user-name { font-size: 11.5px; font-weight: 700; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .h-user-handle { font-size: 9.5px; color: var(--primary-red); font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .h-avatar-box { width: 30px; height: 30px; min-width: 30px; border-radius: 50%; background: linear-gradient(135deg, #F02745, #7a0c1e); border: 1.5px solid var(--primary-red); overflow: hidden; display: flex; align-items: center; justify-content: center; }
-    .h-avatar-img { width: 100%; height: 100%; object-fit: cover; display: none; }
-    .h-avatar-fallback { font-size: 13px; font-weight: 800; color: #fff; }
-
-    /* CHANNELS STRIP */
-    .channel-strip-wrap { padding: 8px 12px 2px 12px; display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; }
-    .channel-strip-wrap::-webkit-scrollbar { display: none; }
-    .ch-btn-compact { display: inline-flex; align-items: center; gap: 5px; padding: 6px 12px; border-radius: 20px; font-size: 11px; font-weight: 800; text-decoration: none; white-space: nowrap; border: 1px solid rgba(255, 255, 255, 0.08); background: #14141e; }
-    .ch-btn-compact.blue { border-color: rgba(34, 158, 217, 0.4); background: rgba(34, 158, 217, 0.12); color: #38bdf8; }
-    .ch-btn-compact.gold { border-color: rgba(245, 158, 11, 0.4); background: rgba(245, 158, 11, 0.12); color: #fbbf24; }
-    .ch-btn-compact.red { border-color: rgba(240, 39, 69, 0.4); background: rgba(240, 39, 69, 0.12); color: #ff5e79; }
-    .tg-verified-icon { font-size: 15px; color: #38bdf8; }
-
-    /* MAIN */
-    .app-main { flex: 1; overflow-y: auto; padding: 10px 12px 75px 12px; }
-    .view-section { display: none; animation: fadeIn 0.2s ease-out; }
-    .view-section.active { display: block; }
-    .section-pill-tag { display: inline-flex; align-items: center; gap: 6px; background: linear-gradient(90deg, #F02745, #b8152e); color: #fff; font-size: 12px; font-weight: 800; padding: 6px 14px; border-radius: 16px; margin-bottom: 12px; border: none; box-shadow: 0 4px 10px var(--red-glow); }
-
-    /* 16:9 & 9:16 FEED CARDS */
-    .feed-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 16px; overflow: hidden; margin-bottom: 16px; box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35); position: relative; }
-    .feed-card.top-rank-card { border: 1.5px solid var(--primary-red); box-shadow: 0 0 18px var(--red-glow); }
-    .top-rank-badge { position: absolute; top: 10px; left: 10px; background: var(--primary-red); color: #fff; font-size: 10px; font-weight: 900; padding: 3px 8px; border-radius: 4px; z-index: 10; display: flex; align-items: center; gap: 3px; }
-    .thumb-dynamic-box { position: relative; width: 100%; background: #000; overflow: hidden; }
-    .thumb-dynamic-box.ratio-16-9 { aspect-ratio: 16 / 9; max-height: 230px; }
-    .thumb-dynamic-box.ratio-9-16 { aspect-ratio: 9 / 16; max-height: 480px; }
-    .thumb-actual-img { width: 100%; height: 100%; object-fit: cover; }
-
-    .btn-fav-circle { position: absolute; top: 10px; right: 10px; width: 34px; height: 34px; border-radius: 50%; background: rgba(15, 15, 24, 0.7); backdrop-filter: blur(6px); border: 1px solid rgba(255, 255, 255, 0.15); display: flex; align-items: center; justify-content: center; color: #fff; cursor: pointer; z-index: 5; }
-    .btn-fav-circle.active { color: var(--primary-red); }
-    .thumb-overlay-bar { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 4px; width: 94%; z-index: 5; }
-    .tag-category-pill { background: var(--badge-blue); color: #fff; font-size: 10.5px; font-weight: 800; padding: 3px 12px; border-radius: 5px; }
-    .tag-title-overlay { background: rgba(14, 14, 22, 0.92); backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.15); padding: 5px 14px; border-radius: 6px; font-size: 13px; font-weight: 700; color: #fff; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 96%; }
-
-    /* CARD INFO & STEPPER */
-    .card-info-area { padding: 12px 14px 14px 14px; }
-    .clean-title-row { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
-    .circle-avatar-badge { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, #F02745, #7a0c1e); display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 900; color: #fff; flex-shrink: 0; border: 1px solid var(--primary-red); }
-    .stylish-video-title { font-size: 14px; font-weight: 800; color: #fff; line-height: 1.35; flex: 1; }
-    .card-sub-stats { font-size: 11px; color: var(--text-muted); display: flex; align-items: center; gap: 6px; margin-left: 46px; margin-bottom: 8px; }
-    .fire-tag { color: var(--primary-red); font-weight: 700; }
-
-    .ad-stepper-line { display: flex; align-items: center; justify-content: space-between; position: relative; margin: 12px 16px 14px 16px; }
-    .stepper-bg-bar { position: absolute; top: 13px; left: 10px; right: 10px; height: 2px; background: #252028; z-index: 1; }
-    .step-item { position: relative; z-index: 3; display: flex; flex-direction: column; align-items: center; gap: 4px; }
-    .step-circle { width: 28px; height: 28px; border-radius: 50%; background: #161622; border: 1.5px solid #2b1e25; color: var(--text-muted); font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center; }
-    .step-item.active .step-circle { background: var(--primary-red); border-color: #ff5e79; color: #fff; box-shadow: 0 0 10px var(--red-glow); }
-    .step-item.completed .step-circle { background: #10b981; border-color: #10b981; color: #fff; }
-    .step-label { font-size: 9px; font-weight: 700; color: var(--text-muted); }
-    .step-item.active .step-label { color: #fff; }
-
-    .btn-unlock-big { width: 100%; background: linear-gradient(90deg, #F02745, #b8152e); border: none; padding: 12px 14px; border-radius: 10px; color: #fff; font-size: 14px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; position: relative; box-shadow: 0 4px 14px var(--red-glow); }
-    .unlock-step-tag { position: absolute; right: 12px; background: rgba(255, 255, 255, 0.25); padding: 2px 8px; border-radius: 14px; font-size: 10px; font-weight: 800; }
-
-    /* ================= TUTORIAL SECTION (DIRECT LOAD FROM ADMIN) ================= */
-    .tutorial-clean-box {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 16px;
-      overflow: hidden;
-      padding: 12px;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.4);
-    }
-    .tutorial-screen-wrap {
-      width: 100%;
-      aspect-ratio: 16 / 9;
-      background: #000;
-      border-radius: 12px;
-      overflow: hidden;
-      border: 1px solid rgba(255,255,255,0.08);
-      position: relative;
-    }
-    .tutorial-screen-wrap video {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      display: block;
-    }
-    .tutorial-notice-text {
-      font-size: 12px;
-      color: var(--text-muted);
-      margin-top: 10px;
-      text-align: center;
-      line-height: 1.4;
-    }
-
-    /* MULTI-PART BUTTONS IN PLAYER */
-    .player-parts-shelf { margin-top: 14px; padding-bottom: 10px; border-bottom: 1px solid #222; }
-    .player-parts-shelf h4 { font-size: 12px; color: #fbbf24; margin-bottom: 8px; text-transform: uppercase; font-weight: 800; }
-    .parts-buttons-row { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; }
-    .btn-part-switch { background: #1c1c2d; border: 1px solid #33334d; color: #fff; padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; white-space: nowrap; }
-    .btn-part-switch.active { background: var(--primary-red); border-color: var(--primary-red); }
-
-    /* 10-SEC COUNTDOWN */
-    .ad-countdown-modal { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.92); backdrop-filter: blur(8px); z-index: 2100; display: none; align-items: center; justify-content: center; padding: 20px; }
-    .countdown-card-inner { background: #181520; border: 1.5px solid var(--primary-red); border-radius: 20px; width: 100%; max-width: 300px; padding: 24px 18px; text-align: center; box-shadow: 0 8px 30px rgba(240, 39, 69, 0.4); }
-    .timer-big-num { font-size: 44px; font-weight: 900; color: var(--primary-red); margin: 8px 0; line-height: 1; }
-
-    /* PLAYER */
-    .player-overlay { position: fixed; inset: 0; background: #000; z-index: 2000; display: none; flex-direction: column; }
-    .player-top-header { height: 48px; display: flex; align-items: center; justify-content: space-between; padding: 0 14px; background: rgba(16, 16, 26, 0.95); }
-    .btn-player-back { background: none; border: none; color: #fff; cursor: pointer; }
-    .player-video-wrap { position: relative; width: 100%; aspect-ratio: 16 / 9; background: #000; }
-    .player-video-wrap video { width: 100%; height: 100%; object-fit: contain; }
-    .player-watermark-tag { position: absolute; top: 10%; left: 10%; color: rgba(255, 255, 255, 0.25); font-size: 11px; font-weight: 800; pointer-events: none; }
-    .player-details-scroll { flex: 1; overflow-y: auto; padding: 14px; }
-
-    /* CHANNELS */
-    .tg-channel-card { background: #141420; border-radius: 16px; padding: 16px; margin-bottom: 12px; border: 1px solid rgba(255, 255, 255, 0.08); display: flex; align-items: center; justify-content: space-between; text-decoration: none; color: #fff; }
-    .ch-info-flex { display: flex; align-items: center; gap: 12px; }
-    .ch-icon-badge { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; background: rgba(240, 39, 69, 0.15); color: var(--primary-red); }
-    .btn-ch-join-gradient { padding: 7px 16px; border-radius: 20px; font-size: 11.5px; font-weight: 800; color: #fff; background: linear-gradient(90deg, #dc2626, #F02745); }
-
-    /* PROFILE */
-    .profile-wrap-center { display: flex; flex-direction: column; align-items: center; margin-top: 10px; margin-bottom: 16px; text-align: center; }
-    .profile-avatar-ring { width: 86px; height: 86px; border-radius: 50%; padding: 3px; background: linear-gradient(135deg, #F02745, #ff6b81, #7a0c1e); box-shadow: 0 0 20px var(--red-glow); margin-bottom: 10px; }
-    .profile-avatar-ring img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
-    .profile-avatar-fallback { width: 100%; height: 100%; border-radius: 50%; background: #25131b; display: flex; align-items: center; justify-content: center; font-size: 30px; font-weight: 800; color: #fff; }
-    .profile-display-name { font-size: 16px; font-weight: 800; color: #fff; margin-bottom: 2px; }
-    .profile-username-tag { font-size: 12px; color: var(--primary-red); font-weight: 700; }
-    .profile-stats-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 14px; padding: 14px 10px; display: grid; grid-template-columns: repeat(3, 1fr); text-align: center; margin-bottom: 16px; }
-    .p-stat-col .p-num { font-size: 20px; font-weight: 900; color: var(--primary-red); margin-bottom: 2px; }
-    .p-stat-col .p-lbl { font-size: 10.5px; color: var(--text-muted); font-weight: 600; }
-
-    /* BOTTOM NAVBAR */
-    .bottom-navbar { height: 60px; background: var(--nav-bg); border-top: 1px solid var(--nav-border); position: fixed; bottom: 0; left: 0; right: 0; width: 100%; display: flex; z-index: 100; }
-    .nav-tab-item { flex: 1; background: none; border: none; color: var(--text-muted); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; cursor: pointer; }
-    .nav-tab-item span.material-symbols-rounded { font-size: 20px; }
-    .nav-tab-item span.tab-txt { font-size: 9.5px; font-weight: 700; }
-    .nav-tab-item.active { color: var(--primary-red); }
-
-    .empty-state-box { text-align: center; padding: 50px 16px; color: var(--text-muted); }
-    .empty-state-box span { font-size: 40px; color: var(--primary-red); margin-bottom: 6px; }
-
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
-  </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"/>
+<meta name="theme-color" content="#080410"/>
+<title>Royal Video Hub — User Panel</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<style>
+:root{--bg:#080410;--card:#150B24;--card2:#211138;--rose:#FF3E8E;--pink:#EC4899;--violet:#A855F7;--purple:#7C3AED;--gold:#F5B700;--gold2:#FFE27A;--mint:#10B981;--bkash:#E2136E;--nagad:#F76B1C;--muted:#C8B6E2;--bd:rgba(255,110,180,.32)}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{background:var(--bg);color:#fff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;height:100%;overflow:hidden}
+#app{max-width:480px;height:100dvh;margin:0 auto;position:relative;display:flex;flex-direction:column;background:radial-gradient(circle at top,#330E52 0%,#120621 42%,var(--bg) 78%);overflow:hidden}
+.screen{flex:1;overflow-y:auto;padding-bottom:88px;scrollbar-width:none}.screen::-webkit-scrollbar{display:none}
+.hide{display:none!important}
+.pwr{position:absolute;inset:0;z-index:60;display:flex;flex-direction:column;justify-content:space-between;align-items:center;padding:34px 22px 26px;background:var(--bg);text-align:center;overflow-y:auto}
+.pwr-bg{position:absolute;inset:0;width:100%;height:56%;object-fit:cover;opacity:.42;mask-image:linear-gradient(to bottom,#000,transparent)}
+.pwr-in{position:relative;z-index:2;width:100%;display:flex;flex-direction:column;align-items:center;gap:12px}
+.crown-ring{width:76px;height:76px;border-radius:50%;background:radial-gradient(circle,#43116B,#0C0518);border:2px solid var(--gold2);display:grid;place-items:center;box-shadow:0 0 30px rgba(255,62,142,.45)}
+.brand{font-size:24px;font-weight:900;letter-spacing:1.4px;background:linear-gradient(90deg,#FFF3B0,var(--gold2),#FF9AD5);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:99px;background:rgba(28,12,48,.92);border:1px solid rgba(255,210,120,.55);color:var(--gold2);font-size:11.5px;font-weight:800}
+.pwr-btn{width:140px;height:140px;border-radius:50%;border:3px solid var(--gold2);background:radial-gradient(circle at 30% 25%,#FF77B7,var(--rose) 38%,var(--purple) 82%);color:#fff;font-size:54px;cursor:pointer;box-shadow:0 0 46px rgba(255,62,142,.82),inset 0 4px 16px rgba(255,255,255,.45);animation:pulse 1.8s infinite ease-in-out}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+.hdr{display:flex;align-items:center;justify-content:space-between;padding:13px 15px 9px;position:sticky;top:0;z-index:12;background:linear-gradient(to bottom,#080410F5,#08041000)}
+.avatar{width:44px;height:44px;border-radius:50%;object-fit:cover;border:2px solid var(--gold2);box-shadow:0 0 14px rgba(255,62,142,.45)}
+.ibtn{width:40px;height:40px;border-radius:50%;background:linear-gradient(145deg,rgba(255,62,142,.22),rgba(33,17,56,.92));border:1px solid var(--bd);color:#fff;display:grid;place-items:center;cursor:pointer;font-size:17px;transition:.15s}
+.ibtn:active,.gbtn:active,.qbtn:active,.fbtn:active{transform:scale(.95)}
+.hero{margin:4px 14px 14px;border-radius:26px;overflow:hidden;position:relative;height:315px;border:1.5px solid rgba(255,190,120,.6);box-shadow:0 14px 36px rgba(236,72,153,.32)}
+.hero img{width:100%;height:100%;object-fit:cover}
+.hero-ov{position:absolute;inset:0;background:linear-gradient(to top,#080410 7%,rgba(8,4,16,.18) 54%,transparent);display:flex;flex-direction:column;justify-content:space-between;padding:14px}
+.vip-b{align-self:flex-start;background:rgba(12,5,24,.88);border:1.5px solid var(--gold2);border-radius:16px;padding:6px 12px;text-align:center;color:var(--gold2);font-weight:900;font-size:11.5px;box-shadow:0 0 18px rgba(245,183,0,.4)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 14px 14px}
+.qbtn{position:relative;overflow:hidden;border:1.2px solid rgba(255,255,255,.28);border-radius:22px;padding:13px 12px;color:#fff;font-weight:900;font-size:13.5px;display:flex;align-items:center;gap:10px;cursor:pointer;box-shadow:0 10px 24px rgba(0,0,0,.38);transition:.15s}
+.qbtn::before{content:"";position:absolute;top:0;left:0;right:0;height:44%;background:linear-gradient(to bottom,rgba(255,255,255,.24),transparent);pointer-events:none}
+.qico{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.22);display:grid;place-items:center;font-size:16px;flex-shrink:0}
+.q1{background:linear-gradient(135deg,#FF3E8E,#9333EA)}.q2{background:linear-gradient(135deg,#10B981,#059669)}
+.q3{background:linear-gradient(135deg,#F59E0B,#EC4899)}.q4{background:linear-gradient(135deg,#EC4899,#7C3AED)}
+.card{margin:0 14px 14px;padding:14px;border-radius:22px;background:linear-gradient(145deg,var(--card2),var(--card));border:1px solid var(--bd);box-shadow:0 8px 24px rgba(0,0,0,.28)}
+.sec-h{display:flex;justify-content:space-between;align-items:center;padding:2px 16px 10px;font-weight:900;font-size:15.5px}
+.sec-h span{color:#FF9AD5;font-size:12px;cursor:pointer;font-weight:800}
+.hscroll{display:flex;gap:10px;overflow-x:auto;padding:0 14px 14px;scrollbar-width:none}.hscroll::-webkit-scrollbar{display:none}
+.girl-card{min-width:128px;width:128px;border-radius:22px;padding:10px 8px;background:linear-gradient(160deg,#2B1348,#140922);border:1.2px solid rgba(255,110,180,.42);text-align:center;cursor:pointer;position:relative;box-shadow:0 8px 22px rgba(236,72,153,.2)}
+.girl-av{width:76px;height:76px;border-radius:50%;object-fit:cover;border:2.5px solid var(--rose);padding:2px;background:linear-gradient(45deg,var(--gold2),var(--rose),var(--violet));margin:0 auto 6px;display:block}
+.dot{position:absolute;top:12px;right:12px;width:11px;height:11px;border-radius:50%;border:2px solid #140922}
+.fbtn{width:100%;border:none;border-radius:99px;padding:7px 10px;margin-top:6px;background:linear-gradient(90deg,var(--rose),var(--violet));color:#fff;font-size:11px;font-weight:800;cursor:pointer;box-shadow:0 4px 14px rgba(255,62,142,.42);transition:.15s}
+.gbtn{position:relative;overflow:hidden;width:100%;border:1px solid rgba(255,224,102,.5);border-radius:99px;padding:13px 16px;background:linear-gradient(90deg,#FF3E8E,#EC4899,#9333EA);color:#fff;font-weight:900;font-size:14px;cursor:pointer;box-shadow:0 8px 26px rgba(255,62,142,.5);transition:.15s;pointer-events:auto}
+.gbtn::before{content:"";position:absolute;top:0;left:0;right:0;height:45%;background:linear-gradient(to bottom,rgba(255,255,255,.22),transparent);pointer-events:none}
+.pay-row{display:flex;align-items:center;justify-content:space-between;gap:10px;background:rgba(8,4,16,.78);border-radius:16px;padding:10px 12px;margin-top:8px;border:1px solid rgba(255,150,210,.18)}
+.pay-logo{width:38px;height:38px;border-radius:11px;overflow:hidden;flex-shrink:0}
+.copy-btn{border:none;border-radius:99px;padding:7px 14px;color:#fff;font-weight:800;font-size:12px;cursor:pointer}
+.vcard{min-width:138px;width:138px;border-radius:18px;overflow:hidden;background:var(--card);border:1px solid var(--bd);cursor:pointer;position:relative}
+.vcard img{width:100%;height:186px;object-fit:cover;display:block}
+.vtag{position:absolute;bottom:48px;right:6px;background:rgba(12,5,24,.9);border:1px solid var(--gold);color:var(--gold2);font-size:10px;font-weight:800;padding:3px 8px;border-radius:99px}
+.vinfo{padding:7px 8px;font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.reels{height:calc(100dvh - 70px);overflow-y:scroll;scroll-snap-type:y mandatory;scrollbar-width:none}.reels::-webkit-scrollbar{display:none}
+.reel{height:calc(100dvh - 70px);scroll-snap-align:start;position:relative;background:#000;overflow:hidden}
+.reel video{width:100%;height:100%;object-fit:cover;background:#000}
+.r-top{position:absolute;top:10px;left:12px;right:12px;display:flex;justify-content:space-between;align-items:center;z-index:8}
+.r-play-big{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:74px;height:74px;border-radius:50%;border:2px solid var(--gold2);background:rgba(255,62,142,.72);color:#fff;font-size:30px;display:grid;place-items:center;cursor:pointer;z-index:7;box-shadow:0 0 32px rgba(255,62,142,.7)}
+.r-acts{position:absolute;right:10px;bottom:146px;display:flex;flex-direction:column;gap:12px;align-items:center;z-index:8}
+.ract{width:46px;height:46px;border-radius:50%;background:rgba(21,11,36,.78);border:1.2px solid rgba(255,120,190,.55);color:#fff;font-size:19px;display:grid;place-items:center;cursor:pointer;backdrop-filter:blur(6px)}
+.rlbl{font-size:11px;font-weight:800;text-shadow:0 1px 4px #000;margin-top:-8px}
+.r-bot{position:absolute;left:0;right:0;bottom:0;background:linear-gradient(to top,rgba(8,4,16,.96) 12%,rgba(8,4,16,.55) 68%,transparent);padding:14px 14px 16px;z-index:8}
+.vbar{display:flex;align-items:center;gap:8px;margin:8px 0 10px}
+.vbar input[type=range]{flex:1;accent-color:#FF3E8E;height:4px;cursor:pointer}
+.vtime{font-size:11px;font-weight:700;color:#F3E8FF;min-width:74px;text-align:right}
+.inp{width:100%;padding:12px;border-radius:14px;border:1px solid var(--bd);background:#0C0618;color:#fff;margin-top:8px;font-size:14px}
+.bnav{position:absolute;bottom:0;left:0;right:0;height:70px;background:rgba(16,8,30,.97);backdrop-filter:blur(16px);border-top:1px solid var(--bd);display:grid;grid-template-columns:repeat(5,1fr);z-index:30}
+.bnav button{background:none;border:none;color:var(--muted);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:11px;font-weight:800;cursor:pointer}
+.bnav button.on{color:var(--gold2)}
+.bnav button.on span{background:linear-gradient(135deg,var(--rose),var(--violet));padding:3px 12px;border-radius:99px;color:#fff;box-shadow:0 0 14px rgba(255,62,142,.55)}
+.sheet{position:fixed;inset:0;z-index:95;background:rgba(8,4,16,.96);overflow-y:auto;max-width:480px;margin:0 auto;padding-bottom:36px}
+.fs-viewer{position:fixed;inset:0;z-index:110;background:#000;display:flex;align-items:center;justify-content:center}
+.fs-viewer img{width:100vw;height:100dvh;object-fit:cover}
+.fs-top{position:fixed;top:14px;left:14px;right:14px;display:flex;justify-content:space-between;align-items:center;z-index:112}
+.fs-bot{position:fixed;bottom:22px;left:14px;right:14px;display:flex;justify-content:space-between;align-items:center;gap:10px;z-index:112}
+.toast{position:fixed;top:18px;left:50%;transform:translateX(-50%);background:#260F42;border:1.5px solid var(--gold2);color:#fff;padding:10px 18px;border-radius:99px;font-size:12.5px;font-weight:800;z-index:200;box-shadow:0 10px 30px rgba(0,0,0,.65);max-width:90%;text-align:center}
+</style>
 </head>
-<body oncontextmenu="return false;">
-
-  <div id="app-container">
-
-    <!-- HEADER -->
-    <header class="app-header">
-      <div class="brand-wrap">
-        <div class="brand-logo-wrap">
-          <img src="https://i.postimg.cc/HLH6L590/IMG-20261107-230123-031.jpg" alt="Logo" class="brand-logo-img">
-        </div>
-        <div class="brand-title">RED<span>VIRALZONE</span></div>
-      </div>
-
-      <div class="header-user-chip" id="top-user-chip" onclick="switchTab('view-profile')">
-        <div class="h-user-details">
-          <span class="h-user-name" id="h-user-name">Telegram User</span>
-          <span class="h-user-handle" id="h-user-handle">@username</span>
-        </div>
-        <div class="h-avatar-box">
-          <img id="h-avatar-img" class="h-avatar-img" alt="Avatar">
-          <span id="h-avatar-fallback" class="h-avatar-fallback">U</span>
-        </div>
-      </div>
-    </header>
-
-    <!-- SHORT CHANNELS STRIP -->
-    <div class="channel-strip-wrap">
-      <a href="https://t.me/videocallservicebd" target="_blank" class="ch-btn-compact blue">
-        <span class="material-symbols-rounded" style="font-size:14px;">send</span>
-        <span>Officials</span>
-        <span class="material-symbols-rounded tg-verified-icon">verified</span>
-      </a>
-      <a href="https://t.me/+M2C0YyslaYc4NDQ1" target="_blank" class="ch-btn-compact gold">
-        <span class="material-symbols-rounded" style="font-size:14px;">star</span>
-        <span>VIP Backup</span>
-        <span class="material-symbols-rounded tg-verified-icon" style="color:#fbbf24;">verified</span>
-      </a>
-      <a href="https://t.me/REDVIRALZONE" target="_blank" class="ch-btn-compact red">
-        <span class="material-symbols-rounded" style="font-size:14px;">local_fire_department</span>
-        <span>RED VIRAL</span>
-        <span class="material-symbols-rounded tg-verified-icon" style="color:#ff5e79;">verified</span>
-      </a>
+<body>
+<div id="app">
+  <div id="powerScreen" class="pwr">
+    <img id="pwrBg" class="pwr-bg" alt=""/>
+    <div class="pwr-in">
+      <div class="crown-ring" id="pwrCrown"></div>
+      <div class="brand">ROYAL VIDEO HUB</div>
+      <div style="color:#FF9AD5;font-size:13px;font-weight:800">Girls Profiles • Live Video • VIP Services</div>
+      <div class="pill" id="syncBadge">✨ Connecting Live Cloud...</div>
     </div>
-
-    <!-- MAIN SCROLL CONTENT -->
-    <main class="app-main">
-
-      <!-- TAB: HOME -->
-      <section id="view-home" class="view-section active">
-        <div id="home-feed-container">
-          <div class="empty-state-box">
-            <span class="material-symbols-rounded">hourglass_empty</span>
-            <p>লোড হচ্ছে... ফায়ারবেস থেকে ভিডিও আনা হচ্ছে</p>
-          </div>
-        </div>
-      </section>
-
-      <!-- TAB: FAVORITES -->
-      <section id="view-favorites" class="view-section">
-        <button class="section-pill-tag">
-          <span class="material-symbols-rounded">favorite</span>
-          <span>Your Favorites</span>
-        </button>
-        <div id="favorites-feed-container">
-          <div class="empty-state-box">
-            <span class="material-symbols-rounded">heart_broken</span>
-            <p>কোনো ফেভারিট ভিডিও নেই (০)</p>
-          </div>
-        </div>
-      </section>
-
-      <!-- TAB: TUTORIAL (LOADS DIRECTLY FROM ADMIN SETTINGS) -->
-      <section id="view-tutorial" class="view-section">
-        <button class="section-pill-tag">
-          <span class="material-symbols-rounded">info</span>
-          <span>Tutorial</span>
-        </button>
-        
-        <div class="tutorial-clean-box">
-          <div class="tutorial-screen-wrap">
-            <video 
-              id="tutorial-video-el" 
-              controls 
-              playsinline 
-              webkit-playsinline 
-              controlsList="nodownload noplaybackrate" 
-              poster="https://i.postimg.cc/HLH6L590/IMG-20261107-230123-031.jpg">
-            </video>
-          </div>
-          <p class="tutorial-notice-text">
-            টিউটোরিয়াল ভিডিওটি দেখে জেনে নিন কীভাবে যেকোনো ভিডিও সহজে আনলক করে উপভোগ করবেন।
-          </p>
-        </div>
-      </section>
-
-      <!-- TAB: CHANNELS -->
-      <section id="view-channels" class="view-section">
-        <button class="section-pill-tag">
-          <span class="material-symbols-rounded">send</span>
-          <span>Verified Channels</span>
-        </button>
-        <div class="channels-grid-list">
-          <a href="https://t.me/videocallservicebd" target="_blank" class="tg-channel-card">
-            <div class="ch-info-flex">
-              <div class="ch-icon-badge"><span class="material-symbols-rounded">send</span></div>
-              <div>
-                <h4 style="font-size:14px; font-weight:800;">Officials <span class="material-symbols-rounded tg-verified-icon">verified</span></h4>
-                <p style="font-size:11px; color:var(--text-muted);">Main Feeds</p>
-              </div>
-            </div>
-            <div class="btn-ch-join-gradient">JOIN</div>
-          </a>
-          <a href="https://t.me/+M2C0YyslaYc4NDQ1" target="_blank" class="tg-channel-card">
-            <div class="ch-info-flex">
-              <div class="ch-icon-badge"><span class="material-symbols-rounded">star</span></div>
-              <div>
-                <h4 style="font-size:14px; font-weight:800;">VIP Backup <span class="material-symbols-rounded tg-verified-icon" style="color:#fbbf24;">verified</span></h4>
-                <p style="font-size:11px; color:var(--text-muted);">VIP Link</p>
-              </div>
-            </div>
-            <div class="btn-ch-join-gradient">JOIN VIP</div>
-          </a>
-          <a href="https://t.me/REDVIRALZONE" target="_blank" class="tg-channel-card">
-            <div class="ch-info-flex">
-              <div class="ch-icon-badge"><span class="material-symbols-rounded">local_fire_department</span></div>
-              <div>
-                <h4 style="font-size:14px; font-weight:800;">RED VIRAL <span class="material-symbols-rounded tg-verified-icon" style="color:#ff5e79;">verified</span></h4>
-                <p style="font-size:11px; color:var(--text-muted);">Official Hub</p>
-              </div>
-            </div>
-            <div class="btn-ch-join-gradient">JOIN</div>
-          </a>
-        </div>
-      </section>
-
-      <!-- TAB: PROFILE -->
-      <section id="view-profile" class="view-section">
-        <div class="profile-wrap-center">
-          <div class="profile-avatar-ring">
-            <img id="p-avatar-img" src="" alt="Avatar">
-            <div id="p-avatar-fallback" class="profile-avatar-fallback">U</div>
-          </div>
-          <div class="profile-display-name" id="p-display-name">Telegram User</div>
-          <div class="profile-username-tag" id="p-username-tag">@username</div>
-        </div>
-
-        <div class="profile-stats-card">
-          <div class="p-stat-col">
-            <div class="p-num" id="stat-fav-count">0</div>
-            <div class="p-lbl">Favorites</div>
-          </div>
-          <div class="p-stat-col">
-            <div class="p-num" id="stat-unlocked-count">0</div>
-            <div class="p-lbl">Unlocked</div>
-          </div>
-          <div class="p-stat-col">
-            <div class="p-num" id="stat-watched-count">0</div>
-            <div class="p-lbl">Watched Ads</div>
-          </div>
-        </div>
-      </section>
-
-    </main>
-
-    <!-- 10-SEC COUNTDOWN -->
-    <div id="ad-countdown-modal" class="ad-countdown-modal">
-      <div class="countdown-card-inner">
-        <span class="material-symbols-rounded" style="color:var(--primary-red); font-size:36px;">hourglass_top</span>
-        <h3 style="font-size:15px; font-weight:800; margin-top:4px;">Next Ad Unlocking</h3>
-        <p style="font-size:11.5px; color:var(--text-muted); margin-top:2px;">Please wait before the next checkpoint</p>
-        <div class="timer-big-num" id="timer-countdown-val">10</div>
-        <small style="color:var(--primary-red); font-size:10.5px; font-weight:800;">REDVIRALZONE VERIFICATION</small>
+    <div class="pwr-in">
+      <button class="pwr-btn" onclick="powerStart(false)">⏻</button>
+      <div style="color:var(--gold2);font-weight:900;letter-spacing:1.2px">TAP POWER TO START</div>
+      <div style="color:var(--muted);font-size:12px;max-width:290px">No Gmail needed — Instant Auto VIP Account &amp; Live Services</div>
+    </div>
+    <div class="pwr-in">
+      <div class="card" style="width:100%;margin:0;display:flex;justify-content:space-around;font-size:12px">
+        <div>⚡ <b>1-Tap Power</b></div><div>👩 <b>Girls Profiles</b></div><div>🛍 <b>VIP Services</b></div>
       </div>
     </div>
-
-    <!-- FULLSCREEN VIDEO PLAYER (WITH MULTI-PART SUPPORT) -->
-    <div id="player-overlay" class="player-overlay">
-      <div class="player-top-header">
-        <button class="btn-player-back" id="btn-player-close">
-          <span class="material-symbols-rounded">arrow_back</span>
-        </button>
-        <span style="font-size:13px; font-weight:800; color:#fff;" id="player-head-title">REDVIRALZONE</span>
-        <div style="width:24px;"></div>
-      </div>
-
-      <div class="player-video-wrap">
-        <div class="player-watermark-tag" id="watermark-tag">REDVIRALZONE</div>
-        <video id="active-player-video" controls playsinline webkit-playsinline controlsList="nodownload noplaybackrate"></video>
-      </div>
-
-      <div class="player-details-scroll">
-        <h3 id="player-active-title" style="font-size:15px; font-weight:700; margin-bottom:4px;">Title</h3>
-        <p id="player-active-views" style="font-size:11.5px; color:var(--text-muted); margin-bottom:10px;">0 views</p>
-
-        <!-- MULTI-PART BUTTONS SHELF -->
-        <div class="player-parts-shelf" id="player-parts-box" style="display:none;">
-          <h4>Select Video Part:</h4>
-          <div class="parts-buttons-row" id="parts-button-container"></div>
-        </div>
-
-        <p id="player-active-desc" style="font-size:12.5px; color:#cbd5e1; line-height:1.4; margin-top:10px;">Video description</p>
-      </div>
-    </div>
-
-    <!-- BOTTOM NAVBAR -->
-    <nav class="bottom-navbar">
-      <button class="nav-tab-item active" data-view="view-home">
-        <span class="material-symbols-rounded">home</span>
-        <span class="tab-txt">Home</span>
-      </button>
-      <button class="nav-tab-item" data-view="view-favorites">
-        <span class="material-symbols-rounded">favorite</span>
-        <span class="tab-txt">Favorites</span>
-      </button>
-      <button class="nav-tab-item" data-view="view-tutorial">
-        <span class="material-symbols-rounded">info</span>
-        <span class="tab-txt">Tutorial</span>
-      </button>
-      <button class="nav-tab-item" data-view="view-channels">
-        <span class="material-symbols-rounded">send</span>
-        <span class="tab-txt">Channels</span>
-      </button>
-      <button class="nav-tab-item" data-view="view-profile">
-        <span class="material-symbols-rounded">person</span>
-        <span class="tab-txt">Profile</span>
-      </button>
-    </nav>
-
   </div>
 
-  <!-- FIREBASE & REAL-TIME LOGIC -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
-    import { 
-      getFirestore, collection, doc, getDoc, getDocs, setDoc, updateDoc, onSnapshot,
-      query, where, increment, serverTimestamp 
-    } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
-    import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
+  <div id="mainShell" class="hide" style="display:flex;flex-direction:column;height:100%">
+    <div id="tabHome" class="screen"></div>
+    <div id="tabVideos" class="screen hide" style="padding-bottom:0;overflow:hidden"></div>
+    <div id="tabCall" class="screen hide"></div>
+    <div id="tabWallet" class="screen hide"></div>
+    <div id="tabProfile" class="screen hide"></div>
+    <nav class="bnav">
+      <button id="nbHome" class="on" onclick="goTab('Home')"><span>🏠</span>Home</button>
+      <button id="nbVideos" onclick="goTab('Videos')"><span>🎬</span>Videos</button>
+      <button id="nbCall" onclick="goTab('Call')"><span>👩</span>Girls</button>
+      <button id="nbWallet" onclick="goTab('Wallet')"><span>💳</span>Wallet</button>
+      <button id="nbProfile" onclick="goTab('Profile')"><span>👤</span>Profile</button>
+    </nav>
+  </div>
+</div>
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyBQ8DkVDx4DCrEVLN3LFTnEER0YLa1UqIQ",
-      authDomain: "free-download-code-2cf68.firebaseapp.com",
-      databaseURL: "https://free-download-code-2cf68-default-rtdb.firebaseio.com",
-      projectId: "free-download-code-2cf68",
-      storageBucket: "free-download-code-2cf68.firebasestorage.app",
-      messagingSenderId: "632394494942",
-      appId: "1:632394494942:web:8bde8ba728c6b7e748a34f"
-    };
+<div id="girlSheet" class="sheet hide"></div>
+<div id="fsViewer" class="fs-viewer hide">
+  <img id="fsImg" alt="" onclick="toggleFsChrome()"/>
+  <div id="fsTop" class="fs-top"><button class="ibtn" onclick="closeFs()">✕</button><div class="pill" id="fsCounter">1 / 5</div></div>
+  <div id="fsBot" class="fs-bot">
+    <button class="ibtn" onclick="stepFs(-1)">◀</button>
+    <div style="flex:1;background:rgba(12,5,24,.78);padding:10px 14px;border-radius:16px;border:1px solid var(--bd)">
+      <div id="fsTitle" style="font-weight:900;font-size:14px"></div>
+      <div id="fsCap" style="font-size:11px;color:var(--muted)"></div>
+    </div>
+    <button class="ibtn" onclick="stepFs(1)">▶</button>
+  </div>
+</div>
+<div id="toast" class="toast hide"></div>
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-    const auth = getAuth(app);
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyBQ8DkVDx4DCrEVLN3LFTnEER0YLa1UqIQ",
+  authDomain: "free-download-code-2cf68.firebaseapp.com",
+  databaseURL: "https://free-download-code-2cf68-default-rtdb.firebaseio.com",
+  projectId: "free-download-code-2cf68",
+  storageBucket: "free-download-code-2cf68.firebasestorage.app",
+  messagingSenderId: "632394494942",
+  appId: "1:632394494942:web:8bde8ba728c6b7e748a34f"
+};
+let fbRef = null;
+try { firebase.initializeApp(firebaseConfig); fbRef = firebase.database().ref("royal_video_hub"); } catch(e) {}
 
-    let DIRECT_AD_URL = "https://auctionr.org/4/c1034da336206e50c9d99d0da9283198";
-    let COOLDOWN_SECONDS = 10;
+const PRESETS=[
+  "https://i.postimg.cc/XqkJKRch/file-000000000bf0821097a3dab058a8cae7.png",
+  "https://i.postimg.cc/j5NC2wWS/file-00000000333882109a221b85b1a73378.png",
+  "https://i.postimg.cc/W4xhs61S/file-000000004c5c8210bdbe3de86bb2df69.png",
+  "https://i.postimg.cc/PxZNJpLN/file-00000000ebe08210bd85a64e9cfdea4a.png",
+  "https://i.postimg.cc/8C778nNh/file-00000000ff8082108062392edf63496c.png"
+];
+const BKASH_SVG=`<svg viewBox="0 0 64 64" width="100%" height="100%"><rect width="64" height="64" rx="14" fill="#E2136E"/><polygon points="10,16 32,26 24,42" fill="#FFF"/><polygon points="32,26 52,18 39,40" fill="#FFD1E6"/><polygon points="32,26 39,40 24,42" fill="#FFF0F6"/><polygon points="39,40 54,48 26,48" fill="#B50D57"/></svg>`;
+const NAGAD_SVG=`<svg viewBox="0 0 64 64" width="100%" height="100%"><defs><linearGradient id="ng" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#FF6B00"/><stop offset="100%" stop-color="#D92128"/></linearGradient></defs><rect width="64" height="64" rx="14" fill="url(#ng)"/><circle cx="32" cy="34" r="18" fill="none" stroke="#FFF" stroke-width="3.5"/><path d="M32 14 C25 22,23 28,25 36 C27 42,34 45,39 40 C43 36,42 29,36 25 C38 30,35 35,31 35 C28 35,27 30,32 14 Z" fill="#FFF"/></svg>`;
+const CROWN_SVG=`<svg viewBox="0 0 64 48" width="42" height="32"><path d="M6 38L10 14L23 25L32 8L41 25L54 14L58 38Z" fill="#FFE27A" stroke="#F5B700" stroke-width="2"/><rect x="8" y="39" width="48" height="6" rx="3" fill="#F5B700"/></svg>`;
+const DB_KEY="ROYAL_HUB_FB_V4", UID_KEY="ROYAL_HUB_UID_V4";
 
-    let tgUser = { id: "987654321", name: "Guest User", handle: "@guest", photo: "" };
+function defaultDB(){
+  const girls=[
+    {id:"g1",name:"Nusrat Jahan",handle:"@nusrat_royal",bio:"VIP Dance Reels & 1-on-1 Live Video Call Star ✨",photoUrl:PRESETS[0],online:true,followers:24800,rating:"4.9",priceCall5:100,priceCall10:180,priceCall15:250,priceCall30:450,priceChat:150,priceCustomVid:300,pricePhotoPack:250},
+    {id:"g2",name:"Tanjin Mim",handle:"@tanjin_vip",bio:"Luxury Lounge Creator • Private Chat & Live Talk 💖",photoUrl:PRESETS[1],online:true,followers:19400,rating:"4.9",priceCall5:100,priceCall10:180,priceCall15:250,priceCall30:450,priceChat:150,priceCustomVid:320,pricePhotoPack:250},
+    {id:"g3",name:"Sadia Afrin",handle:"@sadia_glam",bio:"Exclusive Glamour Model • Custom Shoutout Reels 👑",photoUrl:PRESETS[2],online:true,followers:31200,rating:"4.8",priceCall5:120,priceCall10:200,priceCall15:280,priceCall30:480,priceChat:180,priceCustomVid:350,pricePhotoPack:280},
+    {id:"g4",name:"Riya Islam",handle:"@riya_queen",bio:"Midnight Diamond Edition • VIP Full-HD Gallery 💎",photoUrl:PRESETS[3],online:true,followers:16900,rating:"4.9",priceCall5:100,priceCall10:180,priceCall15:250,priceCall30:450,priceChat:150,priceCustomVid:300,pricePhotoPack:250},
+    {id:"g5",name:"Farhana Nisha",handle:"@nisha_star",bio:"Instant Live Video Call Host & Royal Editorial 🌹",photoUrl:PRESETS[4],online:true,followers:28500,rating:"5.0",priceCall5:120,priceCall10:200,priceCall15:280,priceCall30:500,priceChat:200,priceCustomVid:350,pricePhotoPack:300}
+  ];
+  return {
+    settings:{bkashNumber:"01615327169",nagadNumber:"01615327169",bkashEnabled:true,nagadEnabled:true,bkashLogoUrl:"",nagadLogoUrl:"",extraMethodName:"",extraMethodNumber:"",extraMethodLogoUrl:"",heroBannerUrl:PRESETS[0],adminPin:"1234",specialOfferTitle:"Royal VIP All-Access Pass",specialOfferPriceBdt:500},
+    girls,
+    videos:[
+      {id:"v1",girlId:"g1",title:"Velvet Spotlight Dance",description:"Enjoy the moment ❤️🔥 #Hot #Premium #RoyalVideo",creatorName:"Nusrat Jahan",creatorHandle:"@nusrat_royal",creatorAvatar:PRESETS[0],thumbnailUrl:PRESETS[4],videoUrl:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",priceBdt:200,likes:12500,comments:862},
+      {id:"v2",girlId:"g2",title:"Golden Couture Lounge",description:"Evening VIP lounge exclusive reel 💖 #VIP",creatorName:"Tanjin Mim",creatorHandle:"@tanjin_vip",creatorAvatar:PRESETS[1],thumbnailUrl:PRESETS[1],videoUrl:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",priceBdt:250,likes:9400,comments:540},
+      {id:"v3",girlId:"g3",title:"Amethyst Stage Premiere",description:"Royal velvet spotlight reel by Sadia ✨",creatorName:"Sadia Afrin",creatorHandle:"@sadia_glam",creatorAvatar:PRESETS[2],thumbnailUrl:PRESETS[2],videoUrl:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",priceBdt:300,likes:15200,comments:1120},
+      {id:"v4",girlId:"g4",title:"Royal Red Carpet Teaser",description:"Free HD preview reel — tap Sound for audio! 🎬",creatorName:"Riya Islam",creatorHandle:"@riya_queen",creatorAvatar:PRESETS[3],thumbnailUrl:PRESETS[3],videoUrl:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",priceBdt:0,likes:21900,comments:1430},
+      {id:"v5",girlId:"g5",title:"Starlight VIP Backstage",description:"Midnight glamour backstage session 🌹",creatorName:"Farhana Nisha",creatorHandle:"@nisha_star",creatorAvatar:PRESETS[4],thumbnailUrl:PRESETS[0],videoUrl:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4",priceBdt:350,likes:8700,comments:615}
+    ],
+    photos:girls.map((g,i)=>({id:"p"+(i+1),girlId:g.id,title:g.name+" — VIP HD",caption:"Full-Screen Mobile Portrait • Tap to hide UI",imageUrl:g.photoUrl,likes:6800+i*1100})),
+    users:[],payments:[],orders:[]
+  };
+}
+function mergeDB(raw){
+  const def=defaultDB(); if(!raw||typeof raw!=="object")return def;
+  return {
+    settings:Object.assign({},def.settings,raw.settings||{}),
+    girls:Array.isArray(raw.girls)&&raw.girls.length?raw.girls:def.girls,
+    videos:Array.isArray(raw.videos)&&raw.videos.length?raw.videos:def.videos,
+    photos:Array.isArray(raw.photos)&&raw.photos.length?raw.photos:def.photos,
+    users:Array.isArray(raw.users)?raw.users:[],
+    payments:Array.isArray(raw.payments)?raw.payments:[],
+    orders:Array.isArray(raw.orders)?raw.orders:[]
+  };
+}
+function loadLocal(){try{const r=localStorage.getItem(DB_KEY);return r?mergeDB(JSON.parse(r)):defaultDB();}catch(e){return defaultDB();}}
+function saveDB(d){localStorage.setItem(DB_KEY,JSON.stringify(d));if(fbRef){fbRef.set(d).catch(()=>{});}}
+function fmtTime(sec){if(!isFinite(sec)||sec<0)return "00:00";const m=Math.floor(sec/60),s=Math.floor(sec%60);return String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");}
+function fmtK(n){n=Number(n)||0;return n>=1000?(n/1000).toFixed(1)+"K":String(n);}
+function payLogo(m,c){if(c&&c.trim().length>4)return `<img src="${c.trim()}" style="width:100%;height:100%;object-fit:cover">`;return m==="BKASH"?BKASH_SVG:m==="NAGAD"?NAGAD_SVG:`<div style="width:100%;height:100%;background:var(--rose);display:grid;place-items:center;font-weight:900">${(m||"PM").slice(0,2)}</div>`;}
+function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.remove("hide");clearTimeout(window._tt);window._tt=setTimeout(()=>t.classList.add("hide"),2600);}
+function copyNum(l,n){navigator.clipboard?.writeText(n).catch(()=>{});toast(l+" number copied: "+n);}
 
-    if (window.Telegram?.WebApp) {
-      const tg = window.Telegram.WebApp;
-      tg.ready();
-      tg.expand();
-      const u = tg.initDataUnsafe?.user;
-      if (u) {
-        tgUser.id = String(u.id);
-        tgUser.name = u.first_name + (u.last_name ? " " + u.last_name : "");
-        tgUser.handle = u.username ? "@" + u.username : "@" + u.first_name.toLowerCase();
-        tgUser.photo = u.photo_url || "";
-      }
-    }
+let DB=loadLocal(), ME=null, curTab="Home", selMethod="BKASH", fsList=[], fsIdx=0, isMuted=true, quality="1080p", openGirlId=null, girlTab="Services";
 
-    document.getElementById("h-user-name").innerText = tgUser.name;
-    document.getElementById("h-user-handle").innerText = tgUser.handle;
-    document.getElementById("p-display-name").innerText = tgUser.name;
-    document.getElementById("p-username-tag").innerText = tgUser.handle;
-    document.getElementById("watermark-tag").innerText = `${tgUser.id} • ${tgUser.name}`;
+function powerStart(forceNew){
+  let uid=forceNew?"":(localStorage.getItem(UID_KEY)||"");
+  ME=DB.users.find(u=>u.id===uid);
+  if(!ME){
+    const rnd=Math.floor(100000+Math.random()*900000);
+    ME={id:"usr_"+rnd,royalId:String(rnd),displayName:"Royal VIP #"+String(rnd).slice(-4),accessKey:"RVH-"+Math.random().toString(36).slice(2,8).toUpperCase(),photoUrl:PRESETS[rnd%PRESETS.length],walletBalanceBdt:0,unlockedVideoIds:[],followedGirls:[]};
+    DB.users.unshift(ME); saveDB(DB); localStorage.setItem(UID_KEY,ME.id);
+  }
+  document.getElementById("powerScreen").classList.add("hide");
+  document.getElementById("mainShell").classList.remove("hide");
+  renderAll();
+}
+function powerOff(){localStorage.removeItem(UID_KEY);ME=null;document.getElementById("mainShell").classList.add("hide");document.getElementById("powerScreen").classList.remove("hide");}
+function goTab(tab, focusVideoId){
+  curTab=tab;
+  ["Home","Videos","Call","Wallet","Profile"].forEach(t=>{
+    document.getElementById("tab"+t).classList.toggle("hide",t!==tab);
+    document.getElementById("nb"+t).classList.toggle("on",t===tab);
+  });
+  if(tab==="Videos"){
+    renderVideos();
+    setTimeout(()=>{if(focusVideoId){const el=document.getElementById("reel_"+focusVideoId);if(el)el.scrollIntoView();}autoPlayVisible();},90);
+  } else {document.querySelectorAll("video").forEach(v=>v.pause());}
+}
+function officialPayCard(showBtn){
+  const s=DB.settings; let rows="";
+  if(s.bkashEnabled) rows+=`<div class="pay-row"><div style="display:flex;align-items:center;gap:10px"><div class="pay-logo">${payLogo("BKASH",s.bkashLogoUrl)}</div><div><div style="font-size:11px;color:#FF77B7;font-weight:900">bKash Personal</div><div style="font-size:16px;font-weight:900">${s.bkashNumber}</div></div></div><button class="copy-btn" style="background:var(--bkash)" onclick="copyNum('bKash','${s.bkashNumber}')">Copy</button></div>`;
+  if(s.nagadEnabled) rows+=`<div class="pay-row"><div style="display:flex;align-items:center;gap:10px"><div class="pay-logo">${payLogo("NAGAD",s.nagadLogoUrl)}</div><div><div style="font-size:11px;color:#FFA35C;font-weight:900">Nagad Personal</div><div style="font-size:16px;font-weight:900">${s.nagadNumber}</div></div></div><button class="copy-btn" style="background:var(--nagad)" onclick="copyNum('Nagad','${s.nagadNumber}')">Copy</button></div>`;
+  if(s.extraMethodName&&s.extraMethodNumber) rows+=`<div class="pay-row"><div style="display:flex;align-items:center;gap:10px"><div class="pay-logo">${payLogo(s.extraMethodName,s.extraMethodLogoUrl)}</div><div><div style="font-size:11px;color:#D8B4FE;font-weight:900">${s.extraMethodName}</div><div style="font-size:16px;font-weight:900">${s.extraMethodNumber}</div></div></div><button class="copy-btn" style="background:var(--purple)" onclick="copyNum('${s.extraMethodName}','${s.extraMethodNumber}')">Copy</button></div>`;
+  return `<div class="card"><div style="display:flex;justify-content:space-between;align-items:center"><div style="font-weight:900;color:var(--gold2);font-size:14px">💳 Official Payment Numbers</div>${showBtn?`<span class="pill" style="cursor:pointer" onclick="goTab('Wallet')">Top Up ›</span>`:""}</div>${rows}</div>`;
+}
+function renderHome(){
+  const s=DB.settings;
+  document.getElementById("tabHome").innerHTML=`
+    <div class="hdr">
+      <div style="display:flex;align-items:center;gap:10px;cursor:pointer" onclick="goTab('Profile')">
+        <img class="avatar" src="${ME.photoUrl}"/>
+        <div><div style="font-weight:900;font-size:15px;color:var(--gold2)">👑 Royal Video Hub</div><div style="font-size:11px;color:#FF9AD5;font-weight:700">${ME.displayName} • ${ME.walletBalanceBdt} BDT</div></div>
+      </div>
+      <button class="ibtn" onclick="goTab('Wallet')">💎</button>
+    </div>
+    <div class="hero">
+      <img src="${s.heroBannerUrl||PRESETS[0]}"/>
+      <div class="hero-ov"><div class="vip-b">👑<br>VIP Only</div><div style="text-align:center"><div class="pill">Watch • Talk • Enjoy</div></div></div>
+    </div>
+    <div class="grid2">
+      <button class="qbtn q1" onclick="goTab('Videos')"><div class="qico">▶</div>Short<br>Videos</button>
+      <button class="qbtn q2" onclick="goTab('Call')"><div class="qico">👩</div>Girls<br>Profiles</button>
+      <button class="qbtn q3" onclick="openFs(DB.photos,0)"><div class="qico">🖼</div>Full-Screen<br>Photos</button>
+      <button class="qbtn q4" onclick="buyService(null,'${s.specialOfferTitle||'VIP Pass'}',${s.specialOfferPriceBdt||500})"><div class="qico">🎁</div>Special<br>Offer</button>
+    </div>
+    <div class="sec-h">💖 Featured Girls Profiles <span onclick="goTab('Call')">View All ›</span></div>
+    <div class="hscroll">${DB.girls.map(g=>`
+      <div class="girl-card" onclick="openGirl('${g.id}')">
+        <span class="dot" style="background:${g.online?'var(--mint)':'#94A3B8'}"></span>
+        <img class="girl-av" src="${g.photoUrl}"/>
+        <div style="font-weight:900;font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${g.name}</div>
+        <div style="font-size:10.5px;color:var(--muted)">★ ${g.rating||'4.9'} • ${g.online?'Online':'Busy'}</div>
+        <button class="fbtn">✨ Profile &amp; Buy</button>
+      </div>`).join("")}</div>
+    ${officialPayCard(true)}
+    <div class="sec-h">🔥 Trending Autoplay Videos <span onclick="goTab('Videos')">Watch All ›</span></div>
+    <div class="hscroll">${DB.videos.map(v=>`<div class="vcard" onclick="goTab('Videos','${v.id}')"><img src="${v.thumbnailUrl}"/><div class="vtag">${v.priceBdt>0?v.priceBdt+' BDT':'FREE ▶'}</div><div class="vinfo">${v.creatorName} • ${v.title}</div></div>`).join("")}</div>
+    <div class="sec-h">✨ Full-Screen Photos <span onclick="openFs(DB.photos,0)">Open All ›</span></div>
+    <div class="hscroll">${DB.photos.map((p,i)=>`<div class="vcard" onclick="openFs(DB.photos,${i})"><img src="${p.imageUrl}"/><div class="vtag">FULL HD</div><div class="vinfo">${p.title}</div></div>`).join("")}</div>`;
+}
+function renderVideos(){
+  document.getElementById("tabVideos").innerHTML=`<div class="reels" id="reelsBox" onscroll="autoPlayVisible()">${DB.videos.map((v,idx)=>{
+    const unlocked=v.priceBdt<=0||(ME.unlockedVideoIds||[]).includes(v.id);
+    const girl=DB.girls.find(g=>g.id===v.girlId)||DB.girls[idx%DB.girls.length];
+    return `<div class="reel" id="reel_${v.id}">
+      <video id="vid_${v.id}" src="${v.videoUrl}" poster="${v.thumbnailUrl}" playsinline webkit-playsinline preload="auto" loop ${isMuted?'muted':''}
+        onclick="togglePlay('${v.id}')" ontimeupdate="onVidTime('${v.id}',${unlocked})"
+        onplay="document.getElementById('pbig_${v.id}').classList.add('hide');document.getElementById('pbtn_${v.id}').textContent='⏸'"
+        onpause="document.getElementById('pbig_${v.id}').classList.remove('hide');document.getElementById('pbtn_${v.id}').textContent='▶'"></video>
+      <div class="r-top">
+        <div class="pill" onclick="openGirl('${girl.id}')" style="cursor:pointer">👑 ${girl.name} • ${unlocked?'Full HD':'Preview Playing'}</div>
+        <div style="display:flex;gap:6px">
+          <button class="pill" style="cursor:pointer" onclick="cycleQuality()">${quality}</button>
+          <button class="pill" style="cursor:pointer" onclick="toggleMute()">${isMuted?'🔇 Sound Off':'🔊 Sound On'}</button>
+        </div>
+      </div>
+      <button id="pbig_${v.id}" class="r-play-big" onclick="togglePlay('${v.id}')">▶</button>
+      <div class="r-acts">
+        <div style="position:relative;cursor:pointer" onclick="openGirl('${girl.id}')">
+          <img src="${girl.photoUrl}" style="width:48px;height:48px;border-radius:50%;object-fit:cover;border:2px solid var(--gold2)"/>
+          <div style="position:absolute;bottom:-5px;left:50%;transform:translateX(-50%);background:var(--rose);width:20px;height:20px;border-radius:50%;font-size:13px;font-weight:900;display:grid;place-items:center">+</div>
+        </div>
+        <button class="ract" onclick="likeVid('${v.id}')">❤️</button><div class="rlbl" id="lk_${v.id}">${fmtK(v.likes)}</div>
+        <button class="ract" onclick="openGirl('${girl.id}')">🛍</button><div class="rlbl">Services</div>
+        <button class="ract" onclick="buyService('${girl.id}','Diamond Rose Gift 🌹',100)">🎁</button><div class="rlbl">Gift</div>
+        <button class="ract" onclick="goFsVid('${v.id}')">⛶</button><div class="rlbl">Full</div>
+      </div>
+      <div class="r-bot">
+        <div style="font-weight:900;font-size:15px;cursor:pointer" onclick="openGirl('${girl.id}')">${girl.name} <span style="color:#60A5FA">✓</span> <span style="font-size:11.5px;color:#FF9AD5">${girl.handle}</span></div>
+        <div style="font-size:12.5px;color:#F3E8FF;margin-top:3px;padding-right:58px">${v.title} — ${v.description||''}</div>
+        <div class="vbar">
+          <button id="pbtn_${v.id}" class="ibtn" style="width:34px;height:34px;font-size:14px" onclick="togglePlay('${v.id}')">▶</button>
+          <input id="rng_${v.id}" type="range" min="0" max="100" value="0" oninput="seekVid('${v.id}',this.value)"/>
+          <div id="tm_${v.id}" class="vtime">00:00 / 00:30</div>
+        </div>
+        ${unlocked?`<button class="gbtn" style="background:linear-gradient(90deg,#059669,#10B981)" onclick="openGirl('${girl.id}')">💖 Book ${girl.name.split(' ')[0]}'s VIP Service</button>`
+        :`<button class="gbtn" onclick="unlockVid('${v.id}')">🔓 Unlock Full Video for ${v.priceBdt} BDT</button>`}
+      </div>
+    </div>`;
+  }).join("")}</div>`;
+}
+function togglePlay(id){const v=document.getElementById("vid_"+id);if(!v)return;if(v.paused){v.muted=isMuted;v.play().catch(()=>{v.muted=true;v.play().catch(()=>{});});}else v.pause();}
+function toggleMute(){isMuted=!isMuted;document.querySelectorAll("#reelsBox video").forEach(v=>v.muted=isMuted);renderVideos();setTimeout(autoPlayVisible,60);toast(isMuted?"Video sound muted":"Sound turned ON 🔊");}
+function cycleQuality(){quality=quality==="1080p"?"720p":quality==="720p"?"Auto":"1080p";renderVideos();setTimeout(autoPlayVisible,60);toast("Video Quality: "+quality);}
+function seekVid(id,pct){const v=document.getElementById("vid_"+id);if(v&&v.duration)v.currentTime=(pct/100)*v.duration;}
+function onVidTime(id,unlocked){
+  const v=document.getElementById("vid_"+id);if(!v||!v.duration)return;
+  if(!unlocked&&v.currentTime>=15)v.currentTime=0;
+  const r=document.getElementById("rng_"+id),tm=document.getElementById("tm_"+id);
+  if(r)r.value=(v.currentTime/v.duration)*100;if(tm)tm.textContent=fmtTime(v.currentTime)+" / "+fmtTime(v.duration);
+}
+function goFsVid(id){const v=document.getElementById("vid_"+id);if(v)(v.requestFullscreen||v.webkitEnterFullscreen||(()=>{})).call(v);}
+function autoPlayVisible(){
+  document.querySelectorAll("#reelsBox video").forEach(v=>{
+    const r=v.getBoundingClientRect();
+    if(r.top>=-120&&r.top<window.innerHeight*0.55){v.muted=isMuted;v.play().catch(()=>{v.muted=true;v.play().catch(()=>{});});}else v.pause();
+  });
+}
+function likeVid(id){const v=DB.videos.find(x=>x.id===id);if(!v)return;v.likes=(Number(v.likes)||0)+1;saveDB(DB);const el=document.getElementById("lk_"+id);if(el)el.textContent=fmtK(v.likes);toast("Liked ❤️");}
+function unlockVid(id){
+  const v=DB.videos.find(x=>x.id===id);if(!v)return;
+  if(ME.walletBalanceBdt<v.priceBdt){toast("Need "+v.priceBdt+" BDT — Top up via bKash/Nagad!");goTab("Wallet");return;}
+  ME.walletBalanceBdt-=v.priceBdt;ME.unlockedVideoIds=ME.unlockedVideoIds||[];ME.unlockedVideoIds.push(id);
+  DB.orders.unshift({id:"ORD"+Date.now(),userId:ME.id,username:ME.displayName,girlName:v.creatorName,serviceTitle:"Video Unlock: "+v.title,note:"",amount:v.priceBdt,status:"COMPLETED",at:new Date().toLocaleString()});
+  saveDB(DB);renderAll();goTab("Videos",id);toast("🔓 Unlocked "+v.title+"!");
+}
+function renderGirlsDir(){
+  document.getElementById("tabCall").innerHTML=`
+    <div class="hdr"><div style="font-weight:900;font-size:18px;color:var(--gold2)">👩 Girls Profiles &amp; Services</div><div class="pill">${ME.walletBalanceBdt} BDT</div></div>
+    <div style="padding:0 14px;display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      ${DB.girls.map(g=>`
+        <div class="girl-card" style="width:100%;min-width:0;padding:12px 10px" onclick="openGirl('${g.id}')">
+          <span class="dot" style="background:${g.online?'var(--mint)':'#94A3B8'}"></span>
+          <img class="girl-av" style="width:86px;height:86px" src="${g.photoUrl}"/>
+          <div style="font-weight:900;font-size:14px">${g.name} <span style="color:#60A5FA">✓</span></div>
+          <div style="font-size:11px;color:#FF9AD5">${g.handle}</div>
+          <div style="font-size:11px;color:var(--muted);margin:4px 0">★ ${g.rating||'4.9'} • ${fmtK(g.followers)} Fans</div>
+          <div class="pill" style="font-size:10px;padding:3px 9px">From ${g.priceCall5||100} BDT</div>
+          <button class="fbtn" style="padding:9px;margin-top:8px">💖 Open Profile</button>
+        </div>`).join("")}
+    </div>`;
+}
+function openGirl(gid){openGirlId=gid;girlTab="Services";renderGirlSheet();document.getElementById("girlSheet").classList.remove("hide");}
+function closeGirl(){openGirlId=null;document.getElementById("girlSheet").classList.add("hide");}
+function renderGirlSheet(){
+  const g=DB.girls.find(x=>x.id===openGirlId);if(!g)return;
+  const gVids=DB.videos.filter(v=>v.girlId===g.id),gPhotos=DB.photos.filter(p=>p.girlId===g.id),isFol=(ME.followedGirls||[]).includes(g.id);
+  const services=[
+    {t:"📞 5 Min Live Video Call",d:"Instant 1-on-1 private HD video call",p:g.priceCall5||100},
+    {t:"📞 10 Min Live Video Call",d:"Most popular private video talk",p:g.priceCall10||180},
+    {t:"📞 15 Min VIP Video Call",d:"Extended HD face-to-face call",p:g.priceCall15||250},
+    {t:"📞 30 Min Royal Call Session",d:"Full luxury private live session",p:g.priceCall30||450},
+    {t:"💬 24h Private VIP Chat Pass",d:"Direct personal chat access with "+g.name.split(" ")[0],p:g.priceChat||150},
+    {t:"🎬 Custom Name Shoutout Video",d:"Personalized recorded video just for you",p:g.priceCustomVid||300},
+    {t:"🖼 Exclusive HD Photo Set",d:"Private full-screen collection pack",p:g.pricePhotoPack||250},
+    {t:"🌹 Send Diamond Rose Gift",d:"Show special love & priority reply",p:100}
+  ];
+  let body="";
+  if(girlTab==="Services"){
+    body=`<div class="card"><div style="font-weight:900;color:var(--gold2);margin-bottom:6px">🛍 Buy / Book ${g.name}'s Services</div>
+      <input id="svcNote" class="inp" placeholder="Optional note (e.g. your Telegram @username or time)"/>
+      ${services.map(s=>`<div class="pay-row" style="margin-top:10px"><div style="flex:1"><div style="font-weight:900;font-size:13.5px">${s.t}</div><div style="font-size:11px;color:var(--muted)">${s.d}</div></div><button class="copy-btn" style="background:linear-gradient(90deg,var(--rose),var(--violet));white-space:nowrap" onclick="buyService('${g.id}','${s.t.replace(/'/g,"")}',${s.p})">Buy ${s.p}৳</button></div>`).join("")}</div>`;
+  } else if(girlTab==="Videos"){
+    body=`<div style="padding:0 14px;display:grid;grid-template-columns:1fr 1fr;gap:10px">${gVids.length?gVids.map(v=>`<div class="vcard" style="width:100%;min-width:0" onclick="closeGirl();goTab('Videos','${v.id}')"><img src="${v.thumbnailUrl}"/><div class="vtag">${v.priceBdt>0?v.priceBdt+' BDT':'FREE ▶'}</div><div class="vinfo">${v.title}</div></div>`).join(""):'<div class="card" style="grid-column:1/-1;text-align:center;color:var(--muted)">No videos yet.</div>'}</div>`;
+  } else {
+    body=`<div style="padding:0 14px;display:grid;grid-template-columns:1fr 1fr;gap:10px">${gPhotos.length?gPhotos.map((p,i)=>`<div class="vcard" style="width:100%;min-width:0" onclick="openFs(DB.photos.filter(x=>x.girlId==='${g.id}'),${i})"><img src="${p.imageUrl}"/><div class="vtag">FULL HD</div><div class="vinfo">${p.title}</div></div>`).join(""):'<div class="card" style="grid-column:1/-1;text-align:center;color:var(--muted)">No photos yet.</div>'}</div>`;
+  }
+  document.getElementById("girlSheet").innerHTML=`
+    <div style="position:relative;height:210px">
+      <img src="${g.photoUrl}" style="width:100%;height:100%;object-fit:cover;filter:brightness(.68)"/>
+      <div style="position:absolute;top:12px;left:12px;right:12px;display:flex;justify-content:space-between"><button class="ibtn" onclick="closeGirl()">◀</button><div class="pill">${ME.walletBalanceBdt} BDT</div></div>
+      <img src="${g.photoUrl}" style="position:absolute;bottom:-42px;left:50%;transform:translateX(-50%);width:96px;height:96px;border-radius:50%;object-fit:cover;border:3px solid var(--gold2);box-shadow:0 0 28px rgba(255,62,142,.65)"/>
+    </div>
+    <div style="text-align:center;padding:50px 18px 12px">
+      <div style="font-size:21px;font-weight:900">${g.name} <span style="color:#60A5FA">✓</span></div>
+      <div style="color:#FF9AD5;font-size:12.5px;font-weight:700">${g.handle} • ${g.online?'🟢 Online Now':'🟣 Busy'} • ★ ${g.rating||'4.9'}</div>
+      <div style="font-size:12.5px;color:var(--muted);margin:6px 0 12px">${g.bio||''}</div>
+      <div style="display:flex;gap:10px;justify-content:center">
+        <button class="gbtn" style="width:auto;padding:9px 22px;font-size:12.5px" onclick="toggleFollow('${g.id}')">${isFol?'✓ Following':'💖 Follow ('+fmtK(g.followers)+')'}</button>
+        <button class="gbtn" style="width:auto;padding:9px 18px;font-size:12.5px;background:linear-gradient(90deg,#059669,#10B981)" onclick="buyService('${g.id}','📞 10 Min Live Video Call',${g.priceCall10||180})">📞 Instant Call</button>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;padding:0 14px 12px">
+      ${["Services","Videos","Photos"].map(t=>`<button class="fbtn" style="padding:10px;font-size:12px;background:${girlTab===t?'linear-gradient(90deg,var(--rose),var(--violet))':'#1D1132'};border:1px solid var(--bd)" onclick="girlTab='${t}';renderGirlSheet()">${t==="Services"?'🛍 Services':t==="Videos"?'🎬 Videos ('+gVids.length+')':'🖼 Photos ('+gPhotos.length+')'}</button>`).join("")}
+    </div>${body}`;
+}
+function toggleFollow(gid){
+  const g=DB.girls.find(x=>x.id===gid);if(!g)return;ME.followedGirls=ME.followedGirls||[];
+  if(ME.followedGirls.includes(gid)){ME.followedGirls=ME.followedGirls.filter(x=>x!==gid);g.followers=Math.max(0,(g.followers||1)-1);}
+  else{ME.followedGirls.push(gid);g.followers=(g.followers||0)+1;toast("Following "+g.name+" 💖");}
+  saveDB(DB);renderGirlSheet();
+}
+function buyService(gid,title,price){
+  const g=gid?DB.girls.find(x=>x.id===gid):null;
+  if(ME.walletBalanceBdt<price){toast("Insufficient balance ("+price+" BDT needed). Top up via bKash/Nagad!");closeGirl();goTab("Wallet");return;}
+  const noteEl=document.getElementById("svcNote");const note=noteEl?noteEl.value.trim():"";
+  ME.walletBalanceBdt-=price;
+  DB.orders.unshift({id:"ORD"+Date.now(),userId:ME.id,username:ME.displayName,girlName:g?g.name:"Royal VIP",serviceTitle:title,note,amount:price,status:"CONFIRMED",at:new Date().toLocaleString()});
+  saveDB(DB);renderAll();if(openGirlId)renderGirlSheet();toast("✅ Ordered: "+title+" ("+price+" BDT)");
+}
+function renderWallet(){
+  const myPays=DB.payments.filter(p=>p.userId===ME.id);
+  document.getElementById("tabWallet").innerHTML=`
+    <div class="hdr"><div style="font-weight:900;font-size:18px;color:var(--gold2)">💳 My Wallet</div></div>
+    <div class="card" style="text-align:center;background:linear-gradient(135deg,#3B0B5E,#150B24)">
+      <div style="font-size:12px;color:var(--muted)">Available Balance</div>
+      <div style="font-size:34px;font-weight:900;color:var(--gold2);margin:6px 0">${ME.walletBalanceBdt} BDT</div>
+      <div style="font-size:11.5px;color:#FF9AD5">Royal VIP ID: ${ME.royalId}</div>
+    </div>
+    ${officialPayCard(false)}
+    <div class="card">
+      <div style="font-weight:900;color:var(--gold2);margin-bottom:8px">➕ Add Balance (bKash / Nagad)</div>
+      <div style="display:flex;gap:8px">
+        <button class="copy-btn" style="flex:1;padding:10px;background:${selMethod==='BKASH'?'var(--bkash)':'#24163D'}" onclick="selMethod='BKASH';renderWallet()">bKash</button>
+        <button class="copy-btn" style="flex:1;padding:10px;background:${selMethod==='NAGAD'?'var(--nagad)':'#24163D'}" onclick="selMethod='NAGAD';renderWallet()">Nagad</button>
+      </div>
+      <input id="pAmt" class="inp" type="number" placeholder="Amount (BDT) e.g. 500"/>
+      <input id="pSender" class="inp" placeholder="Your Sender Number (01XXXXXXXXX)"/>
+      <input id="pTrx" class="inp" placeholder="Transaction ID (TrxID)"/>
+      <button class="gbtn" style="margin-top:12px" onclick="submitTopUp()">✨ Submit Payment Request</button>
+    </div>
+    <div class="card"><div style="font-weight:900;margin-bottom:6px">Deposit History</div>
+      ${myPays.length?myPays.map(p=>`<div class="pay-row"><div><b>${p.method} • ${p.amount} BDT</b><div style="font-size:11px;color:var(--muted)">Trx: ${p.trxId}</div></div><span class="pill">${p.status}</span></div>`).join(""):'<div style="font-size:12px;color:var(--muted)">No deposits yet.</div>'}
+    </div>`;
+}
+function submitTopUp(){
+  const amt=Number(document.getElementById("pAmt").value),sender=document.getElementById("pSender").value.trim(),trx=document.getElementById("pTrx").value.trim();
+  if(amt<50||!sender||!trx){toast("Enter Amount (50+), Sender Number & TrxID");return;}
+  DB.payments.unshift({id:"PAY"+Date.now(),userId:ME.id,username:ME.displayName,method:selMethod,amount:amt,sender,trxId:trx,status:"PENDING",at:new Date().toLocaleString()});
+  saveDB(DB);renderWallet();toast("Payment sent! Waiting for Admin approval.");
+}
+function renderProfile(){
+  const myOrd=DB.orders.filter(o=>o.userId===ME.id);
+  document.getElementById("tabProfile").innerHTML=`
+    <div class="hdr"><div style="font-weight:900;font-size:18px;color:var(--gold2)">👤 My Profile</div><button class="ibtn" onclick="powerOff()">⏻</button></div>
+    <div class="card" style="display:flex;align-items:center;gap:14px">
+      <img src="${ME.photoUrl}" style="width:68px;height:68px;border-radius:50%;object-fit:cover;border:2.5px solid var(--gold2)"/>
+      <div><div style="font-weight:900;font-size:18px">${ME.displayName} ✓</div><div style="font-size:12px;color:#FF9AD5">ID: ${ME.royalId} • Key: ${ME.accessKey}</div></div>
+    </div>
+    <div class="card">
+      <div style="font-weight:900;color:var(--gold2);margin-bottom:6px">✏️ Edit Name &amp; Profile Photo Link</div>
+      <input id="uName" class="inp" value="${ME.displayName}"/>
+      <input id="uPic" class="inp" value="${ME.photoUrl}" placeholder="Direct Image URL"/>
+      <button class="gbtn" style="margin-top:10px" onclick="saveProfile()">💾 Save Profile</button>
+    </div>
+    <div class="card"><div style="font-weight:900;color:var(--gold2);margin-bottom:6px">🛍 My Orders &amp; Purchases (${myOrd.length})</div>
+      ${myOrd.length?myOrd.map(o=>`<div class="pay-row"><div><b>${o.serviceTitle}</b><div style="font-size:11px;color:var(--muted)">${o.girlName} • ${o.status} • ${o.at}</div></div><b style="color:#FF77B7">-${o.amount}৳</b></div>`).join(""):'<div style="font-size:12px;color:var(--muted)">No service orders yet.</div>'}
+    </div>`;
+}
+function saveProfile(){ME.displayName=document.getElementById("uName").value.trim()||ME.displayName;ME.photoUrl=document.getElementById("uPic").value.trim()||ME.photoUrl;saveDB(DB);renderAll();toast("Profile updated!");}
+function openFs(list,i){fsList=list&&list.length?list:DB.photos;fsIdx=i||0;updateFs();document.getElementById("fsViewer").classList.remove("hide");}
+function closeFs(){document.getElementById("fsViewer").classList.add("hide");}
+function stepFs(d){fsIdx=(fsIdx+d+fsList.length)%fsList.length;updateFs();}
+function updateFs(){const p=fsList[fsIdx];if(!p)return;document.getElementById("fsImg").src=p.imageUrl;document.getElementById("fsTitle").textContent=p.title;document.getElementById("fsCap").textContent=p.caption;document.getElementById("fsCounter").textContent=(fsIdx+1)+" / "+fsList.length;}
+function toggleFsChrome(){document.getElementById("fsTop").classList.toggle("hide");document.getElementById("fsBot").classList.toggle("hide");}
+function renderAll(){if(!ME)return;renderHome();renderGirlsDir();renderWallet();renderProfile();if(curTab==="Videos")renderVideos();if(openGirlId)renderGirlSheet();}
 
-    function renderUserAvatar(imgId, fallbackId, photoUrl, name) {
-      const img = document.getElementById(imgId);
-      const fb = document.getElementById(fallbackId);
-      if (photoUrl) {
-        img.src = photoUrl;
-        img.onload = () => { img.style.display = "block"; fb.style.display = "none"; };
-        img.onerror = () => { img.style.display = "none"; fb.style.display = "flex"; };
-      } else {
-        img.style.display = "none";
-        fb.style.display = "flex";
-        fb.innerText = (name[0] || "U").toUpperCase();
-      }
-    }
-    renderUserAvatar("h-avatar-img", "h-avatar-fallback", tgUser.photo, tgUser.name);
-    renderUserAvatar("p-avatar-img", "p-avatar-fallback", tgUser.photo, tgUser.name);
-
-    let userFavorites = new Set();
-
-    async function initUser() {
-      try {
-        await signInAnonymously(auth);
-
-        // Fetch Direct Ad settings from Firebase
-        try {
-          const cfgSnap = await getDoc(doc(db, "settings", "ads_config"));
-          if (cfgSnap.exists()) {
-            const d = cfgSnap.data();
-            if (d.directAdUrl) DIRECT_AD_URL = d.directAdUrl;
-            if (d.cooldownSeconds) COOLDOWN_SECONDS = Number(d.cooldownSeconds);
-          }
-        } catch(e) {}
-
-        const ref = doc(db, "users", tgUser.id);
-        const snap = await getDoc(ref);
-        if (!snap.exists()) {
-          await setDoc(ref, {
-            id: tgUser.id,
-            name: tgUser.name,
-            handle: tgUser.handle,
-            photoUrl: tgUser.photo,
-            favoritesCount: 0,
-            unlockedCount: 0,
-            watchedAdsCount: 0,
-            favorites: [],
-            createdAt: serverTimestamp()
-          });
-        } else {
-          const d = snap.data();
-          document.getElementById("stat-fav-count").innerText = d.favoritesCount || 0;
-          document.getElementById("stat-unlocked-count").innerText = d.unlockedCount || 0;
-          document.getElementById("stat-watched-count").innerText = d.watchedAdsCount || 0;
-          if (Array.isArray(d.favorites)) userFavorites = new Set(d.favorites);
-        }
-      } catch(e) {}
-    }
-
-    let videos = [];
-
-    // REAL-TIME LISTENER FOR VIDEOS
-    function listenToVideos() {
-      const container = document.getElementById("home-feed-container");
-      const q = query(collection(db, "videos"), where("isPublished", "==", true));
-
-      onSnapshot(q, (snap) => {
-        videos = [];
-        snap.forEach(d => {
-          const data = d.data();
-          const realViews = Number(data.viewsCount) || 0;
-          const autoViews = Number(data.autoViews) || 0;
-          const totalViews = realViews + autoViews;
-          const ratio = (data.aspectRatio === "9:16") ? "ratio-9-16" : "ratio-16-9";
-
-          videos.push({
-            id: d.id,
-            title: data.title || "Untitled Video",
-            category: data.category || "General",
-            overlayTitle: data.overlayTitle || data.title || "REDVIRALZONE",
-            views: totalViews,
-            likes: Number(data.likesCount) || 0,
-            thumbnail: data.thumbnailUrl || "https://i.postimg.cc/HLH6L590/IMG-20261107-230123-031.jpg",
-            videoUrl: data.videoUrl || "",
-            parts: data.parts || [data.videoUrl],
-            ratioClass: ratio,
-            currentStep: 1
-          });
-        });
-
-        if (videos.length === 0) {
-          container.innerHTML = `
-            <div class="empty-state-box">
-              <span class="material-symbols-rounded">movie</span>
-              <p>এখনো কোনো ভিডিও আপলোড করা হয়নি।</p>
-              <small style="color:#666;">অ্যাডমিন প্যানেল থেকে লিংক পোস্ট করুন।</small>
-            </div>
-          `;
-          return;
-        }
-
-        videos.sort((a, b) => b.views - a.views);
-        renderCards("home-feed-container", videos, true);
-        renderFavorites();
-      });
-    }
-
-    function renderCards(containerId, list, isHome = false) {
-      const container = document.getElementById(containerId);
-      container.innerHTML = "";
-
-      list.forEach((v, index) => {
-        const isFav = userFavorites.has(v.id);
-        const isTopRanked = (isHome && index === 0);
-
-        const card = document.createElement("div");
-        card.className = `feed-card ${isTopRanked ? 'top-rank-card' : ''}`;
-        card.innerHTML = `
-          ${isTopRanked ? `<div class="top-rank-badge"><span class="material-symbols-rounded" style="font-size:12px;">whatshot</span><span>#1 TOP VIRAL</span></div>` : ''}
-
-          <div class="thumb-dynamic-box ${v.ratioClass}">
-            <img class="thumb-actual-img" src="${v.thumbnail}" alt="Thumbnail">
-            <button class="btn-fav-circle ${isFav ? 'active' : ''}" data-id="${v.id}">
-              <span class="material-symbols-rounded">${isFav ? 'favorite' : 'favorite_border'}</span>
-            </button>
-            <div class="thumb-overlay-bar">
-              <span class="tag-category-pill">${v.category}</span>
-              <div class="tag-title-overlay">${v.overlayTitle}</div>
-            </div>
-          </div>
-
-          <div class="card-info-area">
-            <div class="clean-title-row">
-              <div class="circle-avatar-badge">${(v.title[0] || 'R').toUpperCase()}</div>
-              <h3 class="stylish-video-title">${v.title}</h3>
-            </div>
-            <div class="card-sub-stats">
-              <strong>REDVIRALZONE</strong>
-              <span>•</span>
-              <span>👁 ${Number(v.views).toLocaleString()}</span>
-              <span>•</span>
-              <span>❤️ ${Number(v.likes).toLocaleString()}</span>
-              <span>Viral <span class="fire-tag">🔥</span></span>
-            </div>
-
-            <!-- Stepper -->
-            <div class="ad-stepper-line" id="stepper-${v.id}">
-              <div class="stepper-bg-bar"></div>
-              <div class="step-item ${v.currentStep === 1 ? 'active' : (v.currentStep > 1 ? 'completed' : '')}">
-                <div class="step-circle"><span class="material-symbols-rounded" style="font-size:15px;">${v.currentStep > 1 ? 'check' : 'play_arrow'}</span></div>
-                <span class="step-label">AD 1</span>
-              </div>
-              <div class="step-item ${v.currentStep === 2 ? 'active' : (v.currentStep > 2 ? 'completed' : '')}">
-                <div class="step-circle"><span class="material-symbols-rounded" style="font-size:15px;">${v.currentStep > 2 ? 'check' : (v.currentStep === 2 ? 'play_arrow' : '')}</span>${v.currentStep < 2 ? '2' : ''}</div>
-                <span class="step-label">AD 2</span>
-              </div>
-              <div class="step-item ${v.currentStep === 3 ? 'active' : (v.currentStep > 3 ? 'completed' : '')}">
-                <div class="step-circle"><span class="material-symbols-rounded" style="font-size:15px;">${v.currentStep > 3 ? 'check' : (v.currentStep === 3 ? 'play_arrow' : '')}</span>${v.currentStep < 3 ? '3' : ''}</div>
-                <span class="step-label">AD 3</span>
-              </div>
-            </div>
-
-            <button class="btn-unlock-big" data-id="${v.id}">
-              <span class="material-symbols-rounded">lock</span>
-              <span>UNLOCK</span>
-              <span class="unlock-step-tag">${v.currentStep}/3</span>
-            </button>
-          </div>
-        `;
-
-        card.querySelector(".btn-fav-circle").onclick = (e) => {
-          e.stopPropagation();
-          toggleFavorite(v.id);
-        };
-
-        card.querySelector(".btn-unlock-big").onclick = () => {
-          triggerDirectAdCheckpoint(v);
-        };
-
-        container.appendChild(card);
-      });
-    }
-
-    async function toggleFavorite(id) {
-      if (userFavorites.has(id)) userFavorites.delete(id);
-      else userFavorites.add(id);
-
-      const favCount = userFavorites.size;
-      document.getElementById("stat-fav-count").innerText = favCount;
-
-      try {
-        await updateDoc(doc(db, "users", tgUser.id), {
-          favoritesCount: favCount,
-          favorites: Array.from(userFavorites)
-        });
-      } catch(e) {}
-
-      renderCards("home-feed-container", videos, true);
-      renderFavorites();
-    }
-
-    function renderFavorites() {
-      const favList = videos.filter(v => userFavorites.has(v.id));
-      renderCards("favorites-feed-container", favList, false);
-    }
-
-    // DIRECT AD UNLOCK ENGINE
-    let activeVideoForUnlock = null;
-    let timerCountdownInterval = null;
-
-    function triggerDirectAdCheckpoint(video) {
-      activeVideoForUnlock = video;
-
-      try {
-        if (window.Telegram?.WebApp && window.Telegram.WebApp.openLink) {
-          window.Telegram.WebApp.openLink(DIRECT_AD_URL);
-        } else {
-          window.open(DIRECT_AD_URL, "_blank");
-        }
-      } catch(e) {
-        window.open(DIRECT_AD_URL, "_blank");
-      }
-
-      onAdStepCompleted();
-    }
-
-    async function onAdStepCompleted() {
-      const v = activeVideoForUnlock;
-      if (!v) return;
-
-      try {
-        await updateDoc(doc(db, "users", tgUser.id), {
-          watchedAdsCount: increment(1)
-        });
-        const currentAds = Number(document.getElementById("stat-watched-count").innerText) + 1;
-        document.getElementById("stat-watched-count").innerText = currentAds;
-      } catch(e) {}
-
-      if (v.currentStep < 3) {
-        startTenSecondCooldown(() => {
-          v.currentStep++;
-          renderCards("home-feed-container", videos, true);
-        });
-      } else {
-        v.currentStep = 3;
-        try {
-          await updateDoc(doc(db, "users", tgUser.id), { unlockedCount: increment(1) });
-          const curUnlocked = Number(document.getElementById("stat-unlocked-count").innerText) + 1;
-          document.getElementById("stat-unlocked-count").innerText = curUnlocked;
-
-          await updateDoc(doc(db, "videos", v.id), { viewsCount: increment(1) });
-          v.views = Number(v.views) + 1;
-        } catch(e) {}
-
-        launchVideoPlayer(v);
-      }
-    }
-
-    function startTenSecondCooldown(onComplete) {
-      const modal = document.getElementById("ad-countdown-modal");
-      const numEl = document.getElementById("timer-countdown-val");
-      let count = COOLDOWN_SECONDS;
-
-      modal.style.display = "flex";
-      numEl.innerText = count;
-
-      if (timerCountdownInterval) clearInterval(timerCountdownInterval);
-
-      timerCountdownInterval = setInterval(() => {
-        count--;
-        numEl.innerText = count;
-
-        if (count <= 0) {
-          clearInterval(timerCountdownInterval);
-          modal.style.display = "none";
-          if (onComplete) onComplete();
-        }
-      }, 1000);
-    }
-
-    // FULLSCREEN VIDEO PLAYER
-    const pOverlay = document.getElementById("player-overlay");
-    const activeVid = document.getElementById("active-player-video");
-    const partsShelf = document.getElementById("player-parts-box");
-    const partsContainer = document.getElementById("parts-button-container");
-
-    function launchVideoPlayer(v) {
-      pOverlay.style.display = "flex";
-      document.getElementById("player-head-title").innerText = v.title;
-      document.getElementById("player-active-title").innerText = v.title;
-      document.getElementById("player-active-views").innerText = `${Number(v.views).toLocaleString()} views • HD Stream`;
-      document.getElementById("player-active-desc").innerText = v.overlayTitle || v.title;
-
-      if (v.parts && v.parts.length > 1) {
-        partsShelf.style.display = "block";
-        partsContainer.innerHTML = "";
-        v.parts.forEach((url, i) => {
-          const btn = document.createElement("button");
-          btn.className = `btn-part-switch ${i === 0 ? 'active' : ''}`;
-          btn.innerText = `Part ${i + 1}`;
-          btn.onclick = () => {
-            document.querySelectorAll(".btn-part-switch").forEach(b => b.classList.remove("active"));
-            btn.classList.add("active");
-            activeVid.src = url;
-            activeVid.play();
-          };
-          partsContainer.appendChild(btn);
-        });
-      } else {
-        partsShelf.style.display = "none";
-      }
-
-      activeVid.src = (v.parts && v.parts.length > 0) ? v.parts[0] : v.videoUrl;
-      activeVid.play();
-    }
-
-    document.getElementById("btn-player-close").onclick = () => {
-      activeVid.pause();
-      activeVid.src = "";
-      pOverlay.style.display = "none";
-      renderCards("home-feed-container", videos, true);
-    };
-
-    // LOAD TUTORIAL VIDEO DIRECTLY FROM ADMIN SETTINGS
-    function listenToTutorialVideo() {
-      const videoEl = document.getElementById("tutorial-video-el");
-      const tutDoc = doc(db, "settings", "tutorial_config");
-
-      onSnapshot(tutDoc, (snap) => {
-        if (snap.exists() && snap.data().videoUrl) {
-          videoEl.src = snap.data().videoUrl;
-          videoEl.load();
-        }
-      });
-    }
-
-    window.switchTab = function(targetViewId) {
-      document.querySelectorAll(".nav-tab-item").forEach(b => {
-        if (b.getAttribute("data-view") === targetViewId) b.classList.add("active");
-        else b.classList.remove("active");
-      });
-      document.querySelectorAll(".view-section").forEach(sec => {
-        if (sec.id === targetViewId) sec.classList.add("active");
-        else sec.classList.remove("active");
-      });
-    };
-
-    document.querySelectorAll(".nav-tab-item").forEach(tab => {
-      tab.onclick = () => window.switchTab(tab.getAttribute("data-view"));
-    });
-
-    // START
-    await initUser();
-    listenToVideos();
-    listenToTutorialVideo();
-  </script>
+(function init(){
+  document.getElementById("pwrCrown").innerHTML=CROWN_SVG;
+  document.getElementById("pwrBg").src=DB.settings.heroBannerUrl||PRESETS[0];
+  if(window.Telegram?.WebApp){Telegram.WebApp.ready();Telegram.WebApp.expand();}
+  if(fbRef){
+    fbRef.on("value",snap=>{
+      const val=snap.val();
+      if(val){DB=mergeDB(val);localStorage.setItem(DB_KEY,JSON.stringify(DB));}
+      else{fbRef.set(DB).catch(()=>{});}
+      document.getElementById("syncBadge").textContent="🟢 Live Firebase Connected";
+      document.getElementById("pwrBg").src=DB.settings.heroBannerUrl||PRESETS[0];
+      if(ME){ME=DB.users.find(u=>u.id===ME.id)||ME;renderAll();}
+    },()=>{document.getElementById("syncBadge").textContent="✨ Ready (Local Mode)";});
+  }
+  if(localStorage.getItem(UID_KEY)) powerStart(false);
+})();
+</script>
 </body>
 </html>
